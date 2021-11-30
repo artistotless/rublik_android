@@ -7,13 +7,19 @@ using AndroidX.RecyclerView.Widget;
 using FFImageLoading;
 using FFImageLoading.Transformations;
 using RublikNativeAndroid.Adapters;
+using RublikNativeAndroid.Contracts;
 
 namespace RublikNativeAndroid.Fragments
 {
-    public class MyprofileFragment : Fragment
+    public class MyprofileFragment : Fragment, IHasToolbarTitle
     {
         private FriendRecycleListAdapter adapter;
         private Profile myProfile;
+
+        public string GetTitle()
+        {
+            return GetString(Resource.String.myprofile);
+        }
 
         public override void OnCreate(Bundle savedInstanceState)
         {

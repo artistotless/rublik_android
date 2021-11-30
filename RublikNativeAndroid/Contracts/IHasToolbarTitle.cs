@@ -1,16 +1,8 @@
-﻿using System;
-
+﻿
 namespace RublikNativeAndroid.Contracts
 {
-    public interface IHasToolbarAction
+    public interface IHasToolbarTitle
     {
-        CustomToolbarAction GetAction();
-    }
-
-    public struct CustomToolbarAction
-    {
-        public int iconDrawableId;
-        public int titleStringId;
-        public Action action;
+        string GetTitle();
     }
 }

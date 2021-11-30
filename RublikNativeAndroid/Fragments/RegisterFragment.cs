@@ -8,8 +8,13 @@ using RublikNativeAndroid.Contracts;
 
 namespace RublikNativeAndroid
 {
-    internal class RegisterFragment : Fragment
+    internal class RegisterFragment : Fragment, IHasToolbarTitle
     {
+        public string GetTitle()
+        {
+            return GetString(Resource.String.register);
+        }
+
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -22,10 +27,13 @@ namespace RublikNativeAndroid
             base.OnCreateView(inflater, container, savedInstanceState);
 
             var rootView = inflater.Inflate(Resource.Layout.fragment_register, container, false);
-            Button btn_register = rootView.FindViewById<Button>(Resource.Id.btn_register);
-            EditText username_field = rootView.FindViewById<EditText>(Resource.Id.et_username);
-            EditText password_field = rootView.FindViewById<EditText>(Resource.Id.et_password);
-            EditText email_field = rootView.FindViewById<EditText>(Resource.Id.et_email);
+            Button btn_register = rootView.FindButton(Resource.Id.btn_register);
+            Button btn_to_login = rootView.FindButton(Resource.Id.btn_to_login);
+            EditText username_field = rootView.FindEditText(Resource.Id.et_username);
+            EditText password_field = rootView.FindEditText(Resource.Id.et_password);
+            EditText email_field = rootView.FindEditText(Resource.Id.et_email);
+
+            btn_to_login.Click += (object sender, EventArgs e) => { this.Navigator().ShowLoginPage(); };
 
             btn_register.Click += async (object sender, EventArgs e) =>
             {
@@ -43,13 +51,12 @@ namespace RublikNativeAndroid
                 if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
                     var accessKey = content;
-                    (RequireActivity() as INavigator).ShowMyProfilePage(accessKey);
+                    this.Navigator().ShowMyProfilePage(accessKey);
 
                 }
                 else
                 {
                     username_field.Error = string.IsNullOrEmpty(content) ? GetString(Resource.String.novalid_register) : content;
-
                 }
 
             };

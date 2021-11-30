@@ -85,6 +85,7 @@
     <Compile Include="Contracts\IFragmentViewCreateListener.cs" />
     <Compile Include="Models\Friend.cs" />
     <Compile Include="Contracts\IHasToolbarAction.cs" />
+    <Compile Include="Contracts\IHasToolbarTitle.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

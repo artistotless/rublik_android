@@ -14,25 +14,16 @@
 		android:layout_marginTop="20dp"
 		android:visibility="gone"/>
 
-	<TextView
-		android:id="@+id/tv_subtitle"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="@string/tag"
-		android:textSize="18sp"
-		android:layout_marginTop="60dp"
-		android:layout_marginStart="45dp"
-		android:layout_marginBottom="52dp"
-		android:layout_above="@id/et_email"/>
 
 	<EditText
 		android:id="@+id/et_email"
 		android:layout_width="match_parent"
 		android:layout_height="50dp"
-		android:hint="@string/identity_login"
+		android:hint="@string/identity_or_email"
 		android:layout_marginLeft="@dimen/login_register_page_lr_margin"
 		android:layout_marginRight="@dimen/login_register_page_lr_margin"
 		android:padding="15dp"
+		android:layout_marginTop="15dp"
 		android:inputType="textEmailAddress"
 		android:layout_above="@id/et_password"
 		android:background="@drawable/et_custom"
@@ -66,28 +57,17 @@
 		android:textColor="@android:color/white"
 		android:text="@string/login_btn"/>
 
-	<LinearLayout
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:orientation="vertical"
-		android:gravity="bottom|center"
-        >
-		<ImageView
-			android:layout_width="30dp"
-			android:contentDescription=""
-			android:layout_height="30dp"
-			android:src="@drawable/ic_arrow_right"
-			android:layout_above="@id/swipeRight"
-			android:baselineAlignBottom="true"/>
+	<Button
+		android:id="@+id/btn_to_register"
+		android:layout_height="40sp"
+		android:layout_gravity="center"
+		android:layout_width="wrap_content"
+		android:layout_below="@id/btn_login"
+		android:layout_marginLeft="@dimen/login_register_page_lr_margin"
+		android:layout_marginRight="@dimen/login_register_page_lr_margin"
+		android:layout_marginTop="15dp"
+		android:textColor="#ff546e7a"
+		android:text="@string/register"
+		android:backgroundTint="#ffeeeeee" />
 
-		<TextView
-			android:id="@+id/swipeRight"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/swipe_left_for_register"
-			android:textSize="15sp"
-			android:layout_centerHorizontal="true"
-			android:layout_alignParentBottom="true"
-			android:layout_marginBottom="20dp"/>
-	</LinearLayout>
 </LinearLayout>

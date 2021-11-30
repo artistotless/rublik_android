@@ -8,7 +8,6 @@ using AndroidX.AppCompat.App;
 using Google.Android.Material.BottomNavigation;
 using RublikNativeAndroid.Contracts;
 using RublikNativeAndroid.Fragments;
-using RublikNativeAndroid.Utils;
 
 namespace RublikNativeAndroid
 {
@@ -28,7 +27,7 @@ namespace RublikNativeAndroid
     public class MainActivity : AppCompatActivity, BottomNavigationView.IOnNavigationItemSelectedListener, INavigator, IFragmentViewCreateListener
     {
         private FragmentLifecycleListener _fragmentLifecycleListener { get; set; }
-        private Toolbar _toolbar { get; set; }
+        private AndroidX.AppCompat.Widget.Toolbar _toolbar { get; set; }
         public TextView textMessage { get; set; }
         public INavigator mainNavigator { get; set; }
 
@@ -39,8 +38,10 @@ namespace RublikNativeAndroid
             base.OnCreate(savedInstanceState);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             SetContentView(Resource.Layout.activity_main);
-            ShowLoginPage();
-            _toolbar = FindViewById<Toolbar>(Resource.Id.main_toolbar);
+            if (savedInstanceState == null)
+                ShowLoginPage();
+            _toolbar = FindViewById<AndroidX.AppCompat.Widget.Toolbar>(Resource.Id.main_toolbar);
+            SetSupportActionBar(_toolbar);
             SupportFragmentManager.RegisterFragmentLifecycleCallbacks(_fragmentLifecycleListener, false);
 
         }
@@ -62,13 +63,13 @@ namespace RublikNativeAndroid
             switch (item.ItemId)
             {
                 case Resource.Id.navigation_home:
-                    textMessage.SetText(Resource.String.title_home);
+                    textMessage.Text="title_home";
                     return true;
                 case Resource.Id.navigation_dashboard:
-                    textMessage.SetText(Resource.String.title_dashboard);
+                    textMessage.Text = "title_dashboard";
                     return true;
                 case Resource.Id.navigation_notifications:
-                    textMessage.SetText(Resource.String.title_notifications);
+                    textMessage.Text = "title_notifications";
                     return true;
             }
 
