@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:paddingHorizontal="10dp"
+	android:orientation="vertical">
+
+	<TextView
+		android:layout_marginBottom="@dimen/title_marginBottom"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textSize="@dimen/title"
+		android:textStyle="bold"
+		android:labelFor="@id/profile_status_value"
+		android:text="@string/quote"/>
+
+	<EditText
+		android:id="@+id/profile_status_value"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="test quote"
+		android:textSize="@dimen/quoteSize"
+		android:enabled="false"
+		/>
+
+	<TextView
+		android:layout_marginTop="@dimen/title_marginTop"
+		android:layout_marginBottom="@dimen/title_marginBottom"
+		android:textSize="@dimen/title"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+		android:text="@string/friends"
+		android:textStyle="bold"/>
+
+	<androidx.recyclerview.widget.RecyclerView
+		android:id="@+id/profile_friends_scroll_view"
+	android:layout_marginTop="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+	</androidx.recyclerview.widget.RecyclerView>
+
+	<TextView
+		android:layout_marginTop="@dimen/title_marginTop"
+		android:layout_marginBottom="@dimen/title_marginBottom"
+		android:textSize="@dimen/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+		android:text="@string/news"
+		android:textStyle="bold"/>
+
+	<androidx.recyclerview.widget.RecyclerView
+		android:id="@+id/profile_news_scroll_view"
+	android:layout_marginTop="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+	</androidx.recyclerview.widget.RecyclerView>
+
+</LinearLayout>

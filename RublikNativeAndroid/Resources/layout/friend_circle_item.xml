@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+
+<LinearLayout
+	android:id="@+id/friend_list_layout"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	>
+
+
+
+		<ImageView
+			android:id="@+id/friend_image"
+			android:layout_marginHorizontal="10dp"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			android:background="@drawable/rectanglewithborderradius5"
+			android:layout_width="48dp"
+			android:scaleType="fitXY"
+			android:outlineProvider="background"
+			android:layout_height="48dp"
+			android:contentDescription="ProfileImage"/>
+	
+
+</LinearLayout>

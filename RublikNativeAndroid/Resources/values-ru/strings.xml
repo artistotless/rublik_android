@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+	<string name="app_name">RublikNativeAndroid</string>
+	<string name="title_home">Домой</string>
+	<string name="title_dashboard">Дэшборд</string>
+	<string name="title_notifications">Уведомления</string>
+	<string name="hello_blank_fragment">Hello blank fragment</string>
+	<string name="swipe_left_for_register">Свайп влево для регистрации</string>
+	<string name="login_btn">Войти</string>
+	<string name="email">Эл. почта</string>
+	<string name="login">Логин</string>
+	<string name="password">Пароль</string>
+	<string name="novalid_login">Неверный логин или пароль</string>
+	<string name="novalid_register">"Пользователь под такими данными уже зарегистрирован</string>
+	<string name="identity_login">Почта / @логин</string>
+	<string name="tag">Авторизация</string>
+	<string name="swipe_right_for_login">Свайп вправо для авторизации</string>
+	<string name="register">Регистрация</string>
+	<string name="re_type_password">Повторите пароль</string>
+	<string name="your_name">Полное имя</string>
+	<string name="messages">Сообщения</string>
+	<string name="notifications">Уведомления</string>
+	<string name="settings">Насйтроки</string>
+	<string name="friends">Друзья</string>
+	<string name="news">Новости</string>
+	<string name="quote">Цитата</string>
+</resources>
