@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.Http;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
@@ -8,8 +7,16 @@ using RublikNativeAndroid.Contracts;
 
 namespace RublikNativeAndroid
 {
-    internal class RegisterFragment : Fragment, IHasToolbarTitle
+    internal class RegisterFragment : Fragment, IHasToolbarTitle, ITaskListener<string, string>
     {
+        private RegisterViewModel _registerViewModel;
+
+        private Button btn_register { get; set; }
+        private Button btn_to_login { get; set; }
+        private EditText username_field { get; set; }
+        private EditText password_field { get; set; }
+        private EditText email_field { get; set; }
+
         public string GetTitle()
         {
             return GetString(Resource.String.register);
@@ -18,6 +25,8 @@ namespace RublikNativeAndroid
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+            if (savedInstanceState == null)
+                _registerViewModel = new RegisterViewModel(this);
         }
 
 
@@ -27,41 +36,37 @@ namespace RublikNativeAndroid
             base.OnCreateView(inflater, container, savedInstanceState);
 
             var rootView = inflater.Inflate(Resource.Layout.fragment_register, container, false);
-            Button btn_register = rootView.FindButton(Resource.Id.btn_register);
-            Button btn_to_login = rootView.FindButton(Resource.Id.btn_to_login);
-            EditText username_field = rootView.FindEditText(Resource.Id.et_username);
-            EditText password_field = rootView.FindEditText(Resource.Id.et_password);
-            EditText email_field = rootView.FindEditText(Resource.Id.et_email);
+            btn_register = rootView.FindButton(Resource.Id.btn_register);
+            btn_to_login = rootView.FindButton(Resource.Id.btn_to_login);
+            username_field = rootView.FindEditText(Resource.Id.et_username);
+            password_field = rootView.FindEditText(Resource.Id.et_password);
+            email_field = rootView.FindEditText(Resource.Id.et_email);
+
 
             btn_to_login.Click += (object sender, EventArgs e) => { this.Navigator().ShowLoginPage(); };
 
-            btn_register.Click += async (object sender, EventArgs e) =>
-            {
-                HttpClient client = new HttpClient();
-                var body = string.Format("{{ \"username\":\"{0}\" , \"password\":\"{1}\", \"email\":\"{1}\"}}", username_field.Text, password_field.Text, email_field.Text);
-
-                HttpRequestMessage request = new HttpRequestMessage();
-                request.RequestUri = new Uri(Constants.WebApiUrls.API_REGISTER);
-                request.Method = HttpMethod.Post;
-                request.Content = new StringContent(body, System.Text.Encoding.UTF8, "application/json");
-                HttpResponseMessage response = await client.SendAsync(request);
+            btn_register.Click += async (object sender, EventArgs e) => await _registerViewModel.RegisterAsync(
+                new RegisterData(username_field.Text, email_field.Text, password_field.Text));
 
 
-                string content = await response.Content.ReadAsStringAsync();
-                if (response.StatusCode == System.Net.HttpStatusCode.OK)
-                {
-                    var accessKey = content;
-                    this.Navigator().ShowMyProfilePage(accessKey);
-
-                }
-                else
-                {
-                    username_field.Error = string.IsNullOrEmpty(content) ? GetString(Resource.String.novalid_register) : content;
-                }
-
-            };
 
             return rootView;
+        }
+
+        public void OnError(string error)
+        {
+            username_field.Error = string.IsNullOrEmpty(error) ? GetString(Resource.String.novalid_register) : error;
+
+        }
+
+        public void OnPrepare()
+        {
+            return;
+        }
+
+        public void OnSuccess(string accessKey)
+        {
+            this.Navigator().ShowMyProfilePage(accessKey);
         }
     }
 }
