@@ -4,10 +4,11 @@ using Android.Views;
 using Android.Widget;
 using AndroidX.Fragment.App;
 using RublikNativeAndroid.Contracts;
+using RublikNativeAndroid.Models;
 
 namespace RublikNativeAndroid
 {
-    internal class RegisterFragment : Fragment, IHasToolbarTitle, ITaskListener<string, string>
+    internal class RegisterFragment : Fragment, IHasToolbarTitle, ITaskListener<LoginResult, string>
     {
         private RegisterViewModel _registerViewModel;
 
@@ -61,9 +62,9 @@ namespace RublikNativeAndroid
             return;
         }
 
-        public void OnSuccess(string accessKey)
+        public void OnSuccess(LoginResult data)
         {
-            this.Navigator().ShowMyProfilePage(accessKey);
+            this.Navigator().ShowMyProfilePage(data.accessKey, data.id);
         }
     }
 }

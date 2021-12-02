@@ -3,11 +3,13 @@ using Android.OS;
 using Android.Views;
 using Android.Widget;
 using AndroidX.Fragment.App;
+using Newtonsoft.Json;
 using RublikNativeAndroid.Contracts;
+using RublikNativeAndroid.Models;
 
 namespace RublikNativeAndroid
 {
-    internal class LoginFragment : Fragment, IHasToolbarTitle, ITaskListener<string, string>
+    internal class LoginFragment : Fragment, IHasToolbarTitle, ITaskListener<LoginResult, string>
     {
         private LoginViewModel _loginViewModel;
 
@@ -59,7 +61,12 @@ namespace RublikNativeAndroid
             bar.Visibility = ViewStates.Gone;
         }
 
-        public void OnSuccess(string accessKey) => this.Navigator().ShowMyProfilePage(accessKey);
+        public void OnSuccess(LoginResult data)
+        {
+
+            this.Navigator().ShowMyProfilePage(data.accessKey, data.id);
+        }
 
     }
+
 }

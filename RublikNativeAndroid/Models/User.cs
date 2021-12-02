@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace RublikNativeAndroid.Models
 {
 
-    class User : IEquatable<User>
+    public class User : IEquatable<User>
     {
         public class Data
         {

@@ -19,7 +19,7 @@
 		android:id="@+id/profile_status_value"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="test quote"
+		android:text=""
 		android:textSize="@dimen/quoteSize"
 		android:enabled="false"
 		/>

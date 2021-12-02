@@ -95,6 +95,7 @@
     <Compile Include="Services\UsersService.cs" />
     <Compile Include="Services\RoomsService.cs" />
     <Compile Include="Utils\Exceptions.cs" />
+    <Compile Include="Models\LoginResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

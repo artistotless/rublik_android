@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Android.OS;
 using Android.Views;
@@ -10,7 +11,6 @@ using FFImageLoading;
 using FFImageLoading.Transformations;
 using RublikNativeAndroid.Adapters;
 using RublikNativeAndroid.Contracts;
-using RublikNativeAndroid.Services;
 using RublikNativeAndroid.ViewModels;
 
 namespace RublikNativeAndroid.Fragments
@@ -20,6 +20,7 @@ namespace RublikNativeAndroid.Fragments
     {
         private SwipeRefreshLayout _layout;
         public RefreshLayoutConflictFixer(SwipeRefreshLayout layout) => _layout = layout;
+
         public override void OnScrollStateChanged(RecyclerView recyclerView, int newState)
         {
             if (_layout.Refreshing)
@@ -33,14 +34,20 @@ namespace RublikNativeAndroid.Fragments
 
     public class MyprofileFragment : Fragment, IHasToolbarTitle
     {
+
         private ImageView _avatar;
         private TextView _nickname, _username;
+        private EditText _quote;
         private Button _balance_btn;
         private SwipeRefreshLayout _swipeRefreshLayout;
         private RecyclerView _friends_scroll;
 
         private FriendRecycleListAdapter _adapter;
         private MyProfileViewModel _myProfileViewModel;
+        private IDisposable _unsubscriber;
+
+        private static int _userId { get; set; }
+        private static string _accessKey { get; set; }
 
         public string GetTitle()
         {
@@ -51,7 +58,18 @@ namespace RublikNativeAndroid.Fragments
         {
             base.OnCreate(savedInstanceState);
             _myProfileViewModel = new MyProfileViewModel();
+
+            _accessKey = Arguments.GetString(Constants.Fragments.ACCESS_KEY);
+            _userId = Arguments.GetInt(Constants.Fragments.USER_ID);
+
         }
+
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+            _unsubscriber.Dispose();
+        }
+
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
@@ -61,50 +79,89 @@ namespace RublikNativeAndroid.Fragments
             _username = view.FindTextView(Resource.Id.profile_username);
             _nickname = view.FindTextView(Resource.Id.profile_nickname);
             _avatar = view.FindImageView(Resource.Id.profile_image);
+            _quote = view.FindEditText(Resource.Id.profile_status_value);
             _friends_scroll = view.FindRecyclerView(Resource.Id.profile_friends_scroll_view);
             _swipeRefreshLayout = view.FindRefreshLayout(Resource.Id.profile_refresh_swipe);
-
             _friends_scroll.AddOnScrollListener(new RefreshLayoutConflictFixer(_swipeRefreshLayout));
 
-            _adapter = new FriendRecycleListAdapter(new List<Friend> { Friend.Fake(), Friend.Fake(), Friend.Fake(), Friend.Fake(), Friend.Fake(), Friend.Fake(), Friend.Fake(), Friend.Fake(), Friend.Fake(), Friend.Fake(), Friend.Fake(), Friend.Fake(), Friend.Fake(), Friend.Fake(), Friend.Fake() });
-            RecyclerView scrolling = view.FindViewById<RecyclerView>(Resource.Id.profile_friends_scroll_view);
-            scrolling.SetLayoutManager(new LinearLayoutManager(container.Context, 0, false));
-            scrolling.SetAdapter(_adapter);
+            SetUpAdapter(container);
+            ListenObservableObjects();
 
+            _swipeRefreshLayout.Refresh += async (object sender, System.EventArgs e) =>
+            {
+                await RequestUpdateLiveData();
+                _swipeRefreshLayout.Refreshing = false;
 
+            };
+
+            Task.Run(async () =>
+            {
+                await RequestUpdateLiveData();
+            });
 
             return view;
+        }
+
+        private void ListenObservableObjects()
+        {
+            _unsubscriber = _myProfileViewModel.liveDataProfile.Subscribe(
+               (Models.User user) => { UpdateUI(user); },
+               (System.Exception e) => { }, () => { });
+
+            _myProfileViewModel.liveDataFriends.Subscribe(
+                (List<Friend> friends) => { SetFriends(friends); },
+                (System.Exception e) => { }, () => { });
         }
 
         private void SetAvatar(string url)
         {
             ImageService.Instance
-            .LoadUrl("https://images.unsplash.com/photo-1638104191847-3868d225bf93?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1075&q=80")
+            .LoadUrl(url)
             .FadeAnimation(true)
             .Transform(new CornersTransformation(5, CornerTransformType.AllRounded))
             .Into(_avatar);
         }
 
-        private void SetUsername(string username) => _username.Text = username;
-        private void SetNickname(string nickname) => _nickname.Text = nickname;
-        private void SetBalance(int balance) => _balance_btn.Text = $"{balance} RUB";
-        private void SetFriends(List<Friend> friends) => _adapter = friends;
-
-
-        private async void _balance_btn_Click(object sender, System.EventArgs e)
+        private async Task RequestUpdateLiveData()
         {
-            System.Console.WriteLine("_balance_btn_Click");
-            var model = await UsersService.GetUser(1);
-            System.Console.WriteLine(1);
+            await _myProfileViewModel.GetProfileAsync(_userId);
+            await _myProfileViewModel.GetFriendsAsync(_userId);
         }
 
-        public static MyprofileFragment NewInstance(string accessKey)
+        private void SetUpAdapter(ViewGroup container)
+        {
+            _adapter = new FriendRecycleListAdapter();
+            _friends_scroll.SetLayoutManager(new LinearLayoutManager(container.Context, 0, false));
+            _friends_scroll.SetAdapter(_adapter);
+
+        }
+
+
+        private void SetNickname(string nickname) => _nickname.Text = nickname;
+        private void SetUsername(string username) => _username.Text = $"@{username}";
+        private void SetBalance(int balance) => _balance_btn.Text = $"{balance} RUB";
+        private void SetQuote(string quote) => _quote.Text = quote;
+        private void SetFriends(List<Friend> friends) => _adapter.friends = friends;
+
+
+        public static MyprofileFragment NewInstance(string accessKey, int userId)
         {
             var fragment = new MyprofileFragment();
             var bundle = new Bundle();
             bundle.PutString(Constants.Fragments.ACCESS_KEY, accessKey);
+            bundle.PutInt(Constants.Fragments.USER_ID, userId);
             fragment.Arguments = bundle;
             return fragment;
+        }
+
+
+        public void UpdateUI(Models.User user)
+        {
+            SetAvatar(user.extraData.avatar);
+            SetBalance(user.extraData.balance);
+            SetUsername(user.extraData.username);
+            SetNickname(user.extraData.nickname);
+            SetQuote(user.extraData.status);
         }
 
     }

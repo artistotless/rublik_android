@@ -101,9 +101,11 @@ namespace RublikNativeAndroid
             throw new NotImplementedException();
         }
 
-        public void ShowMyProfilePage(string accessKey)
+        public void ShowMyProfilePage(string accessKey,int userId)
         {
-            SupportFragmentManager.ShowFragment(Resource.Id.viewPager, MyprofileFragment.NewInstance(accessKey));
+            SupportFragmentManager.BeginTransaction().
+                Replace(Resource.Id.viewPager, MyprofileFragment.NewInstance(accessKey, userId)).
+                Commit();
         }
 
         public void ShowMessenger(int userId)

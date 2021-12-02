@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using RublikNativeAndroid.Contracts;
+using RublikNativeAndroid.Models;
 
 namespace RublikNativeAndroid
 {
@@ -21,9 +23,9 @@ namespace RublikNativeAndroid
 
     public class RegisterViewModel
     {
-        private ITaskListener<string, string> _listener;
+        private ITaskListener<LoginResult, string> _listener;
 
-        public RegisterViewModel(ITaskListener<string, string> listener)
+        public RegisterViewModel(ITaskListener<LoginResult, string> listener)
         {
             _listener = listener;
         }
@@ -45,7 +47,8 @@ namespace RublikNativeAndroid
             string content = await response.Content.ReadAsStringAsync();
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                _listener.OnSuccess(content);
+                
+                _listener.OnSuccess(JsonConvert.DeserializeObject<LoginResult>(content));
             }
             else
             {

@@ -6038,6 +6038,9 @@ namespace RublikNativeAndroid
 			// aapt resource value: 0x7F0E0042
 			public const int status_bar_notification_info_overflow = 2131624002;
 			
+			// aapt resource value: 0x7F0E0043
+			public const int user_not_found = 2131624003;
+			
 			static String()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();

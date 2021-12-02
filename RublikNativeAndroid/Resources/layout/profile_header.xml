@@ -34,7 +34,7 @@
 		android:maxLength="12"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="Mike Robisssssssssssssssssnsssssosn"
+		android:text=""
         />
 
 	<TextView
@@ -45,7 +45,7 @@
 		android:textSize="@dimen/content"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="@robin"
+		android:text=""
         />
 
 		<Button
@@ -55,7 +55,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="40dp"
 			android:backgroundTint="#ff175bf5"
-			android:text="100 RUB"
+			android:text="- RUB"
 			android:textColor="#fff"
 			android:textSize="@dimen/content" />
 

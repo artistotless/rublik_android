@@ -33,7 +33,7 @@
 			android:layout_above="@id/et_password"
 			android:background="@drawable/et_custom"
 			android:textSize="15sp"
-			android:text="user" />
+			android:text="admin" />
 
 		<EditText
 			android:id="@+id/et_password"
@@ -48,7 +48,7 @@
 			android:layout_centerInParent="true"
 			android:background="@drawable/et_custom"
 			android:textSize="15sp"
-			android:text="user" />
+			android:text="Neuralink7124811" />
 
 		<Button
 			android:id="@+id/btn_login"

@@ -20,10 +20,7 @@ namespace RublikNativeAndroid.Adapters
 
         public List<Friend> friends = new List<Friend>();
 
-        public FriendRecycleListAdapter(List<Friend> friends)
-        {
-            this.friends = friends;
-        }
+
 
         public override int ItemCount => friends.Count;
 
