@@ -6,7 +6,7 @@ namespace RublikNativeAndroid
     {
         public int id { get; set; }
         public string nickname { get; set; }
-        public string imageUrl { get; set; }
+        public string avatar { get; set; }
 
         public static Friend Fake()
         {

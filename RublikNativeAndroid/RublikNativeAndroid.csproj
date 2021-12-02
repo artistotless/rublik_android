@@ -74,7 +74,6 @@
     <Compile Include="Constants\Constants.cs" />
     <Compile Include="Adapters\FriendRecycleListAdapter.cs" />
     <Compile Include="Adapters\AuthenticationPagerAdapter.cs" />
-    <Compile Include="Services\Profile.cs" />
     <Compile Include="Utils\Extensions.cs" />
     <Compile Include="Fragments\ProfileFragment.cs" />
     <Compile Include="Fragments\LobbyFragment.cs" />
@@ -89,6 +88,13 @@
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="Contracts\ITaskListener.cs" />
     <Compile Include="ViewModels\RegisterViewModel.cs" />
+    <Compile Include="ViewModels\MyProfileViewModel.cs" />
+    <Compile Include="Models\User.cs" />
+    <Compile Include="Models\Room.cs" />
+    <Compile Include="Models\Game.cs" />
+    <Compile Include="Services\UsersService.cs" />
+    <Compile Include="Services\RoomsService.cs" />
+    <Compile Include="Utils\Exceptions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -206,6 +212,9 @@
     </PackageReference>
     <PackageReference Include="CrossPlatformLiveData">
       <Version>1.0.2</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>13.0.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

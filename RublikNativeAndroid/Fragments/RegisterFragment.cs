@@ -11,11 +11,9 @@ namespace RublikNativeAndroid
     {
         private RegisterViewModel _registerViewModel;
 
-        private Button btn_register { get; set; }
-        private Button btn_to_login { get; set; }
-        private EditText username_field { get; set; }
-        private EditText password_field { get; set; }
-        private EditText email_field { get; set; }
+        private Button btn_register, btn_to_login;
+        private EditText username_field, password_field, email_field;
+
 
         public string GetTitle()
         {
@@ -25,8 +23,7 @@ namespace RublikNativeAndroid
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            if (savedInstanceState == null)
-                _registerViewModel = new RegisterViewModel(this);
+            _registerViewModel = new RegisterViewModel(this);
         }
 
 

@@ -1,28 +1,42 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+	android:id="@+id/profile_refresh_swipe"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
-	android:background="#ffeeeeee"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent">
+	android:layout_height="match_parent"
+					>
+	<ScrollView
+		android:background="#ffeeeeee"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+
+		<androidx.constraintlayout.widget.ConstraintLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
 
 
-	<include
-		android:id="@+id/profile_head"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-		layout="@layout/profile_header"/>
+			<include
+				android:id="@+id/profile_head"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				layout="@layout/profile_header"/>
 
-	<include
-		android:id="@+id/profile_body"
-		android:layout_marginHorizontal="10dp"
-		android:layout_marginTop="15dp"
-		app:layout_constraintTop_toBottomOf="@id/profile_head"
-		app:layout_constraintStart_toStartOf="parent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-		layout="@layout/profile_body"/>
+			<include
+				android:id="@+id/profile_body"
+				android:layout_marginHorizontal="10dp"
+				android:layout_marginTop="15dp"
+				app:layout_constraintTop_toBottomOf="@id/profile_head"
+				app:layout_constraintStart_toStartOf="parent"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				layout="@layout/profile_body"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+		</androidx.constraintlayout.widget.ConstraintLayout>
+
+	</ScrollView>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 

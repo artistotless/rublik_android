@@ -11,10 +11,8 @@ namespace RublikNativeAndroid
     {
         private LoginViewModel _loginViewModel;
 
-        private Button btn_login { get; set; }
-        private Button btn_to_register { get; set; }
-        private EditText username_field { get; set; }
-        private EditText password_field { get; set; }
+        private Button btn_login, btn_to_register;
+        private EditText username_field, password_field;
         private ProgressBar bar { get; set; }
 
         public string GetTitle()

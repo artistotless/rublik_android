@@ -1,6 +1,8 @@
 ﻿using Android.Views;
 using Android.Widget;
 using AndroidX.Fragment.App;
+using AndroidX.RecyclerView.Widget;
+using AndroidX.SwipeRefreshLayout.Widget;
 
 namespace RublikNativeAndroid
 {
@@ -14,7 +16,7 @@ namespace RublikNativeAndroid
 
     public static class FragmentNavigatorExtension
     {
-        public static Contracts.INavigator Navigator(this Fragment fragment)=> fragment.RequireActivity() as Contracts.INavigator;
+        public static Contracts.INavigator Navigator(this Fragment fragment) => fragment.RequireActivity() as Contracts.INavigator;
     }
 
     public static class FindWidgetIdExtension
@@ -25,6 +27,8 @@ namespace RublikNativeAndroid
 
         public static EditText FindEditText(this View view, int resId) => view.FindViewById<EditText>(resId);
 
+        public static ImageView FindImageView(this View view, int resId) => view.FindViewById<ImageView>(resId);
+
         public static ImageButton FindImageButton(this View view, int resId) => view.FindViewById<ImageButton>(resId);
 
         public static CheckBox FindCheckBox(this View view, int resId) => view.FindViewById<CheckBox>(resId);
@@ -32,6 +36,12 @@ namespace RublikNativeAndroid
         public static RadioButton FindRadioButton(this View view, int resId) => view.FindViewById<RadioButton>(resId);
 
         public static ProgressBar FindProgressBar(this View view, int resId) => view.FindViewById<ProgressBar>(resId);
+
+        public static RecyclerView FindRecyclerView(this View view, int resId) => view.FindViewById<RecyclerView>(resId);
+
+        public static SwipeRefreshLayout FindRefreshLayout(this View view, int resId) => view.FindViewById<SwipeRefreshLayout>(resId);
+
+
 
     }
 }
