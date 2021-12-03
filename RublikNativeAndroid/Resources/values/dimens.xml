@@ -6,8 +6,8 @@
     <dimen name="button">14sp</dimen>
     <dimen name="action_bar">20sp</dimen>
     <dimen name="profile_avatarSize">64</dimen>
-    <dimen name="title_marginTop">20dp</dimen>
-    <dimen name="title_marginBottom">3dp</dimen>
+    <dimen name="title_marginTop">25dp</dimen>
+    <dimen name="title_marginBottom">6dp</dimen>
     <dimen name="profile_friendImageSize">48</dimen>
     <dimen name="quoteSize">13dp</dimen>
     <dimen name="activity_horizontal_margin">16dp</dimen>

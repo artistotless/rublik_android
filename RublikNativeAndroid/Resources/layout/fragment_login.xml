@@ -16,7 +16,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="25dp"
 			android:id="@+id/login_progress"
-			android:layout_marginTop="20dp"
+			android:layout_marginTop="30dp"
 			android:visibility="gone"/>
 
 
@@ -28,7 +28,7 @@
 			android:layout_marginLeft="@dimen/login_register_page_lr_margin"
 			android:layout_marginRight="@dimen/login_register_page_lr_margin"
 			android:padding="15dp"
-			android:layout_marginTop="15dp"
+			android:layout_marginTop="25dp"
 			android:inputType="textEmailAddress"
 			android:layout_above="@id/et_password"
 			android:background="@drawable/et_custom"
@@ -52,11 +52,11 @@
 
 		<Button
 			android:id="@+id/btn_login"
-			android:layout_height="50dp"
+			android:layout_height="55dp"
 			android:layout_width="match_parent"
 			android:layout_below="@id/et_password"
-			android:background="@drawable/btn_custom"
-			android:layout_marginLeft="@dimen/login_register_page_lr_margin"
+			android:backgroundTint="#ff2196f3"
+				android:layout_marginLeft="@dimen/login_register_page_lr_margin"
 			android:layout_marginRight="@dimen/login_register_page_lr_margin"
 			android:layout_marginTop="15dp"
 			android:textColor="@android:color/white"
@@ -73,6 +73,7 @@
 			android:layout_marginTop="15dp"
 			android:textColor="#ff546e7a"
 			android:text="@string/register"
+			android:background="@drawable/et_custom"
 			android:backgroundTint="#ffeeeeee" />
 
 	</LinearLayout>

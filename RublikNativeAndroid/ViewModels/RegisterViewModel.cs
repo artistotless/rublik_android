@@ -43,11 +43,9 @@ namespace RublikNativeAndroid
             request.Content = new StringContent(body, System.Text.Encoding.UTF8, "application/json");
             HttpResponseMessage response = await client.SendAsync(request);
 
-
             string content = await response.Content.ReadAsStringAsync();
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
-            {
-                
+            {       
                 _listener.OnSuccess(JsonConvert.DeserializeObject<LoginResult>(content));
             }
             else

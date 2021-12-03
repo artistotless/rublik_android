@@ -8,9 +8,12 @@ namespace RublikNativeAndroid
 {
     public static class SupportFragmentManagerExtension
     {
-        public static void ShowFragment(this FragmentManager manager, int containerViewId, Fragment fragment)
+        public static void ShowFragment(this FragmentManager manager, int containerViewId, Fragment fragment, bool addToBackStack = true)
         {
-            manager.BeginTransaction().Replace(containerViewId, fragment).Commit();
+            if (!addToBackStack)
+                manager.BeginTransaction().Replace(containerViewId, fragment).Commit();
+            else
+                manager.BeginTransaction().Replace(containerViewId, fragment).AddToBackStack(null).Commit();
         }
     }
 

@@ -11,14 +11,17 @@ namespace RublikNativeAndroid
 
         public static class WebApiUrls
         {
-            private const string API_SCHEME = "https://";
+            private const string HTTPS_SCHEME = "https://";
+            private const string HTTP_SCHEME = "http://";
             private const string API_DOMAIN = "server.bozieff.ru";
+            private const string FS_DOMAIN = "unity3ddd.ru";
 
-            public const string API_LOGIN =  API_SCHEME + API_DOMAIN + "/api/Login";
-            public const string API_GET_USER = API_SCHEME + API_DOMAIN + "/api/user/Profile/{0}";
-            public const string API_GET_FRIENDS = API_SCHEME + API_DOMAIN + "/api/Friend?userId={0}&accessKey={1}";
-            public const string API_GET_AVATAR = API_SCHEME + API_DOMAIN + "/api/user/GetAvatar?userId={0}";
-            public const string API_REGISTER = API_SCHEME + API_DOMAIN + "/api/Register";
+            public const string FS_AVATAR = HTTP_SCHEME + FS_DOMAIN + "{0}";
+            public const string API_LOGIN =  HTTPS_SCHEME + API_DOMAIN + "/api/Login";
+            public const string API_GET_USER = HTTPS_SCHEME + API_DOMAIN + "/api/user/Profile/{0}";
+            public const string API_GET_FRIENDS = HTTPS_SCHEME + API_DOMAIN + "/api/Friend?userId={0}&accessKey={1}";
+            public const string API_GET_AVATAR = HTTPS_SCHEME + API_DOMAIN + "/api/user/GetAvatar?userId={0}";
+            public const string API_REGISTER = HTTPS_SCHEME + API_DOMAIN + "/api/Register";
             //public const string API_GET_FRIENDS = API_SCHEME + API_DOMAIN + "/api/Friend";
         }
     }

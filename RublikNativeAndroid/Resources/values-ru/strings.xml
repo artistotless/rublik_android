@@ -8,6 +8,7 @@
 	<string name="email">Эл. почта</string>
 	<string name="password">Пароль</string>
 	<string name="identity_or_email">Эл. почта или @логин</string>
+	<string name="friends_online">Друзья Online</string>
 	<!-- Pages -->
 	<string name="login">Авторизация</string>
 	<string name="register">Регистрация</string>
@@ -22,6 +23,10 @@
 	<string name="notifications">Уведомления</string>
 	<string name="news">Новости</string>
 	<string name="quote">Цитата</string>
+	<string name="games">Игры</string>
+	<string name="stats">Статистика</string>
+	<string name="tournaments">Турниры</string>
+	<string name="services">Сервисы</string>
 	<!-- Errors -->
 	<string name="novalid_login">Неверный логин или пароль</string>
 	<string name="novalid_register">Пользователь с такими данными уже зарегистрирован</string>

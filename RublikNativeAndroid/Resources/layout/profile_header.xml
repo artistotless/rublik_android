@@ -7,7 +7,7 @@
 	android:paddingStart="20dp"
 	android:paddingTop="20dp"
 	android:paddingBottom="20dp"
-	android:background="#fff"
+	android:background="#fffafafa"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content">
 
@@ -48,67 +48,64 @@
 		android:text=""
         />
 
-		<Button
+	<Button
 		android:id="@+id/profile_balance_btn"
 		app:layout_constraintTop_toTopOf="@id/profile_image"
 		app:layout_constraintEnd_toEndOf="parent"
-			android:layout_width="wrap_content"
-			android:layout_height="40dp"
-			android:backgroundTint="#ff175bf5"
-			android:text="- RUB"
-			android:textColor="#fff"
-			android:textSize="@dimen/content" />
+		android:layout_width="wrap_content"
+		android:layout_height="40dp"
+		android:backgroundTint="#ff175bf5"
+		android:text="- RUB"
+		android:textColor="#fff"
+		android:textSize="@dimen/content" />
 
 
 
 
-		<ImageButton
+	<ImageButton
 		android:id="@+id/profile_msg_btn"
 		app:layout_constraintStart_toEndOf="@id/profile_nickname"
 		app:layout_constraintTop_toBottomOf="@id/profile_balance_btn"
 		app:layout_constraintEnd_toStartOf="@id/profile_notif_btn"
-			android:background="@drawable/abc_btn_borderless_material"
+		android:background="@drawable/abc_btn_borderless_material"
 		app:layout_constraintHorizontal_bias="1"
-			android:padding="5dp"
+		android:padding="5dp"
 		android:layout_marginTop="10dp"
 		android:layout_marginStart="30dp"
-			android:tint="#ffffb300"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:src="@drawable/mail_ico"
-			android:tooltipText="@string/messages"
+		android:tint="#ffffb300"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:src="@drawable/mail_ico"
+		android:tooltipText="@string/messages"
 			/>
-		<ImageButton
+	<ImageButton
 		android:id="@+id/profile_notif_btn"
 		app:layout_constraintStart_toEndOf="@id/profile_msg_btn"
 		app:layout_constraintEnd_toStartOf="@id/profile_settings_btn"
 		app:layout_constraintTop_toTopOf="@id/profile_msg_btn"
-			android:background="@drawable/abc_btn_borderless_material"
-			android:padding="5dp"
-			android:tint="#ff9e9e9e"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_gravity="center"
-			android:src="@drawable/notification_ico"
-			android:tooltipText="@string/notifications"
+		android:background="@drawable/abc_btn_borderless_material"
+		android:padding="5dp"
+		android:tint="#ff9e9e9e"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		android:src="@drawable/notification_ico"
+		android:tooltipText="@string/notifications"
 			/>
 
-		<ImageButton
+	<ImageButton
 		android:id="@+id/profile_settings_btn"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintTop_toTopOf="@id/profile_msg_btn"
-			android:background="@drawable/abc_btn_borderless_material"
-			android:padding="5dp"
-			android:tint="#ff9e9e9e"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_gravity="center"
-			android:src="@drawable/settings_ico"
-			android:tooltipText="@string/settings"
+		android:background="@drawable/abc_btn_borderless_material"
+		android:padding="5dp"
+		android:tint="#ff9e9e9e"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		android:src="@drawable/settings_ico"
+		android:tooltipText="@string/settings"
 			/>
-
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

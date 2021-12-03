@@ -35,13 +35,9 @@ namespace RublikNativeAndroid
 
             var rootView = inflater.Inflate(Resource.Layout.fragment_register, container, false);
             btn_register = rootView.FindButton(Resource.Id.btn_register);
-            btn_to_login = rootView.FindButton(Resource.Id.btn_to_login);
             username_field = rootView.FindEditText(Resource.Id.et_username);
             password_field = rootView.FindEditText(Resource.Id.et_password);
             email_field = rootView.FindEditText(Resource.Id.et_email);
-
-
-            btn_to_login.Click += (object sender, EventArgs e) => { this.Navigator().ShowLoginPage(); };
 
             btn_register.Click += async (object sender, EventArgs e) => await _registerViewModel.RegisterAsync(
                 new RegisterData(username_field.Text, email_field.Text, password_field.Text));

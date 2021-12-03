@@ -8,6 +8,7 @@
 	<string name="email">Email</string>
 	<string name="password">Password</string>
 	<string name="identity_or_email">Email or @username</string>
+	<string name="friends_online">Friends Online</string>
 	<!-- Pages -->
 	<string name="login">Sign In</string>
 	<string name="register">Sign Up</string>
@@ -22,6 +23,10 @@
 	<string name="notifications">Notifications</string>
 	<string name="news">News</string>
 	<string name="quote">Quote</string>
+	<string name="games">Games</string>
+	<string name="stats">Stats</string>
+	<string name="tournaments">Tournaments</string>
+	<string name="services">Services</string>
 	<!-- Errors -->
 	<string name="novalid_login">Novalid login or password</string>
 	<string name="novalid_register">This login or email is already exist</string>

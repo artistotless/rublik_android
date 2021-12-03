@@ -113,14 +113,7 @@ namespace RublikNativeAndroid.Fragments
                 (System.Exception e) => { }, () => { });
         }
 
-        private void SetAvatar(string url)
-        {
-            ImageService.Instance
-            .LoadUrl(url)
-            .FadeAnimation(true)
-            .Transform(new CornersTransformation(5, CornerTransformType.AllRounded))
-            .Into(_avatar);
-        }
+
 
         private async Task RequestUpdateLiveData()
         {
@@ -130,18 +123,11 @@ namespace RublikNativeAndroid.Fragments
 
         private void SetUpAdapter(ViewGroup container)
         {
-            _adapter = new FriendRecycleListAdapter();
+            _adapter = new FriendRecycleListAdapter(this);
             _friends_scroll.SetLayoutManager(new LinearLayoutManager(container.Context, 0, false));
             _friends_scroll.SetAdapter(_adapter);
 
         }
-
-
-        private void SetNickname(string nickname) => _nickname.Text = nickname;
-        private void SetUsername(string username) => _username.Text = $"@{username}";
-        private void SetBalance(int balance) => _balance_btn.Text = $"{balance} RUB";
-        private void SetQuote(string quote) => _quote.Text = quote;
-        private void SetFriends(List<Friend> friends) => _adapter.friends = friends;
 
 
         public static MyprofileFragment NewInstance(string accessKey, int userId)
@@ -163,6 +149,22 @@ namespace RublikNativeAndroid.Fragments
             SetNickname(user.extraData.nickname);
             SetQuote(user.extraData.status);
         }
+
+        private void SetAvatar(string path)
+        {
+            ImageService.Instance
+            .LoadUrl(string.Format(Constants.WebApiUrls.FS_AVATAR, path))
+            .FadeAnimation(true)
+            .Transform(new CircleTransformation())
+            .Into(_avatar);
+        }
+
+        private void SetNickname(string nickname) => _nickname.Text = nickname;
+        private void SetUsername(string username) => _username.Text = $"@{username}";
+        private void SetBalance(int balance) => _balance_btn.Text = $"{balance} RUB";
+        private void SetQuote(string quote) => _quote.Text = quote;
+        private void SetFriends(List<Friend> friends) => _adapter.SetFriends(friends);
+
 
     }
 }

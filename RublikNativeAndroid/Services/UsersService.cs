@@ -71,7 +71,7 @@ namespace RublikNativeAndroid.Services
             string content = await response.Content.ReadAsStringAsync();
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                return content;
+                return string.Format(Constants.WebApiUrls.FS_AVATAR,content);
             }
 
             throw new UserNotFoundException($"User with the id - {userId} was not found");

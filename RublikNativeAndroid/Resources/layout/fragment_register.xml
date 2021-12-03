@@ -18,7 +18,7 @@
 			android:id="@+id/et_username"
 			android:layout_width="match_parent"
 			android:layout_height="50dp"
-			android:layout_marginTop="15dp"
+			android:layout_marginTop="25dp"
 			android:hint="@string/identity"
 			android:layout_marginLeft="@dimen/login_register_page_lr_margin"
 			android:layout_marginRight="@dimen/login_register_page_lr_margin"
@@ -61,26 +61,13 @@
 		<Button
 			android:id="@+id/btn_register"
 			android:layout_width="match_parent"
-			android:layout_height="50dp"
-			android:background="@drawable/btn_custom"
-			android:layout_marginLeft="@dimen/login_register_page_lr_margin"
+			android:layout_height="55dp"
+				android:layout_marginLeft="@dimen/login_register_page_lr_margin"
 			android:layout_marginRight="@dimen/login_register_page_lr_margin"
-			android:layout_marginTop="15dp"
+			android:layout_marginTop="1dp"
+			android:backgroundTint="#ff2196f3"
 			android:layout_below="@id/et_password"
 			android:textColor="@android:color/white"
 			android:text="@string/register"/>
-
-		<Button
-			android:id="@+id/btn_to_login"
-			android:layout_height="40sp"
-			android:layout_gravity="center"
-			android:layout_width="wrap_content"
-			android:layout_below="@id/btn_register"
-			android:layout_marginLeft="@dimen/login_register_page_lr_margin"
-			android:layout_marginRight="@dimen/login_register_page_lr_margin"
-			android:layout_marginTop="15dp"
-			android:textColor="#ff546e7a"
-			android:text="@string/login_btn"
-			android:backgroundTint="#ffeeeeee" />
 	</LinearLayout>
 </ScrollView>
