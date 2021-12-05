@@ -98,6 +98,11 @@
     <Compile Include="Contracts\IHideBottomNav.cs" />
     <Compile Include="Fragments\RegisterFragment.cs" />
     <Compile Include="Utils\RefreshLayoutCollisionFixer.cs" />
+    <Compile Include="Models\ChatMessage.cs" />
+    <Compile Include="Services\MessengerService.cs" />
+    <Compile Include="Contracts\IService.cs" />
+    <Compile Include="Contracts\IMessengerInteractor.cs" />
+    <Compile Include="Contracts\IMessengerListener.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

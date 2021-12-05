@@ -8,7 +8,7 @@ using RublikNativeAndroid.Models;
 
 namespace RublikNativeAndroid
 {
-    internal class RegisterFragment : Fragment, IHasToolbarTitle, IHideBottomNav, ITaskListener<LoginResult, string>
+    internal class RegisterFragment : Fragment, IHasToolbarTitle, IHideBottomNav, ITaskListener<User.Data, string>
     {
         private RegisterViewModel _registerViewModel;
 
@@ -58,7 +58,7 @@ namespace RublikNativeAndroid
             return;
         }
 
-        public void OnSuccess(LoginResult data)
+        public void OnSuccess(User.Data data)
         {
             this.Navigator().ShowMyProfilePage();
         }

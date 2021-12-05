@@ -8,6 +8,7 @@ using AndroidX.AppCompat.App;
 using Google.Android.Material.BottomNavigation;
 using RublikNativeAndroid.Contracts;
 using RublikNativeAndroid.Fragments;
+using RublikNativeAndroid.Services;
 
 namespace RublikNativeAndroid
 {
@@ -24,10 +25,11 @@ namespace RublikNativeAndroid
     }
 
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true)]
-    public class MainActivity : AppCompatActivity, INavigator, IFragmentViewCreateListener, IMenuItemOnMenuItemClickListener
+    public class MainActivity : AppCompatActivity, INavigator, IFragmentViewCreateListener, IMenuItemOnMenuItemClickListener, IMessengerInteractor
     {
         public TextView textMessage { get; set; }
         public INavigator mainNavigator { get; set; }
+        public static MessengerService messengerService { get; private set; }
 
         private FragmentLifecycleListener _fragmentLifecycleListener { get; set; }
         private BottomNavigationView _bottomNav { get; set; }
@@ -43,6 +45,8 @@ namespace RublikNativeAndroid
             SetContentView(Resource.Layout.activity_main);
             if (savedInstanceState == null)
                 ShowLoginPage();
+
+            messengerService = messengerService == null ? new MessengerService() : messengerService;
 
             _toolbar = FindViewById<AndroidX.AppCompat.Widget.Toolbar>(Resource.Id.main_toolbar);
             _bottomNav = FindViewById<BottomNavigationView>(Resource.Id.bottom_navigation);
@@ -96,6 +100,12 @@ namespace RublikNativeAndroid
                 string title = hasToolbarTitle.GetTitle();
                 SupportActionBar.Title = title;
             }
+
+            if(fragment is IMessengerListener listener)
+            {
+                messengerService.Connect(UsersService.myUser.extraData.accessKey);
+                SubscribeOnMessenger(listener);
+            }
         }
 
 
@@ -124,7 +134,7 @@ namespace RublikNativeAndroid
 
         public void ShowProfilePage(int userId)
         {
-            if (userId == Services.UsersService.myUserId)
+            if (userId == UsersService.myUser.extraData.id)
             {
                 ShowMyProfilePage();
                 return;
@@ -161,6 +171,16 @@ namespace RublikNativeAndroid
         public void ShowRegisterPage()
         {
             SupportFragmentManager.ShowFragment(new RegisterFragment());
+        }
+
+        public void SendPrivateMessage(int destinationUserId, string message)
+        {
+            messengerService.SendPrivateMessage(destinationUserId, message);
+        }
+
+        public void SubscribeOnMessenger(IMessengerListener listener)
+        {
+            listener.OnSubscribedOnMessenger(messengerService.SetListener(listener));
         }
     }
 }

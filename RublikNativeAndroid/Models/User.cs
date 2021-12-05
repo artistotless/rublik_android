@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace RublikNativeAndroid.Models
 {
@@ -8,6 +7,8 @@ namespace RublikNativeAndroid.Models
     {
         public class Data
         {
+            public int id { get; set; }
+            public string accessKey { get; set; }
             public string username { get; set; }
             public string nickname { get; set; }
             public string status { get; set; }
@@ -21,8 +22,6 @@ namespace RublikNativeAndroid.Models
         internal Data extraData { get; set; }
         internal Room currentRoom { get; set; }
         internal bool inRoom => currentRoom != null;
-
-        internal List<User> friends { get; set; }
 
         public bool Equals(User other)
         {

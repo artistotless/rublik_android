@@ -20,7 +20,7 @@ using static Android.Views.View;
 namespace RublikNativeAndroid.Fragments
 {
 
-    public class MyprofileFragment : Fragment, IHasToolbarTitle, IOnClickListener
+    public class MyprofileFragment : Fragment, IHasToolbarTitle, IOnClickListener,IMessengerListener
     {
         public string GetTitle() => GetString(Resource.String.myprofile);
 
@@ -34,9 +34,11 @@ namespace RublikNativeAndroid.Fragments
         private FriendRecycleListAdapter _adapter;
         private ProfileViewModel _myProfileViewModel;
         private IDisposable _unsubscriber;
+        private IDisposable _messengerUnsubscriber;
 
         private static int _userId { get; set; }
         private static User.Data _userData { get; set; }
+
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -51,6 +53,12 @@ namespace RublikNativeAndroid.Fragments
         {
             base.OnDestroy();
             _unsubscriber.Dispose();
+        }
+
+        public override void OnDestroyView()
+        {
+            base.OnDestroyView();
+            _messengerUnsubscriber.Dispose();
         }
 
 
@@ -115,7 +123,7 @@ namespace RublikNativeAndroid.Fragments
         {
             var fragment = new MyprofileFragment();
             var bundle = new Bundle();
-            bundle.PutInt(Constants.Fragments.USER_ID, UsersService.myUserId);
+            bundle.PutInt(Constants.Fragments.USER_ID, UsersService.myUser.extraData.id);
             fragment.Arguments = bundle;
             return fragment;
         }
@@ -150,7 +158,12 @@ namespace RublikNativeAndroid.Fragments
         private void SetQuote(string quote) => _quote.Text = quote;
         private void SetFriends(List<Friend> friends) => _adapter.SetFriends(friends);
 
+        public void OnHandleMessage(ChatMessage message)
+        {
+            //throw new NotImplementedException();
+        }
 
+        public void OnSubscribedOnMessenger(IDisposable unsubscriber) => _messengerUnsubscriber = unsubscriber;
     }
 }
 

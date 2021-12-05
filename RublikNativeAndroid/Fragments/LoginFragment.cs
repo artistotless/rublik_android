@@ -8,7 +8,7 @@ using RublikNativeAndroid.Models;
 
 namespace RublikNativeAndroid
 {
-    internal class LoginFragment : Fragment, IHasToolbarTitle, IHideBottomNav, ITaskListener<LoginResult, string>
+    internal class LoginFragment : Fragment, IHasToolbarTitle, IHideBottomNav, ITaskListener<User.Data, string>
     {
         private LoginViewModel _loginViewModel;
 
@@ -58,7 +58,7 @@ namespace RublikNativeAndroid
             bar.Visibility = ViewStates.Gone;
         }
 
-        public void OnSuccess(LoginResult data)
+        public void OnSuccess(User.Data data)
         {
 
             this.Navigator().ShowMyProfilePage();

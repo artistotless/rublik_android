@@ -12,7 +12,8 @@ namespace RublikNativeAndroid.Services
     internal static class UsersService
     {
 
-        public static int myUserId { get; set; }
+        public static User myUser { get; set; }
+
 
         public static async Task<User> GetUser(int id)
         {

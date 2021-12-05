@@ -4,14 +4,15 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using RublikNativeAndroid.Contracts;
 using RublikNativeAndroid.Models;
+using RublikNativeAndroid.Services;
 
 namespace RublikNativeAndroid
 {
     public class LoginViewModel
     {
-        private ITaskListener<LoginResult, string> _listener;
+        private ITaskListener<User.Data, string> _listener;
 
-        public LoginViewModel(ITaskListener<LoginResult, string> listener)
+        public LoginViewModel(ITaskListener<User.Data, string> listener)
         {
             _listener = listener;
         }
@@ -32,9 +33,11 @@ namespace RublikNativeAndroid
             string content = await response.Content.ReadAsStringAsync();
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                var data = JsonConvert.DeserializeObject<LoginResult>(content);
-                Services.UsersService.myUserId = data.id;
-                _listener.OnSuccess(data);
+                var userData = JsonConvert.DeserializeObject<User.Data>(content);
+
+                UsersService.myUser = new User(userData);
+
+                _listener.OnSuccess(userData);
             }
             else
             {

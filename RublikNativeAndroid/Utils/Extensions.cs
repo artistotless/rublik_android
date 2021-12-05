@@ -1,8 +1,10 @@
-﻿using Android.Views;
+﻿using System;
+using Android.Views;
 using Android.Widget;
 using AndroidX.Fragment.App;
 using AndroidX.RecyclerView.Widget;
 using AndroidX.SwipeRefreshLayout.Widget;
+using RublikNativeAndroid.Contracts;
 
 namespace RublikNativeAndroid
 {
@@ -19,7 +21,17 @@ namespace RublikNativeAndroid
 
     public static class FragmentNavigatorExtension
     {
-        public static Contracts.INavigator Navigator(this Fragment fragment) => fragment.RequireActivity() as Contracts.INavigator;
+        public static INavigator Navigator(this Fragment fragment) => fragment.RequireActivity() as INavigator;
+    }
+
+    public static class FragmentMessengerExtension
+    {
+        public static IMessengerInteractor Messenger(this Fragment fragment)
+        {
+            if (fragment is IMessengerListener)
+                return fragment.RequireActivity() as IMessengerInteractor;
+            throw new InvalidCastException($"Fragment #{fragment.Id} does not have IMessengerListener interface");
+        }
     }
 
     public static class FindWidgetIdExtension
