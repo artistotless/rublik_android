@@ -8,8 +8,12 @@ using RublikNativeAndroid.Models;
 
 namespace RublikNativeAndroid.Services
 {
+
     internal static class UsersService
     {
+
+        public static int myUserId { get; set; }
+
         public static async Task<User> GetUser(int id)
         {
             HttpClient client = new HttpClient();
@@ -33,7 +37,7 @@ namespace RublikNativeAndroid.Services
             throw new UserNotFoundException($"User with the id - {id} was not found");
         }
 
-       
+
 
         public static async Task<List<Friend>> GetFriends(int userId, string accessKey)
         {
@@ -71,7 +75,7 @@ namespace RublikNativeAndroid.Services
             string content = await response.Content.ReadAsStringAsync();
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                return string.Format(Constants.WebApiUrls.FS_AVATAR,content);
+                return string.Format(Constants.WebApiUrls.FS_AVATAR, content);
             }
 
             throw new UserNotFoundException($"User with the id - {userId} was not found");

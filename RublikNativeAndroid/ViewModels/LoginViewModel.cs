@@ -33,6 +33,7 @@ namespace RublikNativeAndroid
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 var data = JsonConvert.DeserializeObject<LoginResult>(content);
+                Services.UsersService.myUserId = data.id;
                 _listener.OnSuccess(data);
             }
             else

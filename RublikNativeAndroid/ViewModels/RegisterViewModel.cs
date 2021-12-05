@@ -45,8 +45,10 @@ namespace RublikNativeAndroid
 
             string content = await response.Content.ReadAsStringAsync();
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
-            {       
-                _listener.OnSuccess(JsonConvert.DeserializeObject<LoginResult>(content));
+            {
+                var data = JsonConvert.DeserializeObject<LoginResult>(content);
+                Services.UsersService.myUserId = data.id;
+                _listener.OnSuccess(data);
             }
             else
             {

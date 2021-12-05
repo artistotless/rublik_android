@@ -78,7 +78,7 @@
     <Compile Include="Fragments\SettingsFragment.cs" />
     <Compile Include="Fragments\MessengerFragment.cs" />
     <Compile Include="Fragments\FriendsFragments.cs" />
-    <Compile Include="Fragments\ServicesFragment.cs" />
+    <Compile Include="Fragments\GamesFragment.cs" />
     <Compile Include="Contracts\IFragmentViewCreateListener.cs" />
     <Compile Include="Models\Friend.cs" />
     <Compile Include="Contracts\IHasToolbarAction.cs" />
@@ -86,7 +86,7 @@
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="Contracts\ITaskListener.cs" />
     <Compile Include="ViewModels\RegisterViewModel.cs" />
-    <Compile Include="ViewModels\MyProfileViewModel.cs" />
+    <Compile Include="ViewModels\ProfileViewModel.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\Room.cs" />
     <Compile Include="Models\Game.cs" />
@@ -94,8 +94,10 @@
     <Compile Include="Services\RoomsService.cs" />
     <Compile Include="Utils\Exceptions.cs" />
     <Compile Include="Models\LoginResult.cs" />
-    <Compile Include="RegisterFragment.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
+    <Compile Include="Contracts\IHideBottomNav.cs" />
+    <Compile Include="Fragments\RegisterFragment.cs" />
+    <Compile Include="Utils\RefreshLayoutCollisionFixer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -146,11 +148,7 @@
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>
-    <AndroidResource Include="Resources\layout\profile_header.xml">
-      <SubType></SubType>
-      <Generator></Generator>
-    </AndroidResource>
-    <AndroidResource Include="Resources\layout\profile_body.xml">
+    <AndroidResource Include="Resources\layout\myprofile_header.xml">
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>
@@ -212,6 +210,30 @@
       <Generator></Generator>
     </AndroidResource>
     <AndroidResource Include="Resources\drawable\online_circle.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\fragment_friends.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\myprofile_body.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\profile_header.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\profile_body.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\drawable\msg_ico.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\fragment_messenger.xml">
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>

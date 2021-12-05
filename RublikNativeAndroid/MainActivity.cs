@@ -19,17 +19,19 @@ namespace RublikNativeAndroid
         public override void OnFragmentViewCreated(AndroidX.Fragment.App.FragmentManager fm, AndroidX.Fragment.App.Fragment f, View v, Bundle savedInstanceState)
         {
             base.OnFragmentViewCreated(fm, f, v, savedInstanceState);
-            _listener.UpdateActivityUI(f);
+            _listener.UpdateUI(f);
         }
     }
 
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true)]
     public class MainActivity : AppCompatActivity, INavigator, IFragmentViewCreateListener, IMenuItemOnMenuItemClickListener
     {
-        private FragmentLifecycleListener _fragmentLifecycleListener { get; set; }
-        private AndroidX.AppCompat.Widget.Toolbar _toolbar { get; set; }
         public TextView textMessage { get; set; }
         public INavigator mainNavigator { get; set; }
+
+        private FragmentLifecycleListener _fragmentLifecycleListener { get; set; }
+        private BottomNavigationView _bottomNav { get; set; }
+        private AndroidX.AppCompat.Widget.Toolbar _toolbar { get; set; }
         private AndroidX.Fragment.App.Fragment _currentFragment => SupportFragmentManager.FindFragmentById(Resource.Id.viewPager);
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -41,14 +43,14 @@ namespace RublikNativeAndroid
             SetContentView(Resource.Layout.activity_main);
             if (savedInstanceState == null)
                 ShowLoginPage();
+
             _toolbar = FindViewById<AndroidX.AppCompat.Widget.Toolbar>(Resource.Id.main_toolbar);
+            _bottomNav = FindViewById<BottomNavigationView>(Resource.Id.bottom_navigation);
             SetSupportActionBar(_toolbar);
             SupportFragmentManager.RegisterFragmentLifecycleCallbacks(_fragmentLifecycleListener, false);
 
         }
 
-        //textMessage = FindViewById<TextView>(Resource.Id.message);
-        //BottomNavigationView navigation = FindViewById<BottomNavigationView>(Resource.Id.navigation);
         //navigation.SetOnNavigationItemSelectedListener(this);        
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
@@ -65,7 +67,7 @@ namespace RublikNativeAndroid
         }
 
 
-        public void UpdateActivityUI(AndroidX.Fragment.App.Fragment fragment)
+        public void UpdateUI(AndroidX.Fragment.App.Fragment fragment)
         {
             bool needForBackButton = SupportFragmentManager.BackStackEntryCount > 0;
 
@@ -73,6 +75,11 @@ namespace RublikNativeAndroid
             SupportActionBar.SetDisplayShowHomeEnabled(needForBackButton);
 
             _toolbar.Menu.Clear();
+
+            if (fragment is IHideBottomNav)
+                _bottomNav.Visibility = ViewStates.Gone;
+            else
+                _bottomNav.Visibility = ViewStates.Visible;
 
             if (fragment is IHasToolbarAction hasToolbarAction)
             {
@@ -103,21 +110,26 @@ namespace RublikNativeAndroid
             return true;
         }
 
-        public void ShowMyProfilePage(string accessKey, int userId)
+        public void ShowMyProfilePage()
         {
-            SupportFragmentManager.PopBackStack();
-            SupportFragmentManager.ShowFragment(Resource.Id.viewPager, MyprofileFragment.NewInstance(accessKey, userId), false);
+            SupportFragmentManager.PopBackStack(null, 1);
+            SupportFragmentManager.ShowFragment(MyprofileFragment.NewInstance(), false);
 
         }
 
         public void ShowMessenger(int userId)
         {
-            throw new NotImplementedException();
+            SupportFragmentManager.ShowFragment(new MessengerFragment());
         }
 
         public void ShowProfilePage(int userId)
         {
-            //throw new NotImplementedException();
+            if (userId == Services.UsersService.myUserId)
+            {
+                ShowMyProfilePage();
+                return;
+            }
+            SupportFragmentManager.ShowFragment(ProfileFragment.NewInstance(userId));
         }
 
         public void ShowSettingsPage()
@@ -143,12 +155,12 @@ namespace RublikNativeAndroid
         public void ShowLoginPage()
         {
             SupportFragmentManager.PopBackStack();
-            SupportFragmentManager.ShowFragment(Resource.Id.viewPager, new LoginFragment(), false);
+            SupportFragmentManager.ShowFragment(new LoginFragment(), false);
         }
 
         public void ShowRegisterPage()
         {
-            SupportFragmentManager.ShowFragment(Resource.Id.viewPager, new RegisterFragment());
+            SupportFragmentManager.ShowFragment(new RegisterFragment());
         }
     }
 }

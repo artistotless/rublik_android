@@ -2,6 +2,6 @@
 {
     public interface IFragmentViewCreateListener
     {
-        void UpdateActivityUI(AndroidX.Fragment.App.Fragment fragment);
+        void UpdateUI(AndroidX.Fragment.App.Fragment fragment);
     }
 }

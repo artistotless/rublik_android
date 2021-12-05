@@ -5,7 +5,7 @@
         void GoBack();
         void ShowLoginPage();
         void ShowRegisterPage();
-        void ShowMyProfilePage(string accessKey, int userId);
+        void ShowMyProfilePage();
         void ShowMessenger(int userId);
         void ShowProfilePage(int userId);
         void ShowSettingsPage();

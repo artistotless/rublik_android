@@ -8,11 +8,11 @@ using RublikNativeAndroid.Models;
 
 namespace RublikNativeAndroid
 {
-    internal class RegisterFragment : Fragment, IHasToolbarTitle, ITaskListener<LoginResult, string>
+    internal class RegisterFragment : Fragment, IHasToolbarTitle, IHideBottomNav, ITaskListener<LoginResult, string>
     {
         private RegisterViewModel _registerViewModel;
 
-        private Button btn_register, btn_to_login;
+        private Button btn_register;
         private EditText username_field, password_field, email_field;
 
 
@@ -60,7 +60,7 @@ namespace RublikNativeAndroid
 
         public void OnSuccess(LoginResult data)
         {
-            this.Navigator().ShowMyProfilePage(data.accessKey, data.id);
+            this.Navigator().ShowMyProfilePage();
         }
     }
 }

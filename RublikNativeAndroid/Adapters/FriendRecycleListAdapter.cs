@@ -20,14 +20,14 @@ namespace RublikNativeAndroid.Adapters
         }
     }
 
-    public class FriendRecycleListAdapter : RecyclerView.Adapter, IOnClickListener
+    public class FriendRecycleListAdapter : RecyclerView.Adapter
     {
         private List<Friend> friends { get; set; }
-        private AndroidX.Fragment.App.Fragment _context { get; set; }
+        private IOnClickListener _listener { get; set; }
 
-        public FriendRecycleListAdapter(AndroidX.Fragment.App.Fragment context)
+        public FriendRecycleListAdapter(IOnClickListener listener)
         {
-            _context = context;
+            _listener = listener;
             friends = new List<Friend>();
         }
 
@@ -80,14 +80,8 @@ namespace RublikNativeAndroid.Adapters
         {
             LayoutInflater inflater = LayoutInflater.From(parent.Context);
             var item = inflater.Inflate(Resource.Layout.friend_circle_item, parent, false);
-            item.SetOnClickListener(this);
+            item.SetOnClickListener(_listener);
             return new FriendViewHolder(item);
-        }
-
-        public void OnClick(View v)
-        {
-            int userId = (int)v.Tag;
-            _context.Navigator().ShowProfilePage(userId);
         }
 
     }

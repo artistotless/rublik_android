@@ -1,16 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AndroidX.Lifecycle;
 using CrossPlatformLiveData;
-using RublikNativeAndroid.Contracts;
+using RublikNativeAndroid.Models;
 using RublikNativeAndroid.Services;
 
 namespace RublikNativeAndroid.ViewModels
 {
-    public class MyProfileViewModel : ViewModel
+    public class ProfileViewModel : ViewModel
     {
-
-        public ILiveData<Models.User> liveDataProfile = new LiveData<Models.User>();
+        public ILiveData<User.Data> liveDataProfile = new LiveData<User.Data>();
         public ILiveData<List<Friend>> liveDataFriends = new LiveData<List<Friend>>();
 
 
@@ -20,11 +20,12 @@ namespace RublikNativeAndroid.ViewModels
             try
             {
                 var data = await UsersService.GetUser(userId);
-                liveDataProfile.PostValue(data);
+                liveDataProfile.PostValue(data.extraData);
+                Console.WriteLine(1);
             }
             catch
             {
-                System.Console.WriteLine((Resource.String.user_not_found));
+                Console.WriteLine((Resource.String.user_not_found));
             }
         }
 
@@ -39,9 +40,8 @@ namespace RublikNativeAndroid.ViewModels
             }
             catch
             {
-                System.Console.WriteLine((Resource.String.user_not_found));
+                Console.WriteLine((Resource.String.user_not_found));
             }
         }
     }
 }
-

@@ -3,13 +3,12 @@ using Android.OS;
 using Android.Views;
 using Android.Widget;
 using AndroidX.Fragment.App;
-using Newtonsoft.Json;
 using RublikNativeAndroid.Contracts;
 using RublikNativeAndroid.Models;
 
 namespace RublikNativeAndroid
 {
-    internal class LoginFragment : Fragment, IHasToolbarTitle, ITaskListener<LoginResult, string>
+    internal class LoginFragment : Fragment, IHasToolbarTitle, IHideBottomNav, ITaskListener<LoginResult, string>
     {
         private LoginViewModel _loginViewModel;
 
@@ -17,10 +16,8 @@ namespace RublikNativeAndroid
         private EditText username_field, password_field;
         private ProgressBar bar { get; set; }
 
-        public string GetTitle()
-        {
-            return GetString(Resource.String.login);
-        }
+        public string GetTitle() => GetString(Resource.String.login);
+
 
         public override void OnCreate(Bundle savedInstanceState)
         {
@@ -64,7 +61,7 @@ namespace RublikNativeAndroid
         public void OnSuccess(LoginResult data)
         {
 
-            this.Navigator().ShowMyProfilePage(data.accessKey, data.id);
+            this.Navigator().ShowMyProfilePage();
         }
 
     }

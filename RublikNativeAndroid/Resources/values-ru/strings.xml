@@ -9,11 +9,12 @@
 	<string name="password">Пароль</string>
 	<string name="identity_or_email">Эл. почта или @логин</string>
 	<string name="friends_online">Друзья Online</string>
+	<string name="send_message">Сообщение</string>
 	<!-- Pages -->
 	<string name="login">Авторизация</string>
 	<string name="register">Регистрация</string>
 	<string name="myprofile">Мой профиль</string>
-	<string name="profile">Профиль</string>
+	<string name="profile">Профиль пользователя</string>
 	<string name="settings">Настройки</string>
 	<string name="messenger">Мессенджер</string>
 	<string name="friends">Друзья</string>

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="UTF-8" ?>
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -8,7 +8,6 @@
 	android:paddingHorizontal="10dp"
 	android:orientation="vertical"
 	tools:gridSpec="1|8|#0093eeff|K:#ee8700ff:16,l:72,l:16,r|S:#83ee00ff:16,0,l:16,56,l:16,0,r">
-
 
 	<TextView
 		android:layout_marginBottom="@dimen/title_marginBottom"
@@ -45,6 +44,56 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content">
 	</androidx.recyclerview.widget.RecyclerView>
+
+
+
+	<TextView
+		android:layout_marginTop="@dimen/title_marginTop"
+		android:layout_marginBottom="@dimen/title_marginBottom"
+		android:textSize="@dimen/title"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/services"
+		android:textStyle="bold"/>
+
+	<com.google.android.material.internal.FlowLayout
+		app:lineSpacing="10dp"
+		app:itemSpacing="10dp"
+		android:paddingTop="10dp"
+		android:layout_marginLeft="8dp"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		>
+
+		<Button
+			android:text="@string/games"
+			android:drawableTint="#ffef5350"
+			style="@style/btn_service_style"
+			android:drawableTop="@drawable/games_ico"
+			/>
+
+		<Button
+			android:text="@string/stats"
+			android:drawableTop="@drawable/graph_ico"
+			style="@style/btn_service_style"
+			android:drawableTint="#ff9ccc65" 
+			/>
+		<Button
+			android:drawableTop="@drawable/trophy_ico"
+			android:text="@string/tournaments"
+			style="@style/btn_service_style"
+			android:drawableTint="#ffffa726" 
+		/>
+		<Button
+			android:drawableTop="@drawable/news_ico"
+			android:text="@string/news"
+			style="@style/btn_service_style"
+			android:drawableTint="#ff42a5f5" 
+			/>
+
+	</com.google.android.material.internal.FlowLayout>
+
+
 
 
 </LinearLayout>
