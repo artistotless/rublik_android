@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using CrossPlatformLiveData;
 using LiteNetLib;
 using RublikNativeAndroid.Contracts;
 using RublikNativeAndroid.Models;
@@ -9,7 +10,8 @@ namespace RublikNativeAndroid.Services
 {
     public class MessengerService : IService
     {
-        private IMessengerListener _fragmentListener;
+        //private IMessengerListener _fragmentListener;
+        public LiveData<ChatMessage> liveData = new LiveData<ChatMessage>();
 
         private NetPeer _chatServicePeer;
         private EventBasedNetListener _localListener;
@@ -24,13 +26,10 @@ namespace RublikNativeAndroid.Services
 
         public IDisposable SetListener(IMessengerListener listener)
         {
-            _fragmentListener = listener;
-            return new Unsubscriber(Unsc);
-        }
-
-        private void Unsc()
-        {
-            _fragmentListener = null;
+            //_fragmentListener = listener;
+            //listener.OnSubscribedOnMessenger()
+            listener.OnSubscribedOnMessenger(liveData);
+            return null;
         }
 
         public void Connect(string accessKey)
@@ -47,20 +46,23 @@ namespace RublikNativeAndroid.Services
             _chatServicePeer = _client.Connect("192.168.43.44", 9052, accessKey);
             _localListener.NetworkReceiveEvent += (peer, packetReader, deliveryMethod) =>
             {
+                Console.WriteLine($"NetworkReceiveEvent THREAD # {Thread.CurrentThread.ManagedThreadId}");
                 ChatMessage message = new ChatMessage(packetReader);
                 Console.WriteLine("[{0}][{1}]: {2}", message.timeStamp, message.authorId, message.text);
 
-                if (_fragmentListener == null)
-                    return;
+               /* if (_fragmentListener == null)
+                    return; */
 
-                _fragmentListener.OnHandleMessage(message);
+                liveData.PostValue(message);
+                //_fragmentListener.OnHandleMessage(message);
             };
-            Task.Factory.StartNew(async () =>
+            Task.Run(async () =>
             {
                 while (!canselToken.IsCancellationRequested)
                 {
+                    //Console.WriteLine($"PollEvents THREAD # {Thread.CurrentThread.ManagedThreadId}");
                     _client.PollEvents();
-                    await Task.Delay(200);
+                    await Task.Delay(500);
                 }
             }, canselToken);
 

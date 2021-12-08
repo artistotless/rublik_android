@@ -8,6 +8,7 @@ using RublikNativeAndroid.Models;
 
 namespace RublikNativeAndroid
 {
+
     internal class LoginFragment : Fragment, IHasToolbarTitle, IHideBottomNav, ITaskListener<User.Data, string>
     {
         private LoginViewModel _loginViewModel;
@@ -65,5 +66,6 @@ namespace RublikNativeAndroid
         }
 
     }
+
 
 }

@@ -11,8 +11,12 @@
 	<androidx.appcompat.widget.Toolbar
 		android:id="@+id/main_toolbar"
 		android:layout_width="match_parent"
+		app:logo="@drawable/online_circle"
 		app:layout_constraintTop_toTopOf="parent"
-		android:layout_height="?android:attr/actionBarSize"/>
+		android:layout_height="?android:attr/actionBarSize"
+		>
+
+	</androidx.appcompat.widget.Toolbar>
 
 
 	<androidx.fragment.app.FragmentContainerView

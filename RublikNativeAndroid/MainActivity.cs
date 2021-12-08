@@ -1,13 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using Android.App;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using AndroidX.AppCompat.App;
+using FFImageLoading;
+using FFImageLoading.Transformations;
 using Google.Android.Material.BottomNavigation;
 using RublikNativeAndroid.Contracts;
 using RublikNativeAndroid.Fragments;
+using RublikNativeAndroid.Models;
 using RublikNativeAndroid.Services;
 
 namespace RublikNativeAndroid
@@ -24,35 +28,37 @@ namespace RublikNativeAndroid
         }
     }
 
+
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true)]
     public class MainActivity : AppCompatActivity, INavigator, IFragmentViewCreateListener, IMenuItemOnMenuItemClickListener, IMessengerInteractor
     {
         public TextView textMessage { get; set; }
-        public INavigator mainNavigator { get; set; }
         public static MessengerService messengerService { get; private set; }
 
         private FragmentLifecycleListener _fragmentLifecycleListener { get; set; }
         private BottomNavigationView _bottomNav { get; set; }
-        private AndroidX.AppCompat.Widget.Toolbar _toolbar { get; set; }
         private AndroidX.Fragment.App.Fragment _currentFragment => SupportFragmentManager.FindFragmentById(Resource.Id.viewPager);
+        private Dictionary<IMenuItem, EventHandler> _menuItems = new Dictionary<IMenuItem, EventHandler>();
+        private static AndroidX.AppCompat.Widget.Toolbar _toolbar { get; set; }
+
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
-            mainNavigator = this;
-            _fragmentLifecycleListener = new FragmentLifecycleListener(this);
             base.OnCreate(savedInstanceState);
+            _fragmentLifecycleListener = new FragmentLifecycleListener(this);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             SetContentView(Resource.Layout.activity_main);
-            if (savedInstanceState == null)
-                ShowLoginPage();
 
             messengerService = messengerService == null ? new MessengerService() : messengerService;
-
             _toolbar = FindViewById<AndroidX.AppCompat.Widget.Toolbar>(Resource.Id.main_toolbar);
             _bottomNav = FindViewById<BottomNavigationView>(Resource.Id.bottom_navigation);
-            SetSupportActionBar(_toolbar);
+
+            if (SupportActionBar == null)
+                SetSupportActionBar(_toolbar);
             SupportFragmentManager.RegisterFragmentLifecycleCallbacks(_fragmentLifecycleListener, false);
 
+            if (savedInstanceState == null) // TODO: проверка на сохраненные данные о входе
+                ShowLoginPage();
         }
 
         //navigation.SetOnNavigationItemSelectedListener(this);        
@@ -60,7 +66,6 @@ namespace RublikNativeAndroid
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
@@ -70,6 +75,50 @@ namespace RublikNativeAndroid
             return true;
         }
 
+        public override bool OnCreateOptionsMenu(IMenu menu)
+        {
+            base.OnCreateOptionsMenu(menu);
+            DrawToolbarElements(_currentFragment);
+            return true;
+        }
+
+        private void DrawToolbarElements(AndroidX.Fragment.App.Fragment fragment)
+        {
+            _toolbar.Menu.Clear();
+            _menuItems.Clear();
+
+            if (fragment is IHasCustomToolbarMenu hasToolbarAction)
+            {
+                CustomToolbarItemsBag menuItemsBag = hasToolbarAction.GetBag();
+                foreach (var item in menuItemsBag.GetItems())
+                {
+                    var menuItem = _toolbar.Menu.Add(item.titleResId);
+                    menuItem.SetIcon(item.iconResId);
+                    menuItem.SetShowAsAction(item.showAsAction);
+
+                    if (item is CustomToolbarItemImage itemImage)
+                    {
+                        var viewContainer = LayoutInflater.Inflate(itemImage.layoutResId, _toolbar, false);
+                        menuItem.SetActionView(viewContainer);
+                        menuItem.SetCheckable(true);
+                        var image = viewContainer.FindImageView(itemImage.imageResId);
+                        image.Click += itemImage.onClick;
+                        ImageService.Instance
+                            .LoadUrl(string.Format(Constants.WebApiUrls.FS_AVATAR, itemImage.imagePath))
+                            .FadeAnimation(true)
+                            .Transform(new CircleTransformation())
+                            .Error(delegate
+                            {
+                                Console.WriteLine("avatar's url is not valid!");
+                            })
+                            .IntoAsync(image);
+                    }
+
+                    _menuItems[menuItem] = item.onClick;
+                    menuItem.SetOnMenuItemClickListener(this);
+                }
+            }
+        }
 
         public void UpdateUI(AndroidX.Fragment.App.Fragment fragment)
         {
@@ -78,36 +127,29 @@ namespace RublikNativeAndroid
             SupportActionBar.SetDisplayHomeAsUpEnabled(needForBackButton);
             SupportActionBar.SetDisplayShowHomeEnabled(needForBackButton);
 
-            _toolbar.Menu.Clear();
+            DrawToolbarElements(fragment);
 
             if (fragment is IHideBottomNav)
                 _bottomNav.Visibility = ViewStates.Gone;
             else
                 _bottomNav.Visibility = ViewStates.Visible;
 
-            if (fragment is IHasToolbarAction hasToolbarAction)
-            {
-                CustomToolbarAction customAction = hasToolbarAction.GetAction();
 
-                var menuItem = _toolbar.Menu.Add(customAction.textStringId);
-                menuItem.SetIcon(customAction.iconDrawableId);
-                menuItem.SetShowAsAction(ShowAsAction.Always);
-                menuItem.SetOnMenuItemClickListener(this);
-            }
 
             if (fragment is IHasToolbarTitle hasToolbarTitle)
             {
                 string title = hasToolbarTitle.GetTitle();
                 SupportActionBar.Title = title;
+
             }
 
-            if(fragment is IMessengerListener listener)
+
+            if (fragment is IMessengerListener listener)
             {
                 messengerService.Connect(UsersService.myUser.extraData.accessKey);
                 SubscribeOnMessenger(listener);
             }
         }
-
 
         public void GoBack()
         {
@@ -116,7 +158,8 @@ namespace RublikNativeAndroid
 
         public bool OnMenuItemClick(IMenuItem item)
         {
-            (_currentFragment as IHasToolbarAction).GetAction().callback();
+            if (_menuItems.ContainsKey(item))
+                _menuItems[item](null, null);
             return true;
         }
 
@@ -180,7 +223,7 @@ namespace RublikNativeAndroid
 
         public void SubscribeOnMessenger(IMessengerListener listener)
         {
-            listener.OnSubscribedOnMessenger(messengerService.SetListener(listener));
+            messengerService.SetListener(listener);
         }
     }
 }

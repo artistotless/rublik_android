@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Android.OS;
 using Android.Views;
@@ -7,6 +8,7 @@ using Android.Widget;
 using AndroidX.Fragment.App;
 using AndroidX.RecyclerView.Widget;
 using AndroidX.SwipeRefreshLayout.Widget;
+using CrossPlatformLiveData;
 using FFImageLoading;
 using FFImageLoading.Transformations;
 using RublikNativeAndroid.Adapters;
@@ -20,7 +22,7 @@ using static Android.Views.View;
 namespace RublikNativeAndroid.Fragments
 {
 
-    public class MyprofileFragment : Fragment, IHasToolbarTitle, IOnClickListener,IMessengerListener
+    public class MyprofileFragment : Fragment, IHasToolbarTitle, IOnClickListener, IMessengerListener
     {
         public string GetTitle() => GetString(Resource.String.myprofile);
 
@@ -53,12 +55,6 @@ namespace RublikNativeAndroid.Fragments
         {
             base.OnDestroy();
             _unsubscriber.Dispose();
-        }
-
-        public override void OnDestroyView()
-        {
-            base.OnDestroyView();
-            _messengerUnsubscriber.Dispose();
         }
 
 
@@ -151,19 +147,26 @@ namespace RublikNativeAndroid.Fragments
             .Into(_avatar);
 
         }
-         
+
         private void SetBalance(int balance) => _balance_btn.Text = $"{balance} RUB";
         private void SetUsername(string username) => _username.Text = $"@{username}";
         private void SetNickname(string nickname) => _nickname.Text = nickname;
         private void SetQuote(string quote) => _quote.Text = quote;
         private void SetFriends(List<Friend> friends) => _adapter.SetFriends(friends);
 
-        public void OnHandleMessage(ChatMessage message)
-        {
-            //throw new NotImplementedException();
-        }
 
-        public void OnSubscribedOnMessenger(IDisposable unsubscriber) => _messengerUnsubscriber = unsubscriber;
+        public void OnSubscribedOnMessenger(LiveData<ChatMessage> liveData)
+        {
+            liveData.Subscribe(
+                 (ChatMessage message) =>
+                 {
+                     Console.WriteLine($"MyprofileFragment:OnSubscribedOnMessenger THREAD # {Thread.CurrentThread.ManagedThreadId}");
+
+                     Toast.MakeText(Context, $"Message: {message.text}", ToastLength.Short).Show();
+                 },
+                 (Exception e) => { },
+                 () => { });
+        }
     }
 }
 
