@@ -104,6 +104,11 @@
     <Compile Include="Contracts\IMessengerInteractor.cs" />
     <Compile Include="Contracts\IMessengerListener.cs" />
     <Compile Include="Models\CustomToolbarItem.cs" />
+    <Compile Include="Adapters\BaseRecycleViewAdapter.cs" />
+    <Compile Include="Contracts\IHasId.cs" />
+    <Compile Include="Adapters\MessengerRecycleListAdapter.cs" />
+    <Compile Include="Services\LocalCacheService.cs" />
+    <Compile Include="Contracts\ICacheServiceAccessor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -252,6 +257,18 @@
       <Generator></Generator>
     </AndroidResource>
     <AndroidResource Include="Resources\values-v21\styles.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\drawable\border_button.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\drawable\messenger_field.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\messenger_dialog_item.xml">
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>

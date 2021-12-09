@@ -1,15 +1,24 @@
 ﻿
+using System;
 using LiteNetLib;
 using LiteNetLib.Utils;
 namespace RublikNativeAndroid.Models
 {
-    public class ChatMessage
+    public class ChatMessage : Contracts.IHasId
     {
         public string text { get; set; }
         public int authorId { get; set; }
         public int destinationId { get; set; }
 
         public string timeStamp { get; set; }
+
+        public ChatMessage(int destinationId, string text, int authorId, DateTime dateTime)
+        {
+            this.destinationId = destinationId;
+            this.text = text;
+            this.authorId = authorId;
+            this.timeStamp = dateTime.ToString();
+        }
 
         public ChatMessage(int destinationId, string text)
         {
@@ -42,6 +51,9 @@ namespace RublikNativeAndroid.Models
             writer.Put(reader.GetString());
             return writer;
         }
+
+        public long GetId() => authorId;
+
     }
 }
 

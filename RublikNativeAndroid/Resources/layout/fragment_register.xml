@@ -65,7 +65,7 @@
 				android:layout_marginLeft="@dimen/login_register_page_lr_margin"
 			android:layout_marginRight="@dimen/login_register_page_lr_margin"
 			android:layout_marginTop="1dp"
-			android:backgroundTint="#ff2196f3"
+			android:background="@drawable/abc_btn_colored_material"
 			android:layout_below="@id/et_password"
 			android:textColor="@android:color/white"
 			android:text="@string/register"/>

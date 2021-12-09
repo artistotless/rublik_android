@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Android.Views;
+﻿using Android.Views;
 using Android.Widget;
 using AndroidX.RecyclerView.Widget;
 using FFImageLoading;
@@ -16,62 +15,30 @@ namespace RublikNativeAndroid.Adapters
 
         public FriendViewHolder(View view) : base(view)
         {
-            image = view.FindViewById<ImageView>(Resource.Id.friend_image);
+            this.image = view.FindViewById<ImageView>(Resource.Id.friend_image);
         }
     }
 
-    public class FriendRecycleListAdapter : RecyclerView.Adapter
+    public class FriendRecycleListAdapter : BaseRecycleViewAdapter<Friend>
     {
-        private List<Friend> friends { get; set; }
-        private IOnClickListener _listener { get; set; }
 
-        public FriendRecycleListAdapter(IOnClickListener listener)
-        {
-            _listener = listener;
-            friends = new List<Friend>();
-        }
-
-        public void SetFriends(List<Friend> fr)
-        {
-            friends = fr;
-            NotifyDataSetChanged();
-        }
-
-        public void AddFriend(Friend fr)
-        {
-            if (friends.Contains(fr))
-                return;
-
-            friends.Add(fr);
-            int position = friends.IndexOf(fr);
-            NotifyItemInserted(position);
-        }
-
-
-        public override int ItemCount => friends.Count;
-
-        public override long GetItemId(int position) => friends[position].id;
+        public FriendRecycleListAdapter(IOnClickListener listener) : base(listener) { }
 
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
             var friendHolder = (FriendViewHolder)holder;
             var image = friendHolder.image;
-            var friend = friends[position];
+            var friend = GetElements()[position];
             friendHolder.ItemView.Tag = friend.userId;
-            holder.ItemView.ViewAttachedToWindow += async (object sender, ViewAttachedToWindowEventArgs e) =>
+            try
             {
-                try
-                {
-                    string avatarUrl = await UsersService.GetAvatarUrl(friends[position].userId);
-                    ImageService.Instance
-                    .LoadUrl(avatarUrl)
-                    .FadeAnimation(true)
-                    .Transform(new RoundedTransformation(50))
-                    .Into(image);
-                }
-                catch { }
-
-            };
+                ImageService.Instance
+                .LoadUrl(string.Format(Constants.WebApiUrls.FS_AVATAR, friend.avatarUrl))
+                .FadeAnimation(true)
+                .Transform(new RoundedTransformation(50))
+                .Into(image);
+            }
+            catch { }
 
         }
 

@@ -54,8 +54,8 @@
 		app:layout_constraintEnd_toEndOf="parent"
 		android:layout_width="wrap_content"
 		android:layout_height="40dp"
-		android:backgroundTint="#ff175bf5"
 		android:text="- RUB"
+		android:background="@drawable/abc_btn_colored_material"
 		android:textColor="#fff"
 		android:textSize="@dimen/content" />
 

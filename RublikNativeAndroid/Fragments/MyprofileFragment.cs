@@ -22,7 +22,7 @@ using static Android.Views.View;
 namespace RublikNativeAndroid.Fragments
 {
 
-    public class MyprofileFragment : Fragment, IHasToolbarTitle, IOnClickListener, IMessengerListener
+    public class MyprofileFragment : Fragment, IHasToolbarTitle, IOnClickListener
     {
         public string GetTitle() => GetString(Resource.String.myprofile);
 
@@ -33,11 +33,11 @@ namespace RublikNativeAndroid.Fragments
         private SwipeRefreshLayout _swipeRefreshLayout;
         private RecyclerView _friends_scroll;
 
-        private FriendRecycleListAdapter _adapter;
         private ProfileViewModel _myProfileViewModel;
         private IDisposable _unsubscriber;
         private IDisposable _messengerUnsubscriber;
 
+        private FriendRecycleListAdapter _adapter;
         private static int _userId { get; set; }
         private static User.Data _userData { get; set; }
 
@@ -50,13 +50,11 @@ namespace RublikNativeAndroid.Fragments
             ListenObservableObjects();
         }
 
-
         public override void OnDestroy()
         {
             base.OnDestroy();
             _unsubscriber.Dispose();
         }
-
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
@@ -73,8 +71,11 @@ namespace RublikNativeAndroid.Fragments
             _friends_scroll.ViewAttachedToWindow += async (object sender, ViewAttachedToWindowEventArgs e) =>
             {
                 if (_userData == null)
+                {
                     await RequestUpdateProfileLiveData();
+                }
                 await RequestUpdateFriendsLiveData();
+                
             };
 
             AttachAdapter(_adapter, container);
@@ -105,7 +106,7 @@ namespace RublikNativeAndroid.Fragments
         {
             if (_friends_scroll.GetAdapter() != null)
                 return;
-            _friends_scroll.SetLayoutManager(new LinearLayoutManager(container.Context, 0, false));
+            _friends_scroll.SetLayoutManager(new LinearLayoutManager(container.Context, (int)Orientation.Horizontal, false));
             _friends_scroll.SetAdapter(adapter);
         }
 
@@ -152,7 +153,7 @@ namespace RublikNativeAndroid.Fragments
         private void SetUsername(string username) => _username.Text = $"@{username}";
         private void SetNickname(string nickname) => _nickname.Text = nickname;
         private void SetQuote(string quote) => _quote.Text = quote;
-        private void SetFriends(List<Friend> friends) => _adapter.SetFriends(friends);
+        private void SetFriends(List<Friend> friends) => _adapter.SetElements(friends);
 
 
         public void OnSubscribedOnMessenger(LiveData<ChatMessage> liveData)

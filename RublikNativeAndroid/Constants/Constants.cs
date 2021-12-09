@@ -7,6 +7,7 @@ namespace RublikNativeAndroid
         {
             public const string ACCESS_KEY = "ACCESS_KEY";
             public const string USER_ID = "USER_ID";
+            public const string USER_NAME = "USER_NAME";
         }
 
         public static class WebApiUrls

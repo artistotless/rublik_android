@@ -30,9 +30,9 @@ namespace RublikNativeAndroid.Fragments
         private RecyclerView _friends_scroll;
 
         private int _userId { get; set; }
-        private User.Data _userData { get; set; }
 
         private FriendRecycleListAdapter _adapter;
+        private FriendRecycleListAdapter _adapterCached;
         private ProfileViewModel _profileViewModel;
         private IDisposable _unsubscriber;
 
@@ -42,8 +42,8 @@ namespace RublikNativeAndroid.Fragments
             base.OnCreate(savedInstanceState);
             _userId = Arguments.GetInt(Constants.Fragments.USER_ID);
             _profileViewModel = _profileViewModel == null ? new ProfileViewModel() : _profileViewModel;
-            _adapter = _adapter == null ? new FriendRecycleListAdapter(this) : _adapter;
-
+            _adapterCached = this.Cache().GetCacheService().GetUserFriendsAdapter(_userId);
+            _adapter = _adapterCached == null ? new FriendRecycleListAdapter(this) : _adapterCached;
             ListenObservableObjects();
 
         }
@@ -69,16 +69,21 @@ namespace RublikNativeAndroid.Fragments
             _swipeRefreshLayout = view.FindRefreshLayout(Resource.Id.profile_refresh_swipe);
             _friends_scroll = view.FindRecyclerView(Resource.Id.profile_friends_scroll_view);
             _friends_scroll.AddOnScrollListener(new RefreshLayoutCollisionFixer(_swipeRefreshLayout));
+
+            var userData = this.Cache().GetCacheService().GetUsersData(_userId);
+
             _friends_scroll.ViewAttachedToWindow += async (object sender, ViewAttachedToWindowEventArgs e) =>
             {
-                await RequestUpdateFriendsLiveData();
+                if (_adapterCached == null)
+                    await RequestUpdateFriendsLiveData();
             };
 
             AttachAdapter(_adapter, container);
-            UpdateUI(_userData);
 
-
-            Task.Run(async () => { await RequestUpdateProfileLiveData(); });
+            if (userData != null)
+                UpdateUI(userData);
+            else
+                Task.Run(async () => { await RequestUpdateProfileLiveData(); });
 
             _swipeRefreshLayout.Refresh += async (object sender, EventArgs e) =>
             {
@@ -95,11 +100,19 @@ namespace RublikNativeAndroid.Fragments
         private void ListenObservableObjects()
         {
             _unsubscriber = _profileViewModel.liveDataProfile.Subscribe(
-               (User.Data data) => { UpdateUI(data); },
+               (User.Data data) =>
+               {
+                   this.Cache().GetCacheService().AddUsersData(_userId, data);
+                   UpdateUI(data);
+               },
                (Exception e) => { }, () => { });
 
             _profileViewModel.liveDataFriends.Subscribe(
-                (List<Friend> friends) => { SetFriends(friends); },
+                (List<Friend> friends) =>
+                {
+                    SetFriends(friends);
+                    this.Cache().GetCacheService().AddUserFriendsAdapter(_userId, _adapter);
+                },
                 (Exception e) => { }, () => { });
         }
 
@@ -130,7 +143,6 @@ namespace RublikNativeAndroid.Fragments
             if (user == null)
                 return;
 
-            _userData = user;
             SetAvatar(user.avatar);
             SetUsername(user.username);
             SetNickname(user.nickname);
@@ -149,6 +161,6 @@ namespace RublikNativeAndroid.Fragments
         private void SetUsername(string username) => _username.Text = $"@{username}";
         private void SetNickname(string nickname) => _nickname.Text = nickname;
         private void SetQuote(string quote) => _quote.Text = quote;
-        private void SetFriends(List<Friend> friends) => _adapter.SetFriends(friends);
+        private void SetFriends(List<Friend> friends) => _adapter.SetElements(friends);
     }
 }

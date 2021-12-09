@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/dialog_parent"
+	android:paddingHorizontal="30dp"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content">
+
+	<LinearLayout
+		android:id="@+id/dialog_container"
+		android:orientation="vertical"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:minWidth="100dp"
+		android:background="@drawable/et_custom"
+		android:backgroundTint="#ffe3f2fd"
+		android:padding="6dp"
+		android:layout_marginBottom="15dp"
+	>
+
+		<TextView
+			android:id="@+id/dialog_message"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:maxWidth="200dp"
+			android:textSize="17dp"
+			android:textColor="#ff455a64"
+			android:text="@string/messages"
+			android:layout_marginBottom="4dp"
+    />
+
+		<TextView
+			android:id="@+id/dialog_datetime"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:maxWidth="200dp"
+			android:textSize="12dp"
+			android:textColor="#ff455a64"
+			android:text="12.01.2021 : 21:00"/>
+	</LinearLayout>
+</LinearLayout>

@@ -30,7 +30,7 @@ namespace RublikNativeAndroid
 
 
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true)]
-    public class MainActivity : AppCompatActivity, INavigator, IFragmentViewCreateListener, IMenuItemOnMenuItemClickListener, IMessengerInteractor
+    public class MainActivity : AppCompatActivity, INavigator, IFragmentViewCreateListener, ICacheServiceAccessor, IMenuItemOnMenuItemClickListener, IMessengerInteractor
     {
         public TextView textMessage { get; set; }
         public static MessengerService messengerService { get; private set; }
@@ -40,11 +40,14 @@ namespace RublikNativeAndroid
         private AndroidX.Fragment.App.Fragment _currentFragment => SupportFragmentManager.FindFragmentById(Resource.Id.viewPager);
         private Dictionary<IMenuItem, EventHandler> _menuItems = new Dictionary<IMenuItem, EventHandler>();
         private static AndroidX.AppCompat.Widget.Toolbar _toolbar { get; set; }
+        private static LocalCacheService cacheService { get; set; }
 
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+            if (cacheService == null)
+                cacheService = new LocalCacheService();
             _fragmentLifecycleListener = new FragmentLifecycleListener(this);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             SetContentView(Resource.Layout.activity_main);
@@ -172,7 +175,7 @@ namespace RublikNativeAndroid
 
         public void ShowMessenger(int userId)
         {
-            SupportFragmentManager.ShowFragment(new MessengerFragment());
+            SupportFragmentManager.ShowFragment(MessengerFragment.NewInstance(userId, "test"));
         }
 
         public void ShowProfilePage(int userId)
@@ -224,6 +227,11 @@ namespace RublikNativeAndroid
         public void SubscribeOnMessenger(IMessengerListener listener)
         {
             messengerService.SetListener(listener);
+        }
+
+        public LocalCacheService GetCacheService()
+        {
+            return cacheService;
         }
     }
 }

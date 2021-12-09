@@ -22,6 +22,7 @@ namespace RublikNativeAndroid
     public static class FragmentNavigatorExtension
     {
         public static INavigator Navigator(this Fragment fragment) => fragment.RequireActivity() as INavigator;
+        public static ICacheServiceAccessor Cache(this Fragment fragment) => fragment.RequireActivity() as ICacheServiceAccessor;
     }
 
     public static class FragmentMessengerExtension
@@ -39,6 +40,8 @@ namespace RublikNativeAndroid
         public static Button FindButton(this View view, int resId) => view.FindViewById<Button>(resId);
 
         public static TextView FindTextView(this View view, int resId) => view.FindViewById<TextView>(resId);
+
+        public static LinearLayout FindLinearLayout(this View view, int resId) => view.FindViewById<LinearLayout>(resId);
 
         public static EditText FindEditText(this View view, int resId) => view.FindViewById<EditText>(resId);
 

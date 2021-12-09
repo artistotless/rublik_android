@@ -50,8 +50,8 @@ namespace RublikNativeAndroid.Services
                 ChatMessage message = new ChatMessage(packetReader);
                 Console.WriteLine("[{0}][{1}]: {2}", message.timeStamp, message.authorId, message.text);
 
-               /* if (_fragmentListener == null)
-                    return; */
+                /* if (_fragmentListener == null)
+                     return; */
 
                 liveData.PostValue(message);
                 //_fragmentListener.OnHandleMessage(message);

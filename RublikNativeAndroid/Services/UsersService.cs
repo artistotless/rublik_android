@@ -15,16 +15,24 @@ namespace RublikNativeAndroid.Services
         public static User myUser { get; set; }
 
 
-        public static async Task<User> GetUser(int id)
+        public static async Task<User> GetUserAsync(int id, bool sync = false)
         {
             HttpClient client = new HttpClient();
             HttpRequestMessage request = new HttpRequestMessage();
             request.RequestUri = new Uri(string.Format(Constants.WebApiUrls.API_GET_USER, id));
             request.Method = HttpMethod.Get;
-            HttpResponseMessage response = await client.SendAsync(request);
+            HttpResponseMessage response;
+            if (sync)
+                response = client.SendAsync(request).Result;
+            else
+                response = await client.SendAsync(request);
 
             Console.WriteLine($"statusCode - {response.StatusCode}");
-            string content = await response.Content.ReadAsStringAsync();
+            string content;
+            if (sync)
+                content = response.Content.ReadAsStringAsync().Result;
+            else
+                content = await response.Content.ReadAsStringAsync();
             User.Data extraData = null;
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
@@ -40,7 +48,7 @@ namespace RublikNativeAndroid.Services
 
 
 
-        public static async Task<List<Friend>> GetFriends(int userId, string accessKey)
+        public static async Task<List<Friend>> GetFriendsAsync(int userId, string accessKey)
         {
             HttpClient client = new HttpClient();
             HttpRequestMessage request = new HttpRequestMessage();
@@ -62,9 +70,9 @@ namespace RublikNativeAndroid.Services
             throw new UserNotFoundException($"User with the id - {userId} was not found");
         }
 
-        public static async Task<List<Friend>> GetFriends(int userId) { return await GetFriends(userId, string.Empty); }
+        public static async Task<List<Friend>> GetFriendsAsync(int userId) { return await GetFriendsAsync(userId, string.Empty); }
 
-        public static async Task<string> GetAvatarUrl(int userId)
+        public static async Task<string> GetAvatarUrlAsync(int userId)
         {
             HttpClient client = new HttpClient();
             HttpRequestMessage request = new HttpRequestMessage();

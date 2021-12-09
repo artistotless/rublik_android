@@ -19,7 +19,7 @@ namespace RublikNativeAndroid.ViewModels
 
             try
             {
-                var data = await UsersService.GetUser(userId);
+                var data = await UsersService.GetUserAsync(userId);
                 liveDataProfile.PostValue(data.extraData);
                 Console.WriteLine(1);
             }
@@ -35,7 +35,7 @@ namespace RublikNativeAndroid.ViewModels
 
             try
             {
-                var data = await UsersService.GetFriends(userId);
+                var data = await UsersService.GetFriendsAsync(userId);
                 liveDataFriends.PostValue(data);
             }
             catch

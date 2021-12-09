@@ -10,7 +10,7 @@
 		<item name="colorAccent">@color/colorAccent</item>
 	</style>
 
-	<style name="btn_service_style" parent="Theme.AppCompat.Light.NoActionBar">
+	<style name="btn_service_style" parent="AppTheme">
 		<item name="android:textAllCaps">false</item>
 		<item name="android:paddingTop">15dp</item>
 		<item name="android:paddingHorizontal">12dp</item>
@@ -22,7 +22,7 @@
 		<item name="android:textColor">#000</item>
 		<item name="android:gravity">center</item>
 		<item name="android:paddingBottom">8dp</item>
-		<item name="android:background">@drawable/btn_service</item>		
+		<item name="android:background">@drawable/btn_service</item>
 	</style>
 
 </resources>
