@@ -78,6 +78,7 @@ namespace RublikNativeAndroid.Fragments
             liveData.Subscribe(
                 delegate (NetPacketReader reader)
                 {
+                    Console.WriteLine($"RoomsFragment : OnSubscribedOnLobbyService THREAD # {System.Threading.Thread.CurrentThread.ManagedThreadId}");
                     _roomEventsViewModel.ParseNetDataReader(reader);
                 },
                 delegate (Exception e) { },

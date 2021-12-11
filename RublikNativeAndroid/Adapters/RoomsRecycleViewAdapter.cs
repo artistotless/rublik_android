@@ -37,20 +37,23 @@ namespace RublikNativeAndroid.Adapters
         {
             var roomViewHolder = (RoomViewHolder)holder;
             var room = GetElements()[position];
-
-            roomViewHolder.hasPaswordIco.Visibility = room.hasPassword ? ViewStates.Visible : ViewStates.Gone;
-            roomViewHolder.countPlayers.Text = room.members.Count.ToString();
-            roomViewHolder.gameTitle.Text = room.game.id.ToString();
-            roomViewHolder.award.Text = room.award.ToString();
-            roomViewHolder.host.Text = room.host.extraData.username;
-            roomViewHolder.id.Text = room.id.ToString();
+            try
+            {
+                roomViewHolder.hasPaswordIco.Visibility = room.hasPassword ? ViewStates.Visible : ViewStates.Gone;
+                roomViewHolder.countPlayers.Text = room.members.Count.ToString();
+                roomViewHolder.gameTitle.Text = room.game.id.ToString();
+                roomViewHolder.award.Text = room.award.ToString();
+                roomViewHolder.host.Text = room.host.extraData.username;
+                roomViewHolder.id.Text = room.id.ToString();
+            }
+            catch { }
         }
 
 
         public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
         {
             LayoutInflater inflater = LayoutInflater.From(parent.Context);
-            var item = inflater.Inflate(Resource.Layout.fragment_rooms, parent, false);
+            var item = inflater.Inflate(Resource.Layout.holder_room_item, parent, false);
             item.SetOnClickListener(_listener);
             return new RoomViewHolder(item);
         }

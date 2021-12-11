@@ -5,6 +5,7 @@ using LiteNetLib.Utils;
 using RublikNativeAndroid.Contracts;
 
 using CrossPlatformLiveData;
+using System;
 
 namespace RublikNativeAndroid.Services
 {
@@ -59,6 +60,7 @@ namespace RublikNativeAndroid.Services
 
             _listener.NetworkReceiveEvent += (peer, dataReader, deliveryMethod) =>
             {
+                Console.WriteLine($"Lobby Service : NetworkReceiveEvent THREAD # {Thread.CurrentThread.ManagedThreadId}");
                 _liveData.PostValue(dataReader);
             };
 

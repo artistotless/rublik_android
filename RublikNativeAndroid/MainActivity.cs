@@ -142,7 +142,6 @@ namespace RublikNativeAndroid
                 _bottomNav.Visibility = ViewStates.Visible;
 
 
-
             if (fragment is IHasToolbarTitle hasToolbarTitle)
             {
                 string title = hasToolbarTitle.GetTitle();
@@ -150,16 +149,16 @@ namespace RublikNativeAndroid
 
             }
 
-
             if (fragment is IMessengerListener messengerListener)
             {
                 messengerService.Connect(UsersService.myUser.extraData.accessKey);
-                SubscribeOnMessenger(messengerListener);
+                messengerService.SetListener(messengerListener);
             }
 
             if(fragment is IRoomEventListener roomEventListener)
             {
                 lobbyService.Connect(UsersService.myUser.extraData.accessKey);
+                lobbyService.SetListener(roomEventListener);
             }
         }
 
@@ -177,15 +176,12 @@ namespace RublikNativeAndroid
 
         public void ShowMyProfilePage()
         {
-            SupportFragmentManager.PopBackStack(null, 1);
+            SupportFragmentManager.PopBackStack(null, (int)PopBackStackFlags.Inclusive);
             SupportFragmentManager.ShowFragment(MyprofileFragment.NewInstance(), false);
 
         }
 
-        public void ShowMessenger(int userId)
-        {
-            SupportFragmentManager.ShowFragment(MessengerFragment.NewInstance(userId, "test"));
-        }
+        public void ShowMessenger(int userId) => SupportFragmentManager.ShowFragment(MessengerFragment.NewInstance(userId));
 
         public void ShowProfilePage(int userId)
         {
@@ -223,25 +219,14 @@ namespace RublikNativeAndroid
             SupportFragmentManager.ShowFragment(new LoginFragment(), false);
         }
 
-        public void ShowRegisterPage()
-        {
-            SupportFragmentManager.ShowFragment(new RegisterFragment());
-        }
+        public void ShowRoomsPage() => SupportFragmentManager.ShowFragment(new RoomsFragment());
 
-        public void SendPrivateMessage(int destinationUserId, string message)
-        {
-            messengerService.SendPrivateMessage(destinationUserId, message);
-        }
+        public void ShowRegisterPage()=> SupportFragmentManager.ShowFragment(new RegisterFragment());
 
-        public void SubscribeOnMessenger(IMessengerListener listener)
-        {
-            messengerService.SetListener(listener);
-        }
+        public void SendPrivateMessage(int destinationUserId, string message)=> messengerService.SendPrivateMessage(destinationUserId, message);
 
-        public LocalCacheService GetCacheService()
-        {
-            return cacheService;
-        }
+        public LocalCacheService GetCacheService()=> cacheService;
+
     }
 }
 

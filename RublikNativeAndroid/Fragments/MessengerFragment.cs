@@ -170,12 +170,11 @@ namespace RublikNativeAndroid.Fragments
             Console.WriteLine("Нажал на текст");
         }
 
-        public static MessengerFragment NewInstance(int conversatorId, string conversatorName)
+        public static MessengerFragment NewInstance(int conversatorId)
         {
             var fragment = new MessengerFragment();
             var bundle = new Bundle();
             bundle.PutInt(Constants.Fragments.USER_ID, conversatorId);
-            bundle.PutString(Constants.Fragments.USER_NAME, conversatorName);
             fragment.Arguments = bundle;
             return fragment;
         }

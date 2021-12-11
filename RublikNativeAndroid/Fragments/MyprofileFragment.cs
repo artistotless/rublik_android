@@ -22,7 +22,7 @@ using static Android.Views.View;
 namespace RublikNativeAndroid.Fragments
 {
 
-    public class MyprofileFragment : Fragment, IHasToolbarTitle, IOnClickListener
+    public class MyprofileFragment : Fragment, IHasToolbarTitle, IOnClickListener, IMessengerListener
     {
         public string GetTitle() => GetString(Resource.String.myprofile);
 
@@ -35,9 +35,9 @@ namespace RublikNativeAndroid.Fragments
 
         private ProfileViewModel _myProfileViewModel;
         private IDisposable _unsubscriber;
-        private IDisposable _messengerUnsubscriber;
-
+        private IDisposable _unsubscriberMessenger;
         private FriendRecycleListAdapter _adapter;
+
         private static int _userId { get; set; }
         private static User.Data _userData { get; set; }
 
@@ -56,10 +56,18 @@ namespace RublikNativeAndroid.Fragments
             _unsubscriber.Dispose();
         }
 
+        public override void OnDestroyView()
+        {
+            base.OnDestroyView();
+            if (_unsubscriberMessenger != null)
+                _unsubscriberMessenger.Dispose();
+        }
+
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             base.OnCreateView(inflater, container, savedInstanceState);
             var view = inflater.Inflate(Resource.Layout.fragment_myprofile, container, false);
+            InitServiceEvents(view);
             _balance_btn = view.FindButton(Resource.Id.profile_balance_btn);
             _username = view.FindTextView(Resource.Id.profile_username);
             _nickname = view.FindTextView(Resource.Id.profile_nickname);
@@ -89,6 +97,18 @@ namespace RublikNativeAndroid.Fragments
             };
 
             return view;
+        }
+
+        private void InitServiceEvents(View root)
+        {
+            root.FindButton(Resource.Id.services_games).Click +=
+                (object sender, EventArgs e) => { this.Navigator().ShowRoomsPage(); };
+            root.FindButton(Resource.Id.services_news).Click +=
+                (object sender, EventArgs e) => { throw new NotImplementedException(); };
+            root.FindButton(Resource.Id.services_stats).Click +=
+                (object sender, EventArgs e) => { throw new NotImplementedException(); };
+            root.FindButton(Resource.Id.services_tournaments).Click +=
+                (object sender, EventArgs e) => { throw new NotImplementedException(); };
         }
 
         private void ListenObservableObjects()
@@ -141,13 +161,11 @@ namespace RublikNativeAndroid.Fragments
 
         private void SetAvatar(string path)
         {
-
             ImageService.Instance
             .LoadUrl(string.Format(Constants.WebApiUrls.FS_AVATAR, path))
             .FadeAnimation(true)
             .Transform(new CircleTransformation())
             .Into(_avatar);
-
         }
 
         private void SetBalance(int balance) => _balance_btn.Text = $"{balance} RUB";
@@ -159,11 +177,10 @@ namespace RublikNativeAndroid.Fragments
 
         public void OnSubscribedOnMessenger(LiveData<ChatMessage> liveData)
         {
-            liveData.Subscribe(
+            _unsubscriberMessenger = liveData.Subscribe(
                  (ChatMessage message) =>
                  {
                      Console.WriteLine($"MyprofileFragment:OnSubscribedOnMessenger THREAD # {Thread.CurrentThread.ManagedThreadId}");
-
                      Toast.MakeText(Context, $"Message: {message.text}", ToastLength.Short).Show();
                  },
                  (Exception e) => { },

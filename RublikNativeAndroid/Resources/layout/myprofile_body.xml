@@ -66,6 +66,7 @@
 		>
 
 		<Button
+			android:id="@+id/services_games"
 			android:text="@string/games"
 			android:drawableTint="#ffef5350"
 			style="@style/btn_service_style"
@@ -73,18 +74,21 @@
 			/>
 
 		<Button
+			android:id="@+id/services_stats"
 			android:text="@string/stats"
 			android:drawableTop="@drawable/graph_ico"
 			style="@style/btn_service_style"
 			android:drawableTint="#ff9ccc65" 
 			/>
 		<Button
+			android:id="@+id/services_tournaments"
 			android:drawableTop="@drawable/trophy_ico"
 			android:text="@string/tournaments"
 			style="@style/btn_service_style"
 			android:drawableTint="#ffffa726" 
 		/>
 		<Button
+			android:id="@+id/services_news"
 			android:drawableTop="@drawable/news_ico"
 			android:text="@string/news"
 			style="@style/btn_service_style"

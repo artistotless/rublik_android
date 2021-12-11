@@ -11,6 +11,7 @@
         void ShowSettingsPage();
         void ShowFriendsPage();
         void ShowServicesPage();
+        void ShowRoomsPage();
         void ShowLobbyPage(int gameId);
     }
 }

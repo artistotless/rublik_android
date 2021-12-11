@@ -31,6 +31,7 @@ namespace RublikNativeAndroid.ViewModels
 
         public void ParseNetDataReader(NetDataReader reader)
         {
+            Console.WriteLine($"RoomEventsViewModel : ParseNetDataReader THREAD # {System.Threading.Thread.CurrentThread.ManagedThreadId}");
             _eventReferenses[(EventOption)reader.GetUShort()](UsersService.myUser, reader);
         }
 

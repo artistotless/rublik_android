@@ -1,8 +1,6 @@
-﻿using System.Linq;
-using AndroidX.Lifecycle;
+﻿using AndroidX.Lifecycle;
 using LiteNetLib;
 using LiteNetLib.Utils;
-using RublikNativeAndroid.Models;
 using RublikNativeAndroid.Services;
 
 namespace RublikNativeAndroid.ViewModels

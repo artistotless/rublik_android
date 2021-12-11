@@ -18,7 +18,7 @@ namespace RublikNativeAndroid.Models
         }
 
         public User(Data extraData) => this.extraData = extraData;
-        public User(string nickname) { }
+        public User(string username) : this(new Data() { username = username }) { }
 
         internal Data extraData { get; set; }
         internal Room currentRoom { get; set; }
