@@ -10,6 +10,14 @@ namespace RublikNativeAndroid
             public const string USER_NAME = "USER_NAME";
         }
 
+        public static class Services
+        {
+            public const string LOBBY_IP = "192.168.43.44";
+            public const int LOBBY_PORT = 9053;
+            public const string MESSENGER_IP = "192.168.43.44";
+            public const int MESSENGER_PORT = 9052;
+        }
+
         public static class WebApiUrls
         {
             private const string HTTPS_SCHEME = "https://";

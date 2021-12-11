@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="horizontal"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:padding="20dp"
+	android:background="#fae0e0e0"
+    >
+
+	<TextView
+		android:id="@+id/room_id"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginEnd="20dp"
+		android:text="id"/>
+	<TextView
+		android:id="@+id/room_playersCount"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginEnd="20dp"
+		android:text="Count:"
+        />
+	<TextView
+		android:id="@+id/room_gameTitle"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginEnd="20dp"
+		android:text="Game:"
+        />
+	<TextView
+		android:id="@+id/room_award"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginEnd="20dp"
+		android:text="Award:"
+        />
+	<TextView
+		android:id="@+id/room_host"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginEnd="20dp"
+		android:text="Host:"
+        />
+	<ImageView
+		android:id="@+id/room_isPasswordIco"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+		android:src="@drawable/lock_ico"
+		/>
+
+</LinearLayout>

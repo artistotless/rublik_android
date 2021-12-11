@@ -33,7 +33,9 @@ namespace RublikNativeAndroid
     public class MainActivity : AppCompatActivity, INavigator, IFragmentViewCreateListener, ICacheServiceAccessor, IMenuItemOnMenuItemClickListener, IMessengerInteractor
     {
         public TextView textMessage { get; set; }
+
         public static MessengerService messengerService { get; private set; }
+        public static LobbyService lobbyService { get; private set; }
 
         private FragmentLifecycleListener _fragmentLifecycleListener { get; set; }
         private BottomNavigationView _bottomNav { get; set; }
@@ -53,6 +55,8 @@ namespace RublikNativeAndroid
             SetContentView(Resource.Layout.activity_main);
 
             messengerService = messengerService == null ? new MessengerService() : messengerService;
+            lobbyService = lobbyService == null ? new LobbyService() : lobbyService;
+
             _toolbar = FindViewById<AndroidX.AppCompat.Widget.Toolbar>(Resource.Id.main_toolbar);
             _bottomNav = FindViewById<BottomNavigationView>(Resource.Id.bottom_navigation);
 
@@ -147,10 +151,15 @@ namespace RublikNativeAndroid
             }
 
 
-            if (fragment is IMessengerListener listener)
+            if (fragment is IMessengerListener messengerListener)
             {
                 messengerService.Connect(UsersService.myUser.extraData.accessKey);
-                SubscribeOnMessenger(listener);
+                SubscribeOnMessenger(messengerListener);
+            }
+
+            if(fragment is IRoomEventListener roomEventListener)
+            {
+                lobbyService.Connect(UsersService.myUser.extraData.accessKey);
             }
         }
 

@@ -37,6 +37,13 @@ namespace RublikNativeAndroid.Adapters
             NotifyItemInserted(position);
         }
 
+        public void DeleteElement(T element)
+        {
+            int position = elements.IndexOf(element);
+            elements.Remove(element);
+            NotifyItemRemoved(position);
+        }
+
 
         public override int ItemCount => elements.Count;
 

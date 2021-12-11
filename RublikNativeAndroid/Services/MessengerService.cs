@@ -10,7 +10,6 @@ namespace RublikNativeAndroid.Services
 {
     public class MessengerService : IService
     {
-        //private IMessengerListener _fragmentListener;
         public LiveData<ChatMessage> liveData = new LiveData<ChatMessage>();
 
         private NetPeer _chatServicePeer;
@@ -24,12 +23,9 @@ namespace RublikNativeAndroid.Services
             _chatServicePeer.Send(msg.GetNetDataWriter(), DeliveryMethod.ReliableUnordered);
         }
 
-        public IDisposable SetListener(IMessengerListener listener)
+        public void SetListener(IMessengerListener listener)
         {
-            //_fragmentListener = listener;
-            //listener.OnSubscribedOnMessenger()
             listener.OnSubscribedOnMessenger(liveData);
-            return null;
         }
 
         public void Connect(string accessKey)
@@ -43,18 +39,15 @@ namespace RublikNativeAndroid.Services
             _client.Start();
 
             // TODO: заменить ip сервиса на домен вида m1s.rublik.ru . Использовать DNS сервера
-            _chatServicePeer = _client.Connect("192.168.43.44", 9052, accessKey);
+            _chatServicePeer = _client.Connect(Constants.Services.MESSENGER_IP, Constants.Services.MESSENGER_PORT, accessKey);
             _localListener.NetworkReceiveEvent += (peer, packetReader, deliveryMethod) =>
             {
                 Console.WriteLine($"NetworkReceiveEvent THREAD # {Thread.CurrentThread.ManagedThreadId}");
                 ChatMessage message = new ChatMessage(packetReader);
                 Console.WriteLine("[{0}][{1}]: {2}", message.timeStamp, message.authorId, message.text);
 
-                /* if (_fragmentListener == null)
-                     return; */
-
                 liveData.PostValue(message);
-                //_fragmentListener.OnHandleMessage(message);
+
             };
             Task.Run(async () =>
             {
@@ -75,12 +68,5 @@ namespace RublikNativeAndroid.Services
         }
 
         public ConnectionState GetConnectionState() => _chatServicePeer == null ? ConnectionState.Disconnected : _chatServicePeer.ConnectionState;
-    }
-
-    public class Unsubscriber : IDisposable
-    {
-        private Action unSubscribeAction;
-        public Unsubscriber(Action unSubscribeAction) => this.unSubscribeAction = unSubscribeAction;
-        public void Dispose() => unSubscribeAction.Invoke();
     }
 }

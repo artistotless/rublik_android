@@ -17,6 +17,52 @@ namespace RublikNativeAndroid.Services
 
         public static async Task<User> GetUserAsync(int id, bool sync = false)
         {
+           /* // Offline mode
+
+            switch (id)
+            {
+                case 1:
+                    return new User(new User.Data()
+                    {
+                        accessKey = "user1",
+                        avatar = "/Files/126kb.jpg",
+                        balance = 1350,
+                        id = 1,
+                        isOnline = true,
+                        nickname = "Artistotless",
+                        quote = "just quote",
+                        username = "admin"
+                    });
+
+                case 4:
+                    return new User(new User.Data()
+                    {
+                        accessKey = "user4",
+                        avatar = "/Files/33kb.jpg",
+                        balance = 15,
+                        id = 4,
+                        isOnline = true,
+                        nickname = "KennyS",
+                        quote = "bebra",
+                        username = "kenya"
+                    });
+
+
+                case 6:
+                    return new User(new User.Data()
+                    {
+                        accessKey = "user6",
+                        avatar = "/Files/admin.jpg",
+                        balance = 800,
+                        id = 6,
+                        isOnline = true,
+                        nickname = "BoomBoombI4",
+                        quote = "cmon lulz",
+                        username = "suser"
+                    });
+            }
+           */
+
             HttpClient client = new HttpClient();
             HttpRequestMessage request = new HttpRequestMessage();
             request.RequestUri = new Uri(string.Format(Constants.WebApiUrls.API_GET_USER, id));
@@ -50,6 +96,29 @@ namespace RublikNativeAndroid.Services
 
         public static async Task<List<Friend>> GetFriendsAsync(int userId, string accessKey)
         {
+            /*// Offline mode
+
+            List<Friend> result = new List<Friend>();
+
+            switch (userId)
+            {
+                case 1:
+                    result.Add(new Friend() { avatarUrl = "/Files/33kb.jpg", id = 1, status = 0, userId = 4 });
+                    result.Add(new Friend() { avatarUrl = "/Files/admin.jpg", id = 2, status = 0, userId = 6 });
+                    return result;
+
+                case 4:
+                    result.Add(new Friend() { avatarUrl = "/Files/126kb.jpg", id = 1, status = 0, userId = 1 });
+                    return result;
+
+                case 6:
+                    result.Add(new Friend() { avatarUrl = "/Files/126kb.jpg", id = 2, status = 0, userId = 1 });
+                    return result;
+            }*/
+
+
+
+
             HttpClient client = new HttpClient();
             HttpRequestMessage request = new HttpRequestMessage();
             request.RequestUri = new Uri(string.Format(Constants.WebApiUrls.API_GET_FRIENDS, userId, accessKey));
@@ -74,6 +143,23 @@ namespace RublikNativeAndroid.Services
 
         public static async Task<string> GetAvatarUrlAsync(int userId)
         {
+
+            /*// Offline mode
+
+
+            switch (userId)
+            {
+                case 1:
+                    return string.Format(Constants.WebApiUrls.FS_AVATAR, "/Files/126kb.jpg");
+
+                case 4:
+                    return string.Format(Constants.WebApiUrls.FS_AVATAR, "/Files/33kb.jpg");
+
+                case 6:
+                    return string.Format(Constants.WebApiUrls.FS_AVATAR, "/Files/admin.jpg");
+            }*/
+
+
             HttpClient client = new HttpClient();
             HttpRequestMessage request = new HttpRequestMessage();
             request.RequestUri = new Uri(string.Format(Constants.WebApiUrls.API_GET_AVATAR, userId));

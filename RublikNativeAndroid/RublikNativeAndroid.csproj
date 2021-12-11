@@ -91,7 +91,6 @@
     <Compile Include="Models\Room.cs" />
     <Compile Include="Models\Game.cs" />
     <Compile Include="Services\UsersService.cs" />
-    <Compile Include="Services\RoomsService.cs" />
     <Compile Include="Utils\Exceptions.cs" />
     <Compile Include="Models\LoginResult.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
@@ -109,6 +108,15 @@
     <Compile Include="Adapters\MessengerRecycleListAdapter.cs" />
     <Compile Include="Services\LocalCacheService.cs" />
     <Compile Include="Contracts\ICacheServiceAccessor.cs" />
+    <Compile Include="Database\Database.cs" />
+    <Compile Include="Services\LobbyService.cs" />
+    <Compile Include="Contracts\ILobbyEventImplementator.cs" />
+    <Compile Include="ViewModels\RoomNetRequestViewModel.cs" />
+    <Compile Include="Services\RoomService.cs" />
+    <Compile Include="Fragments\RoomsFragment.cs" />
+    <Compile Include="Adapters\RoomsRecycleViewAdapter.cs" />
+    <Compile Include="Contracts\IRoomEventListener.cs" />
+    <Compile Include="ViewModels\RoomEventsViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -272,6 +280,22 @@
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>
+    <AndroidResource Include="Resources\drawable\down_btn_ico.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\fragment_rooms.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\holder_room_item.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\drawable\lock_ico.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="LiteNetLib">
@@ -298,10 +322,12 @@
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.1</Version>
     </PackageReference>
+    <PackageReference Include="sqlite-net-pcl">
+      <Version>1.8.116</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\Code\" />
-    <Folder Include="Resources\drawable\icons\" />
     <Folder Include="Resources\values-ru\" />
     <Folder Include="Contracts\" />
     <Folder Include="Constants\" />
@@ -311,6 +337,7 @@
     <Folder Include="Utils\" />
     <Folder Include="ViewModels\" />
     <Folder Include="Resources\values-v21\" />
+    <Folder Include="Database\" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\btn_custom.xml" />

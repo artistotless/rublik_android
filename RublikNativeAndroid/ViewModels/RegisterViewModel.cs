@@ -34,6 +34,25 @@ namespace RublikNativeAndroid
         public async Task RegisterAsync(RegisterData regData)
         {
             _listener.OnPrepare();
+
+            /*// Offline mode
+
+            var offlineUser = new User.Data()
+            {
+                accessKey = "user1",
+                avatar = "/Files/126kb.jpg",
+                balance = 1350,
+                id = 1,
+                isOnline = true,
+                nickname = "Artistotless",
+                quote = "just quote",
+                username = "admin"
+            };
+            UsersService.myUser = new User(offlineUser);
+            _listener.OnSuccess(offlineUser);
+            return;*/
+
+
             HttpClient client = new HttpClient();
             var body = string.Format("{{ \"username\":\"{0}\" , \"password\":\"{1}\", \"email\":\"{1}\"}}",
                 regData.username, regData.password, regData.email);

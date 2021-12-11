@@ -75,7 +75,7 @@ namespace RublikNativeAndroid.Fragments
                     await RequestUpdateProfileLiveData();
                 }
                 await RequestUpdateFriendsLiveData();
-                
+
             };
 
             AttachAdapter(_adapter, container);
@@ -106,7 +106,8 @@ namespace RublikNativeAndroid.Fragments
         {
             if (_friends_scroll.GetAdapter() != null)
                 return;
-            _friends_scroll.SetLayoutManager(new LinearLayoutManager(container.Context, (int)Orientation.Horizontal, false));
+            LinearLayoutManager layoutManager = new LinearLayoutManager(container.Context, (int)Orientation.Horizontal, false);
+            _friends_scroll.SetLayoutManager(layoutManager);
             _friends_scroll.SetAdapter(adapter);
         }
 
@@ -135,7 +136,7 @@ namespace RublikNativeAndroid.Fragments
             SetBalance(user.balance);
             SetUsername(user.username);
             SetNickname(user.nickname);
-            SetQuote(user.status);
+            SetQuote(user.quote);
         }
 
         private void SetAvatar(string path)

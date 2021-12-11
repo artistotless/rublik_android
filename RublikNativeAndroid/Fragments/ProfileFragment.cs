@@ -32,7 +32,6 @@ namespace RublikNativeAndroid.Fragments
         private int _userId { get; set; }
 
         private FriendRecycleListAdapter _adapter;
-        private FriendRecycleListAdapter _adapterCached;
         private ProfileViewModel _profileViewModel;
         private IDisposable _unsubscriber;
 
@@ -42,8 +41,8 @@ namespace RublikNativeAndroid.Fragments
             base.OnCreate(savedInstanceState);
             _userId = Arguments.GetInt(Constants.Fragments.USER_ID);
             _profileViewModel = _profileViewModel == null ? new ProfileViewModel() : _profileViewModel;
-            _adapterCached = this.Cache().GetCacheService().GetUserFriendsAdapter(_userId);
-            _adapter = _adapterCached == null ? new FriendRecycleListAdapter(this) : _adapterCached;
+
+            _adapter = new FriendRecycleListAdapter(this);
             ListenObservableObjects();
 
         }
@@ -71,11 +70,14 @@ namespace RublikNativeAndroid.Fragments
             _friends_scroll.AddOnScrollListener(new RefreshLayoutCollisionFixer(_swipeRefreshLayout));
 
             var userData = this.Cache().GetCacheService().GetUsersData(_userId);
+            var userFriends = this.Cache().GetCacheService().GetUserFriends(_userId);
 
             _friends_scroll.ViewAttachedToWindow += async (object sender, ViewAttachedToWindowEventArgs e) =>
             {
-                if (_adapterCached == null)
+                if (userFriends == null)
                     await RequestUpdateFriendsLiveData();
+                else
+                    SetFriends(userFriends);
             };
 
             AttachAdapter(_adapter, container);
@@ -111,14 +113,14 @@ namespace RublikNativeAndroid.Fragments
                 (List<Friend> friends) =>
                 {
                     SetFriends(friends);
-                    this.Cache().GetCacheService().AddUserFriendsAdapter(_userId, _adapter);
+                    this.Cache().GetCacheService().AddUserFriends(_userId, friends);
                 },
                 (Exception e) => { }, () => { });
         }
 
         private void AttachAdapter(FriendRecycleListAdapter adapter, ViewGroup container)
         {
-            _friends_scroll.SetLayoutManager(new LinearLayoutManager(container.Context, 0, false));
+            _friends_scroll.SetLayoutManager(new LinearLayoutManager(container.Context, (int)Orientation.Horizontal, false));
             _friends_scroll.SetAdapter(adapter);
         }
 
@@ -146,7 +148,7 @@ namespace RublikNativeAndroid.Fragments
             SetAvatar(user.avatar);
             SetUsername(user.username);
             SetNickname(user.nickname);
-            SetQuote(user.status);
+            SetQuote(user.quote);
         }
 
         private void SetAvatar(string path)

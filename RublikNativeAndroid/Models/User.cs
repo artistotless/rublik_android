@@ -11,13 +11,14 @@ namespace RublikNativeAndroid.Models
             public string accessKey { get; set; }
             public string username { get; set; }
             public string nickname { get; set; }
-            public string status { get; set; }
+            public string quote { get; set; }
             public string avatar { get; set; }
             public bool isOnline { get; set; }
             public int balance { get; set; }
         }
 
         public User(Data extraData) => this.extraData = extraData;
+        public User(string nickname) { }
 
         internal Data extraData { get; set; }
         internal Room currentRoom { get; set; }

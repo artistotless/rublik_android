@@ -16,7 +16,6 @@ namespace RublikNativeAndroid.ViewModels
 
         public async Task GetProfileAsync(int userId)
         {
-
             try
             {
                 var data = await UsersService.GetUserAsync(userId);
@@ -32,7 +31,6 @@ namespace RublikNativeAndroid.ViewModels
 
         public async Task GetFriendsAsync(int userId)
         {
-
             try
             {
                 var data = await UsersService.GetFriendsAsync(userId);

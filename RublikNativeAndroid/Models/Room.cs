@@ -1,22 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using RublikNativeAndroid.Contracts;
 
 namespace RublikNativeAndroid.Models
 {
-    class Room
+    public class Room : IEquatable<Room>, IHasId
     {
-        internal static List<Room> rooms = new List<Room>();
-
-        internal List<User> members { get; private set; }
-        internal Game game { get; private set; }
-        internal readonly int id;
-        internal User host => members[0];
-        internal uint award { get; set; }
-        internal readonly bool hasPassword;
+        public List<User> members { get; set; }
+        public Game game { get; set; }
+        public readonly int id;
+        public User host => members[0];
+        public uint award { get; set; }
+        public bool hasPassword;
 
 
-        private Room(int id, Game game, User host, uint award, bool hasPassword)
+        public Room(int id, Game game, User host, uint award, bool hasPassword)
         {
             this.members = new List<User>();
             this.members.Add(host);
@@ -26,22 +25,7 @@ namespace RublikNativeAndroid.Models
             this.hasPassword = hasPassword;
         }
 
-        internal void AddMember(User user)
-        {
-            if (game.maxPlayers > members.Count)
-            {
-                members.Add(user);
-                user.currentRoom = this;
-            }
-        }
-
-        internal void RemoveMember(User user)
-        {
-            members.Remove(user);
-            user.currentRoom = null;
-        }
-
-        private Room(int id, Game game, IEnumerable<User> members, uint award, bool hasPassword)
+        public Room(int id, Game game, IEnumerable<User> members, uint award, bool hasPassword)
         {
             this.members = members.ToList();
             this.game = game;
@@ -50,39 +34,25 @@ namespace RublikNativeAndroid.Models
             this.hasPassword = hasPassword;
         }
 
-        internal static void CreateAndAdd(int id, Game game, User host, uint award, bool hasPassword)
-        {
-            Room room = new Room(id, game, host, award, hasPassword);
-            host.currentRoom = room;
-            rooms.Add(room);
-        }
 
-        internal static void DeleteRoom(Room room)
+        public void AddMember(User user)
         {
-            rooms.Remove(room);
-        }
-
-        internal static void CreateAndAdd(int id, Game game, IEnumerable<User> members, uint award, bool hasPassword)
-        {
-            Room room = new Room(id, game, members, award, hasPassword);
-            foreach (User member in members)
+            if (game.maxPlayers > members.Count)
             {
-                member.currentRoom = room;
+                members.Add(user);
+                user.currentRoom = this;
             }
-            rooms.Add(room);
         }
 
-        internal static void Clear()
+        public void RemoveMember(User user)
         {
-            rooms.Clear();
+            members.Remove(user);
+            user.currentRoom = null;
         }
 
+        public bool Equals(Room other) => other.id == id;
 
-        internal static Room GetRoomById(int id)
-        {
-            return rooms.Where(x => x.id == id).SingleOrDefault();
-        }
-
+        public long GetId() => id;
 
     }
 }

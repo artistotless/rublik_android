@@ -15,6 +15,21 @@
 		app:layout_constraintBottom_toTopOf="@id/messenger_text_field"
 		/>
 
+	<Button
+		android:id="@+id/messenger_scrolldown_btn"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+		android:gravity="center"
+		app:layout_constraintLeft_toLeftOf="parent"
+		app:layout_constraintRight_toRightOf="parent"
+		app:layout_constraintBottom_toTopOf="@id/messenger_text_field"
+		android:layout_marginBottom="20dp"
+		android:visibility="gone"
+		android:background="@drawable/circle_shape"
+		android:paddingTop="5dp"
+		android:drawableTop="@drawable/down_btn_ico"
+		/>
+
 	<EditText
 		android:id="@+id/messenger_text_field"
 		android:hint="@string/send_message"
@@ -39,6 +54,7 @@
 		app:layout_constraintEnd_toStartOf="@id/messenger_send_btn"
 		app:layout_constraintStart_toEndOf="@id/messenger_text_field"
 		/>
+
 
 	<Button
 		android:id="@+id/messenger_send_btn"

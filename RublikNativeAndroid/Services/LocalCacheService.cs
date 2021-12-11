@@ -8,12 +8,12 @@ namespace RublikNativeAndroid.Services
     public class LocalCacheService
     {
         public static Dictionary<int, User.Data> usersData { get; set; }
-        public static Dictionary<int, FriendRecycleListAdapter> userFriendsAdapter { get; set; }
+        public static Dictionary<int, List<Friend>> userFriends { get; set; }
 
         public LocalCacheService()
         {
             usersData = new Dictionary<int, User.Data>();
-            userFriendsAdapter = new Dictionary<int, FriendRecycleListAdapter>();
+            userFriends = new Dictionary<int, List<Friend>>();
         }
 
         public User.Data GetUsersData(int userId)
@@ -25,14 +25,14 @@ namespace RublikNativeAndroid.Services
 
         public void AddUsersData(int userId, User.Data data) => usersData[userId] = data;
 
-        public FriendRecycleListAdapter GetUserFriendsAdapter(int userId)
+        public List<Friend> GetUserFriends(int userId)
         {
-            if (userFriendsAdapter.ContainsKey(userId))
-                return userFriendsAdapter[userId];
+            if (userFriends.ContainsKey(userId))
+                return userFriends[userId];
             return null;
         }
 
-        public void AddUserFriendsAdapter(int userId, FriendRecycleListAdapter friendsAdapter) => userFriendsAdapter[userId] = friendsAdapter;
+        public void AddUserFriends(int userId, List<Friend> friends) => userFriends[userId] = friends;
 
     }
 }

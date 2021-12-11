@@ -11,7 +11,6 @@ namespace RublikNativeAndroid.Adapters
     public class FriendViewHolder : RecyclerView.ViewHolder
     {
         public ImageView image { get; set; }
-        public Friend friend { get; set; }
 
         public FriendViewHolder(View view) : base(view)
         {

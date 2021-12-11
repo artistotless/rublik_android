@@ -19,13 +19,14 @@ namespace RublikNativeAndroid.Fragments
     {
         private EditText _msgField { get; set; }
         private Button _msgSubmit { get; set; }
-        private RecyclerView _dialogList { get; set; }
         private Button _scrollDownBtn { get; set; }
+        private RecyclerView _dialogList { get; set; }
 
         private User.Data _conversator { get; set; }
         private User.Data _conversatorCache { get; set; }
 
         private MessengerRecycleListAdapter _adapter;
+        private IDisposable _unsubscriberMessenger;
 
         public CustomToolbarItemsBag GetBag()
         {
@@ -41,9 +42,18 @@ namespace RublikNativeAndroid.Fragments
 
         public string GetTitle() => _conversator.nickname;
 
+        public override void OnDestroyView()
+        {
+            base.OnDestroyView();
+            if (_unsubscriberMessenger != null)
+                _unsubscriberMessenger.Dispose();
+        }
+
+
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+            RetainInstance = true;
             var _conversatorId = Arguments.GetInt(Constants.Fragments.USER_ID);
 
             _conversatorCache = this.Cache().GetCacheService().GetUsersData(_conversatorId);
@@ -67,9 +77,9 @@ namespace RublikNativeAndroid.Fragments
             var rootView = inflater.Inflate(Resource.Layout.fragment_messenger, container, false);
 
             _msgField = rootView.FindEditText(Resource.Id.messenger_text_field);
+            _scrollDownBtn = rootView.FindButton(Resource.Id.messenger_scrolldown_btn);
             _msgSubmit = rootView.FindButton(Resource.Id.messenger_send_btn);
             _dialogList = rootView.FindRecyclerView(Resource.Id.messenger_dialog_list);
-
 
             AttachAdapter(_adapter, container);
 
@@ -81,6 +91,15 @@ namespace RublikNativeAndroid.Fragments
                     _msgSubmit.Visibility = ViewStates.Visible;
             };
 
+            _scrollDownBtn.Click += (object sender, EventArgs e) => { SmoothScroolDown(); };
+
+            _dialogList.ScrollChange += (object sender, ScrollChangeEventArgs e) =>
+            {
+                if (_adapter.ItemCount - GetCurrentRecyclerViewPos() > 3)
+                    _scrollDownBtn.Visibility = ViewStates.Visible;
+                else
+                    _scrollDownBtn.Visibility = ViewStates.Gone;
+            };
 
             _msgSubmit.Click += (object sender, EventArgs e) =>
             {
@@ -95,34 +114,55 @@ namespace RublikNativeAndroid.Fragments
                     v.Vibrate(20);
 
                 string message = _msgField.Text;
-                _msgField.SetText(string.Empty, TextView.BufferType.Normal);
-                _adapter.AddElement(new ChatMessage(_conversator.id, message, UsersService.myUser.extraData.id, DateTime.Now));
                 this.Messenger().SendPrivateMessage(_conversator.id, message);
+                _msgField.SetText(string.Empty, TextView.BufferType.Normal);
+                HandleIncommingMessage(new ChatMessage(_conversator.id, message, UsersService.myUser.extraData.id, DateTime.Now));
+
             };
 
             return rootView;
         }
 
+        private int GetCurrentRecyclerViewPos() => (_dialogList.GetLayoutManager() as LinearLayoutManager).FindLastVisibleItemPosition();
+
         private void AttachAdapter(MessengerRecycleListAdapter adapter, ViewGroup container)
         {
-            if (_dialogList.GetAdapter() != null)
-                return;
-            _dialogList.SetLayoutManager(new LinearLayoutManager(container.Context, (int)Orientation.Vertical, false));
+            LinearLayoutManager layoutManager = new LinearLayoutManager(container.Context, (int)Orientation.Vertical, false);
+
+            layoutManager.StackFromEnd = true;
+
+            _dialogList.SetLayoutManager(layoutManager);
             _dialogList.SetAdapter(adapter);
         }
 
         public void OnSubscribedOnMessenger(LiveData<ChatMessage> liveData)
         {
-            liveData.Subscribe(
-                async (ChatMessage message) =>
+            _unsubscriberMessenger = liveData.Subscribe(
+                (ChatMessage message) =>
                 {
                     if (message.authorId == _conversator.id)
-                        _adapter.AddElement(message);
+                        HandleIncommingMessage(message);
                     else
                         Console.WriteLine($"MessengerFragment:OnSubscribedOnMessenger THREAD # {Thread.CurrentThread.ManagedThreadId}");
                 },
                 (Exception e) => { },
-                () => { });
+                delegate { });
+        }
+
+        private void HandleIncommingMessage(ChatMessage message)
+        {
+            var currentRecyclerViewPos = GetCurrentRecyclerViewPos();
+            _adapter.AddElement(message);
+
+            if (_adapter.ItemCount - currentRecyclerViewPos < 3)
+                SmoothScroolDown();
+
+        }
+
+        private void SmoothScroolDown()
+        {
+            _scrollDownBtn.Visibility = ViewStates.Gone;
+            _dialogList.SmoothScrollToPosition(_adapter.ItemCount - 1);
         }
 
         public void OnClick(View v)
