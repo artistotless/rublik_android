@@ -27,7 +27,6 @@ namespace RublikNativeAndroid
             _registerViewModel = new RegisterViewModel(this);
         }
 
-
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
 
@@ -42,15 +41,12 @@ namespace RublikNativeAndroid
             btn_register.Click += async (object sender, EventArgs e) => await _registerViewModel.RegisterAsync(
                 new RegisterData(username_field.Text, email_field.Text, password_field.Text));
 
-
-
             return rootView;
         }
 
         public void OnError(string error)
         {
             username_field.Error = string.IsNullOrEmpty(error) ? GetString(Resource.String.novalid_register) : error;
-
         }
 
         public void OnPrepare()

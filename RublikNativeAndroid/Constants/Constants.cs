@@ -8,11 +8,13 @@ namespace RublikNativeAndroid
             public const string ACCESS_KEY = "ACCESS_KEY";
             public const string USER_ID = "USER_ID";
             public const string USER_NAME = "USER_NAME";
+            public const string IP = "IP";
+            public const string PORT = "PORT";
         }
 
         public static class Services
         {
-            public const string LOBBY_IP = "192.168.43.44";
+            public const string LOBBY_IP = "192.168.43.14";
             public const int LOBBY_PORT = 9053;
             public const string MESSENGER_IP = "192.168.43.44";
             public const int MESSENGER_PORT = 9052;

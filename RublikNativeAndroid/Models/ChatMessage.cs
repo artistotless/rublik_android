@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using LiteNetLib;
 using LiteNetLib.Utils;
 namespace RublikNativeAndroid.Models

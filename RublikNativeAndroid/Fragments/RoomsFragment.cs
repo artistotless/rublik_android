@@ -19,7 +19,8 @@ namespace RublikNativeAndroid.Fragments
     {
         private RecyclerView _rooms_scroll;
         private RoomsRecycleViewAdapter _adapter;
-        private RoomEventsViewModel _roomEventsViewModel;
+        private RoomEventsParserViewModel _roomEvents;
+        private RoomNetRequestViewModel _roomRequest;
 
         public string GetTitle() => GetString(Resource.String.lobby);
 
@@ -27,7 +28,9 @@ namespace RublikNativeAndroid.Fragments
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            _roomEventsViewModel = new RoomEventsViewModel(this);
+            _adapter = new RoomsRecycleViewAdapter(this);
+            _roomEvents = new RoomEventsParserViewModel(this);
+            _roomRequest = new RoomNetRequestViewModel(Services.LobbyService.currentInstance,_adapter.GetElements());
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -36,7 +39,7 @@ namespace RublikNativeAndroid.Fragments
             var rootView = inflater.Inflate(Resource.Layout.fragment_rooms, container, false);
 
             _rooms_scroll = rootView.FindRecyclerView(Resource.Id.rooms_recycler_view);
-            _adapter = new RoomsRecycleViewAdapter(this);
+            
             AttachAdapter(_adapter, container);
 
             return rootView;
@@ -50,7 +53,7 @@ namespace RublikNativeAndroid.Fragments
 
         public void OnClick(View v)
         {
-            throw new NotImplementedException();
+            _roomRequest.JoinRoom(0, string.Empty);
         }
 
         public void OnGotRooms(List<Room> rooms) => _adapter.SetElements(rooms);
@@ -68,9 +71,9 @@ namespace RublikNativeAndroid.Fragments
             throw new NotImplementedException();
         }
 
-        public void OnGameStarted(Room room)
+        public void OnGameStarted(string ip, int port)
         {
-            throw new NotImplementedException();
+            ParentFragmentManager.BeginTransaction().Replace(Resource.Id.viewPager, ShellGameFragment.NewInstance(ip,port)).AddToBackStack(null).Commit();
         }
 
         public void OnSubscribedOnLobbyService(LiveData<NetPacketReader> liveData)
@@ -79,13 +82,13 @@ namespace RublikNativeAndroid.Fragments
                 delegate (NetPacketReader reader)
                 {
                     Console.WriteLine($"RoomsFragment : OnSubscribedOnLobbyService THREAD # {System.Threading.Thread.CurrentThread.ManagedThreadId}");
-                    _roomEventsViewModel.ParseNetDataReader(reader);
+                    _roomEvents.ParseNetPacketReader(reader);
                 },
                 delegate (Exception e) { },
                 delegate { }
                 );
         }
 
-     
+
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AndroidX.Lifecycle;
+using LiteNetLib;
 using LiteNetLib.Utils;
 using RublikNativeAndroid.Contracts;
 using RublikNativeAndroid.Models;
@@ -9,33 +10,35 @@ using RublikNativeAndroid.Services;
 
 namespace RublikNativeAndroid.ViewModels
 {
-    public class RoomEventsViewModel : ViewModel
+    public class RoomEventsParserViewModel : ViewModel
     {
-        private Dictionary<EventOption, Action<User, NetDataReader>> _eventReferenses;
+        private Dictionary<EventOption, Action<User, NetPacketReader>> _eventReferenses;
         private IRoomEventListener _listener;
 
-        public RoomEventsViewModel(IRoomEventListener listener)
+        public RoomEventsParserViewModel(IRoomEventListener listener)
         {
             _listener = listener;
-            _eventReferenses = new Dictionary<EventOption, Action<User, NetDataReader>>{
+            _eventReferenses = new Dictionary<EventOption, Action<User, NetPacketReader>>{
 
-                {EventOption.GotRoomList, OnGotRooms},
-                {EventOption.HostedRoom, OnHostedRoom},
-                {EventOption.JoinedRoom, OnJoinedRoom},
-                {EventOption.LeavedRoom, OnLeavedRoom},
-                {EventOption.MessageRoom, OnMessagedRoom},
-                {EventOption.DeletedRoom, OnDeletedRoom},
-                {EventOption.GameStarted, OnGameStarted},
+                {EventOption.GotRoomList, ParseGotRoomsEvent},
+                {EventOption.HostedRoom, ParseHostedRoomEvent},
+                {EventOption.JoinedRoom, ParseJoinedRoomEvent},
+                {EventOption.LeavedRoom, ParseLeavedRoomEvent},
+                {EventOption.MessageRoom, ParseMessagedRoomEvent},
+                {EventOption.DeletedRoom, ParseDeletedRoomEvent},
+                {EventOption.HostOfRoomChanged, ParseDeletedRoomEvent},
+                {EventOption.GameStarted, ParseGameStartedEvent},
             };
         }
 
-        public void ParseNetDataReader(NetDataReader reader)
+        public void ParseNetPacketReader(NetPacketReader reader)
         {
             Console.WriteLine($"RoomEventsViewModel : ParseNetDataReader THREAD # {System.Threading.Thread.CurrentThread.ManagedThreadId}");
-            _eventReferenses[(EventOption)reader.GetUShort()](UsersService.myUser, reader);
+            int code = reader.GetUShort();
+            _eventReferenses[(EventOption)code](UsersService.myUser, reader);
         }
 
-        private void OnJoinedRoom(User user, NetDataReader dataReader)
+        private void ParseJoinedRoomEvent(User user, NetPacketReader dataReader)
         {
             Console.WriteLine("JointRoomEvent <- LobbyService");
             _listener.OnJoinedRoom(
@@ -43,7 +46,7 @@ namespace RublikNativeAndroid.ViewModels
              userName: dataReader.GetString());
         }
 
-        private void OnLeavedRoom(User user, NetDataReader dataReader)
+        private void ParseLeavedRoomEvent(User user, NetPacketReader dataReader)
         {
             Console.WriteLine("LeaveRoomEvent <- LobbyService");
             _listener.OnLeavedRoom(
@@ -51,7 +54,7 @@ namespace RublikNativeAndroid.ViewModels
                 userName: dataReader.GetString());
         }
 
-        private void OnMessagedRoom(User user, NetDataReader dataReader)
+        private void ParseMessagedRoomEvent(User user, NetPacketReader dataReader)
         {
             Console.WriteLine("MessageRoomEvent <- LobbyService");
             if (user.inRoom)
@@ -62,13 +65,13 @@ namespace RublikNativeAndroid.ViewModels
             }
         }
 
-        private void OnDeletedRoom(User user, NetDataReader dataReader)
+        private void ParseDeletedRoomEvent(User user, NetPacketReader dataReader)
         {
             Console.WriteLine("DeleteRoomEvent <- LobbyService");
             _listener.OnDeletedRoom(idRoom: dataReader.GetInt());
         }
 
-        private void OnGotRooms(User user, NetDataReader dataReader)
+        private void ParseGotRoomsEvent(User user, NetPacketReader dataReader)
         {
             Console.WriteLine("GetRoomsEvent <- LobbyService");
             List<Room> rooms = new List<Room>();
@@ -88,7 +91,7 @@ namespace RublikNativeAndroid.ViewModels
             _listener.OnGotRooms(rooms);
         }
 
-        private void OnHostedRoom(User user, NetDataReader dataReader)
+        private void ParseHostedRoomEvent(User user, NetPacketReader dataReader)
         {
             Console.WriteLine("HostRoomEvent <- LobbyService");
 
@@ -104,11 +107,14 @@ namespace RublikNativeAndroid.ViewModels
         }
 
 
-        private void OnGameStarted(User user, NetDataReader dataReader)
+        private void ParseGameStartedEvent(User user, NetPacketReader dataReader)
         {
             Console.WriteLine("GameStartedEvent <- LobbyService");
 
-            _listener.OnGameStarted(new Room(1, null, new List<User>(), 100, true));
+            _listener.OnGameStarted(
+                ip: dataReader.GetString(),
+                port: dataReader.GetUShort()
+                );
 
             /*
             string ip = dataReader.GetString();

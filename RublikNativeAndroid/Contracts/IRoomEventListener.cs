@@ -13,7 +13,7 @@ namespace RublikNativeAndroid.Contracts
         public void OnMessagedRoom(Room room);
         public void OnLeavedRoom(int idRoom, string userName);
         public void OnJoinedRoom(int idRoom, string userName);
-        public void OnGameStarted(Room room);
+        public void OnGameStarted(string ip, int port);
 
         public void OnSubscribedOnLobbyService(LiveData<NetPacketReader> liveData);
     }

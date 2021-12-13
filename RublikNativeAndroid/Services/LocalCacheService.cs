@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using RublikNativeAndroid.Adapters;
+﻿using System.Collections.Generic;
 using RublikNativeAndroid.Models;
 
 namespace RublikNativeAndroid.Services

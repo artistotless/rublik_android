@@ -21,7 +21,8 @@ namespace RublikNativeAndroid.Adapters
 
         public void SetElements(List<T> elements)
         {
-            this.elements = elements;
+            this.elements.Clear();
+            this.elements.AddRange(elements);
             NotifyDataSetChanged();
         }
 

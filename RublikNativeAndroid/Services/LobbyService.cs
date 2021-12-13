@@ -33,6 +33,8 @@ namespace RublikNativeAndroid.Services
 
     public class LobbyService : IService
     {
+        public static LobbyService currentInstance;
+
         private NetPeer _lobbyServicePeer;
         private EventBasedNetListener _listener;
         private NetManager _client;
@@ -40,6 +42,7 @@ namespace RublikNativeAndroid.Services
 
         private LiveData<NetPacketReader> _liveData = new LiveData<NetPacketReader>();
 
+        public LobbyService() => currentInstance = this;
 
         public void SetListener(IRoomEventListener listener)
         {
@@ -66,9 +69,7 @@ namespace RublikNativeAndroid.Services
 
             _listener.PeerDisconnectedEvent += (peer, disconnectInfo) =>
             {
-                var status = disconnectInfo.AdditionalData.GetUShort();
-                if (disconnectInfo.AdditionalData.AvailableBytes != 0 && status != 0 && disconnectInfo.Reason == DisconnectReason.RemoteConnectionClose)
-                    _liveData.PostValue(disconnectInfo.AdditionalData);
+                _liveData.PostValue(disconnectInfo.AdditionalData);
             };
 
 
@@ -89,6 +90,7 @@ namespace RublikNativeAndroid.Services
         {
             _cancelTokenSource.Cancel();
             _client.Stop();
+            currentInstance = null;
         }
     }
 }
