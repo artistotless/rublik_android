@@ -28,8 +28,16 @@
 	<string name="stats">Stats</string>
 	<string name="tournaments">Tournaments</string>
 	<string name="services">Services</string>
-	<!-- Games -->
-	<string name="shellgame">Shell Game</string>
+	<!-- BaseGameEvents -->
+	<!-- // TODO: Перевести на английский -->
+	<string name="awaitReconnection">____</string>
+	<string name="awaitConnectionOtherPlayers">____</string>
+	<string name="canceledGame">____</string>
+	<string name="finishedGame">____</string>
+	<string name="initGame">____</string>
+	<string name="readyGame">____</string>
+	<!-- GameTitles -->
+	<string name="shellgame">Shell Game (Eggs)</string>
 	<!-- Errors -->
 	<string name="novalid_login">Novalid login or password</string>
 	<string name="novalid_register">This login or email is already exist</string>

@@ -5,7 +5,7 @@ using RublikNativeAndroid.Models;
 
 namespace RublikNativeAndroid.Games
 {
-    public enum GameStatus : ushort
+    public enum BaseGameEvent : ushort
     {
         waitingForConnecting,
         init,
@@ -16,15 +16,14 @@ namespace RublikNativeAndroid.Games
         chat
     }
 
-    public class GameInstance
+    public class BaseGameServer
     {
         public EventBasedNetListener listener;
         public NetManager client;
-        public GameStatus status;
         public BasePlayer player;
         public string addr;
         public int port;
-        public static GameInstance currentGame { get; set; }
+        public static BaseGameServer currentGame { get; set; }
         public CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
 
         private NetPeer _gameServerPeer;
@@ -34,7 +33,7 @@ namespace RublikNativeAndroid.Games
             _gameServerPeer = client.Connect(addr, port, initPacket);
         }
 
-        public GameInstance(BasePlayer player, string addr, int port)
+        public BaseGameServer(BasePlayer player, string addr, int port)
         {
             listener = new EventBasedNetListener();
             client = new NetManager(listener);
@@ -43,7 +42,7 @@ namespace RublikNativeAndroid.Games
             this.port = port;
             currentGame = this;
         }
-        private GameInstance() { }
+        private BaseGameServer() { }
 
         public void Send(NetDataWriter writer, DeliveryMethod deliveryMethod) => _gameServerPeer.Send(writer, deliveryMethod);
     }

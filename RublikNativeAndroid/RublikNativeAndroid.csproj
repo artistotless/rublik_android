@@ -115,14 +115,18 @@
     <Compile Include="Adapters\RoomsRecycleViewAdapter.cs" />
     <Compile Include="Contracts\IRoomEventListener.cs" />
     <Compile Include="ViewModels\RoomEventsParserViewModel.cs" />
-    <Compile Include="Games\ShellGame\ShellGame.cs" />
-    <Compile Include="Games\GameInstance.cs" />
+    <Compile Include="Games\BaseGameServer.cs" />
     <Compile Include="Contracts\IGameEventListener.cs" />
     <Compile Include="Games\BaseGameEventParserViewModel.cs" />
     <Compile Include="Models\BasePlayer.cs" />
     <Compile Include="Games\ShellGame\ShellGameControllerViewModel.cs" />
     <Compile Include="Models\PlayerListSerializable.cs" />
     <Compile Include="Fragments\ShellGameFragment.cs" />
+    <Compile Include="Games\ShellGame\ShellGameEventParserViewModel.cs" />
+    <Compile Include="Games\GameServer.cs" />
+    <Compile Include="Models\ShellGamePlayer.cs" />
+    <Compile Include="Contracts\IShellGameEventListener.cs" />
+    <Compile Include="Models\GameInitialPacket.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

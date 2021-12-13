@@ -13,9 +13,9 @@ namespace RublikNativeAndroid.Games
     }
     public class ShellGameControllerViewModel:ViewModel
     {
-        private GameInstance _instance;
+        private GameServer _instance;
 
-        public ShellGameControllerViewModel(GameInstance instance)
+        public ShellGameControllerViewModel(GameServer instance)
         {
             _instance = instance;
         }

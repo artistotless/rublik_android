@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using CrossPlatformLiveData;
@@ -11,28 +10,11 @@ using RublikNativeAndroid.Models;
 namespace RublikNativeAndroid.Games
 {
 
-    public class ShellGame : GameInstance, IDisposable
+    public class GameServer : BaseGameServer, IDisposable
     {
-        public class Player : BasePlayer
-        {
-            public int score { get; set; }
-
-            public Player(string nickname) : base(nickname) { }
-            public Player(User.Data userData) : base(userData) { }
-        }
-
         private LiveData<NetPacketReader> _liveData = new LiveData<NetPacketReader>();
 
-        private Player selectorPlayer => players.Count < maxPlayersCount ? null : players[masterId == 0 ? 1 : 0];
-        private Player masterPlayer => players.Count <= 0 ? null : players[masterId];
-        private int maxPlayersCount = 2;
-        private int masterId;
-        private List<Player> players = new List<Player>();
-        private int secondsForConnectingAllPlayers;
-        private int secondsForReconnect;
-        private uint steps;
-
-        public ShellGame(Player player, string addr, int port) : base(player, addr, port) { }
+        public GameServer(BasePlayer player, string addr, int port) : base(player, addr, port) { }
 
         public void SetListener(IGameEventListener listener) => listener.OnSubscribedGameEvents(_liveData);
 

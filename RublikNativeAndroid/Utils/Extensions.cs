@@ -4,6 +4,7 @@ using Android.Widget;
 using AndroidX.Fragment.App;
 using AndroidX.RecyclerView.Widget;
 using AndroidX.SwipeRefreshLayout.Widget;
+using Com.Airbnb.Lottie;
 using RublikNativeAndroid.Contracts;
 
 namespace RublikNativeAndroid
@@ -59,7 +60,7 @@ namespace RublikNativeAndroid
 
         public static SwipeRefreshLayout FindRefreshLayout(this View view, int resId) => view.FindViewById<SwipeRefreshLayout>(resId);
 
-
+        public static LottieAnimationView FindLottie(this View view, int resId) => view.FindViewById<LottieAnimationView>(resId);
 
     }
 }

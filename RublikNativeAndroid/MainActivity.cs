@@ -65,8 +65,8 @@ namespace RublikNativeAndroid
             SupportFragmentManager.RegisterFragmentLifecycleCallbacks(_fragmentLifecycleListener, false);
 
             if (savedInstanceState == null) // TODO: проверка на сохраненные данные о входе
-                SupportFragmentManager.ShowFragment(ShellGameFragment.NewInstance("62.109.26.46",9000), false);
-            //ShowLoginPage();
+                ShowLoginPage();
+                //SupportFragmentManager.ShowFragment(ShellGameFragment.NewInstance("62.109.26.46",9000), false);
         }
 
         //navigation.SetOnNavigationItemSelectedListener(this);        
