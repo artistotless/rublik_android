@@ -16,8 +16,7 @@
 		android:layout_marginTop="6dp"
 		android:maxWidth="100dp"
 		android:singleLine="true"
-		android:ellipsize="end"
-		android:text="Artistotlesswwwww"/>
+		android:ellipsize="end"/>
 
 	<ImageView
 		android:id="@+id/player1_image"
@@ -35,7 +34,7 @@
 		android:textStyle="bold"
 		android:layout_marginTop="8dp"
 		android:textSize="18dp"
-		android:text="1:1"/>
+		android:text="0:0"/>
 
 
 
@@ -54,6 +53,5 @@
 		android:layout_marginTop="6dp"
 		android:maxWidth="100dp"
 		android:singleLine="true"
-		android:ellipsize="end"
-		android:text="Neuralink7232050"/>
+		android:ellipsize="end"/>
 </LinearLayout>

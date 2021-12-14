@@ -7,34 +7,29 @@ namespace RublikNativeAndroid.Games
 
     enum ControllerAction : ushort
     {
-        Hide,
-        Select,
+        Move,
         Chat
     }
     public class ShellGameControllerViewModel:ViewModel
     {
         private GameServer _instance;
+        public int currentEggIndex;
 
         public ShellGameControllerViewModel(GameServer instance)
         {
             _instance = instance;
         }
 
-        public void HideBall(ushort idPlace)
+
+        public void Move(ushort idPlace)
         {
             NetDataWriter writer = new NetDataWriter();
-            writer.Put((ushort)ControllerAction.Hide);
+            writer.Put((ushort)ControllerAction.Move);
             writer.Put(idPlace);
             _instance.Send(writer, DeliveryMethod.ReliableOrdered);
+            currentEggIndex = idPlace - 1;
         }
 
-        public void SelectBall(ushort idPlace)
-        {
-            NetDataWriter writer = new NetDataWriter();
-            writer.Put((ushort)ControllerAction.Select);
-            writer.Put(idPlace);
-            _instance.Send(writer, DeliveryMethod.ReliableOrdered);
-        }
 
         public void Chat(string msg)
         {

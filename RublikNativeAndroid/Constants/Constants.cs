@@ -12,6 +12,14 @@ namespace RublikNativeAndroid
             public const string PORT = "PORT";
         }
 
+        public static class Numbers
+        {
+            public static class GameEnumCodeStart
+            {
+                public const int ShellGame = 7;
+            }
+        }
+
         public static class Services
         {
             public const string LOBBY_IP = "192.168.43.14";
@@ -28,7 +36,7 @@ namespace RublikNativeAndroid
             private const string FS_DOMAIN = "unity3ddd.ru";
 
             public const string FS_AVATAR = HTTP_SCHEME + FS_DOMAIN + "{0}";
-            public const string API_LOGIN =  HTTPS_SCHEME + API_DOMAIN + "/api/Login";
+            public const string API_LOGIN = HTTPS_SCHEME + API_DOMAIN + "/api/Login";
             public const string API_GET_USER = HTTPS_SCHEME + API_DOMAIN + "/api/user/Profile/{0}";
             public const string API_GET_FRIENDS = HTTPS_SCHEME + API_DOMAIN + "/api/Friend?userId={0}&accessKey={1}";
             public const string API_GET_AVATAR = HTTPS_SCHEME + API_DOMAIN + "/api/user/GetAvatar?userId={0}";

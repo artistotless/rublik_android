@@ -7,7 +7,9 @@ namespace RublikNativeAndroid.Games.ShellGame
 {
     enum ShellGameEvent
     {
-        updateState
+        updateState = Constants.Numbers.GameEnumCodeStart.ShellGame,
+        successPredicted,
+        failPredicted
     }
 
     public class ShellGameEventParserViewModel : BaseGameEventParserViewModel
