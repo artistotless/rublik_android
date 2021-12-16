@@ -26,7 +26,7 @@ namespace RublikNativeAndroid.Fragments
         private User.Data _conversatorCache { get; set; }
 
         private MessengerRecycleListAdapter _adapter;
-        private IDisposable _unsubscriberMessenger;
+        private IDisposable _eventsUnsubscriber;
 
         public CustomToolbarItemsBag GetBag()
         {
@@ -45,8 +45,8 @@ namespace RublikNativeAndroid.Fragments
         public override void OnDestroyView()
         {
             base.OnDestroyView();
-            if (_unsubscriberMessenger != null)
-                _unsubscriberMessenger.Dispose();
+            try { _eventsUnsubscriber.Dispose(); }
+            catch { }
         }
 
 
@@ -135,9 +135,9 @@ namespace RublikNativeAndroid.Fragments
             _dialogList.SetAdapter(adapter);
         }
 
-        public void OnSubscribedOnMessenger(LiveData<ChatMessage> liveData)
+        public void OnSubscribedOnMessenger(LiveData<ChatMessage> liveData, IDisposable serviceDisposable)
         {
-            _unsubscriberMessenger = liveData.Subscribe(
+            var liveDataDisposable = liveData.Subscribe(
                 (ChatMessage message) =>
                 {
                     if (message.authorId == _conversator.id)
@@ -145,8 +145,11 @@ namespace RublikNativeAndroid.Fragments
                     else
                         Console.WriteLine($"MessengerFragment:OnSubscribedOnMessenger THREAD # {Thread.CurrentThread.ManagedThreadId}");
                 },
-                (Exception e) => { },
-                delegate { });
+                delegate (Exception e) { },
+                delegate { }
+                );
+
+            _eventsUnsubscriber = new UnsubscriberService(serviceDisposable, liveDataDisposable);
         }
 
         private void HandleIncommingMessage(ChatMessage message)

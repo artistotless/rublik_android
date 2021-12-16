@@ -31,7 +31,7 @@ namespace RublikNativeAndroid.Services
         GameStarted
     }
 
-    public class LobbyService : IService
+    public class LobbyService : IService, IDisposable
     {
         public static LobbyService currentInstance;
 
@@ -44,13 +44,11 @@ namespace RublikNativeAndroid.Services
 
         public LobbyService() => currentInstance = this;
 
-        public void SetListener(IRoomEventListener listener)
-        {
-            listener.OnSubscribedOnLobbyService(_liveData);
-        }
+        public void SetListener(IRoomEventListener listener) => listener.OnSubscribedOnService(_liveData, this);
 
         public void Connect(string accessKey)
         {
+            LobbyService.currentInstance = this;
             _listener = new EventBasedNetListener();
             _client = new NetManager(_listener);
             CancellationToken cancelToken = _cancelTokenSource.Token;
@@ -78,7 +76,7 @@ namespace RublikNativeAndroid.Services
                 while (!cancelToken.IsCancellationRequested)
                 {
                     _client.PollEvents();
-                    await Task.Delay(500);
+                    await Task.Delay(100);
                 }
             }, cancelToken);
 
@@ -86,11 +84,19 @@ namespace RublikNativeAndroid.Services
 
         public void Send(NetDataWriter writer, DeliveryMethod deliveryMethod) => _lobbyServicePeer.Send(writer, deliveryMethod);
 
-        internal void Disconnect()
+        public void Disconnect()
         {
             _cancelTokenSource.Cancel();
             _client.Stop();
             currentInstance = null;
+        }
+
+        public void Dispose()
+        {
+            Disconnect();
+            _client = null;
+            _listener = null;
+            _liveData.Value.Clear();
         }
     }
 }

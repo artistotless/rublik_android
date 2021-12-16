@@ -35,6 +35,9 @@
 	<string name="finishedGame">Игра закончена</string>
 	<string name="initGame">Игра инициализирована</string>
 	<string name="readyGame">Игра готова</string>
+	<string name="youwon">Вы победили!</string>
+	<string name="wasted">Повезет в другой раз!</string>
+	<string name="gamewascanceled">Игра была отменена</string>
 	<!-- GameTitles -->
 	<string name="shellgame">Наперстки (Яйца)</string>
 	<!-- Errors -->

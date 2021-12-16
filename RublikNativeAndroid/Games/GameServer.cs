@@ -9,33 +9,56 @@ using RublikNativeAndroid.Models;
 
 namespace RublikNativeAndroid.Games
 {
-
-    public class GameServer : BaseGameServer, IDisposable
+    public enum GameServerEvent : ushort
     {
+        waitingForConnecting,
+        init,
+        waitingForReconnecting,
+        ready,
+        canceled,
+        finished,
+        chat
+    }
+
+    public class GameServer : IDisposable
+    {
+        private EventBasedNetListener _listener;
+        private NetManager _client;
+        private BasePlayer _player;
+        public static GameServer currentInstance { get; set; }
+        private CancellationTokenSource _cancelTokenSource = new CancellationTokenSource();
+
         private LiveData<NetPacketReader> _liveData = new LiveData<NetPacketReader>();
+        private NetPeer _gameServerPeer;
 
-        public GameServer(BasePlayer player, string addr, int port) : base(player, addr, port) { }
-
-        public void SetListener(IGameEventListener listener) => listener.OnSubscribedGameEvents(_liveData);
-
-        public void Start()
+        public GameServer()
         {
-            client.Start();
+            _listener = new EventBasedNetListener();
+            _client = new NetManager(_listener);
+            currentInstance = this;
+        }
+
+        public void SetListener(IGameEventListener listener) => listener.OnSubscribedOnService(_liveData, this);
+
+        public void Connect(BasePlayer player, ServerEndpoint endpoint)
+        {
+            currentInstance = this;
+            _client.Start();
             NetDataWriter initPacket = new NetDataWriter();
             initPacket.Put(player.extraData.username);
             initPacket.Put(player.extraData.accessKey);
 
-            Connect(addr, port, initPacket);
+            _gameServerPeer = _client.Connect(endpoint.ip, endpoint.port, initPacket);
 
-            CancellationToken canselToken = cancelTokenSource.Token;
+            CancellationToken canselToken = _cancelTokenSource.Token;
 
 
-            listener.NetworkReceiveEvent += (peer, dataReader, deliveryMethod) =>
+            _listener.NetworkReceiveEvent += (peer, dataReader, deliveryMethod) =>
         {
             _liveData.PostValue(dataReader);
         };
 
-            listener.PeerDisconnectedEvent += (peer, disconnectInfo) =>
+            _listener.PeerDisconnectedEvent += (peer, disconnectInfo) =>
                     {
                         Console.WriteLine(
                             "\n" +
@@ -51,15 +74,26 @@ namespace RublikNativeAndroid.Games
                     {
                         while (!canselToken.IsCancellationRequested)
                         {
-                            client.PollEvents();
+                            _client.PollEvents();
                             await Task.Delay(500);
                         }
                     }, canselToken);
         }
+        public void Send(NetDataWriter writer, DeliveryMethod deliveryMethod) => _gameServerPeer.Send(writer, deliveryMethod);
+
+        public void Disconnect()
+        {
+            _cancelTokenSource.Cancel();
+            _client.Stop();
+            currentInstance = null;
+        }
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            Disconnect();
+            _client = null;
+            _listener = null;
+            _liveData.Value.Clear();
         }
     }
 

@@ -10,28 +10,28 @@ namespace RublikNativeAndroid.Games
     public abstract class BaseGameEventParserViewModel : ViewModel
     {
 
-        private Dictionary<BaseGameEvent, Action<NetPacketReader>> _eventReferenses;
+        private Dictionary<GameServerEvent, Action<NetPacketReader>> _eventReferenses;
         private IGameEventListener _listener;
 
         public BaseGameEventParserViewModel(IGameEventListener listener)
         {
             _listener = listener;
-            _eventReferenses = new Dictionary<BaseGameEvent, Action<NetPacketReader>>{
-            {BaseGameEvent.waitingForConnecting , ParseWaitingPlayerConnectionEvent},
-            {BaseGameEvent.waitingForReconnecting ,ParseWaitingPlayerReconnectionEvent},
-            {BaseGameEvent.init , ParseInitGameEvent},
-            {BaseGameEvent.ready , ParseReadyGameEvent},
-            {BaseGameEvent.canceled , ParseCanceledGameEvent},
-            {BaseGameEvent.finished , ParseFinishedGameEvent},
-            {BaseGameEvent.chat , ParseChatGameEvent}
+            _eventReferenses = new Dictionary<GameServerEvent, Action<NetPacketReader>>{
+            {GameServerEvent.waitingForConnecting , ParseWaitingPlayerConnectionEvent},
+            {GameServerEvent.waitingForReconnecting ,ParseWaitingPlayerReconnectionEvent},
+            {GameServerEvent.init , ParseInitGameEvent},
+            {GameServerEvent.ready , ParseReadyGameEvent},
+            {GameServerEvent.canceled , ParseCanceledGameEvent},
+            {GameServerEvent.finished , ParseFinishedGameEvent},
+            {GameServerEvent.chat , ParseChatGameEvent}
             };
         }
 
         public void ParseNetPacketReader(NetPacketReader reader)
         {
             ushort eventCode = reader.GetUShort();
-            if (_eventReferenses.ContainsKey((BaseGameEvent)eventCode))
-                _eventReferenses[(BaseGameEvent)eventCode](reader);
+            if (_eventReferenses.ContainsKey((GameServerEvent)eventCode))
+                _eventReferenses[(GameServerEvent)eventCode](reader);
             else
                 ParseAdditionally(eventCode, reader);
         }

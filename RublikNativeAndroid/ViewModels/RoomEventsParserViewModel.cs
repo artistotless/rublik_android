@@ -112,9 +112,10 @@ namespace RublikNativeAndroid.ViewModels
             Console.WriteLine("GameStartedEvent <- LobbyService");
 
             _listener.OnGameStarted(
+                new ServerEndpoint(
                 ip: dataReader.GetString(),
                 port: dataReader.GetUShort()
-                );
+                ));
 
             /*
             string ip = dataReader.GetString();

@@ -5,6 +5,7 @@ using AndroidX.Fragment.App;
 using AndroidX.RecyclerView.Widget;
 using AndroidX.SwipeRefreshLayout.Widget;
 using Com.Airbnb.Lottie;
+using Google.Android.Material.FloatingActionButton;
 using RublikNativeAndroid.Contracts;
 
 namespace RublikNativeAndroid
@@ -39,6 +40,8 @@ namespace RublikNativeAndroid
     public static class FindWidgetIdExtension
     {
         public static Button FindButton(this View view, int resId) => view.FindViewById<Button>(resId);
+
+        public static FloatingActionButton FindFloatingBtn(this View view, int resId) => view.FindViewById<FloatingActionButton>(resId);
 
         public static TextView FindTextView(this View view, int resId) => view.FindViewById<TextView>(resId);
 

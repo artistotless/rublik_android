@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/bottom_sheet"
+	android:layout_width="match_parent"
+	android:layout_height="340dp"
+	android:orientation="vertical"
+	app:behavior_hideable="true"
+	app:behavior_peekHeight="80dp">
+
+	<TextView
+		android:layout_height="40dp"
+		android:background="#ff304ffe"
+		android:layout_marginBottom="15dp"
+		android:layout_width="match_parent"
+		android:gravity="center"
+		android:text="@string/messenger"
+		android:textColor="@android:color/white"
+		/>
+
+
+	<include
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		layout="@layout/fragment_messenger"/>
+
+
+</LinearLayout>

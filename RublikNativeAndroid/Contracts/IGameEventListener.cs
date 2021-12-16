@@ -1,11 +1,9 @@
-﻿using CrossPlatformLiveData;
-using LiteNetLib;
-using RublikNativeAndroid.Models;
+﻿using RublikNativeAndroid.Models;
 
 namespace RublikNativeAndroid.Contracts
 {
 
-    public interface IGameEventListener
+    public interface IGameEventListener: IServiceListener
     {
         public void OnWaitingPlayerConnection();
         public void OnWaitingPlayerReconnection();
@@ -15,7 +13,7 @@ namespace RublikNativeAndroid.Contracts
         public void OnFinishedGame();
         public void OnChatGame(int authorId, string message);
 
-        public void OnSubscribedGameEvents(LiveData<NetPacketReader> liveData);
+        public ServerEndpoint GetServerEndpoint();
     }
 
 }

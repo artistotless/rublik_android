@@ -1,4 +1,7 @@
-﻿namespace RublikNativeAndroid.Contracts
+﻿using RublikNativeAndroid.Fragments;
+using RublikNativeAndroid.Models;
+
+namespace RublikNativeAndroid.Contracts
 {
     public interface INavigator
     {
@@ -13,5 +16,7 @@
         void ShowServicesPage();
         void ShowRoomsPage();
         void ShowLobbyPage(int gameId);
+        void ShowGamePage(Room room, ServerEndpoint endpoint);
+        void ShowGameResultPage(int sum, GameResult status);
     }
 }

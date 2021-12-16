@@ -4,13 +4,13 @@ using Android.App;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
-using Android.Widget;
 using AndroidX.AppCompat.App;
 using FFImageLoading;
 using FFImageLoading.Transformations;
 using Google.Android.Material.BottomNavigation;
 using RublikNativeAndroid.Contracts;
 using RublikNativeAndroid.Fragments;
+using RublikNativeAndroid.Games;
 using RublikNativeAndroid.Models;
 using RublikNativeAndroid.Services;
 
@@ -32,17 +32,14 @@ namespace RublikNativeAndroid
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true)]
     public class MainActivity : AppCompatActivity, INavigator, IFragmentViewCreateListener, ICacheServiceAccessor, IMenuItemOnMenuItemClickListener, IMessengerInteractor
     {
-        public TextView textMessage { get; set; }
-
-        public static MessengerService messengerService { get; private set; }
-        public static LobbyService lobbyService { get; private set; }
+        private MessengerService messengerService;
+        private static LocalCacheService cacheService { get; set; }
 
         private FragmentLifecycleListener _fragmentLifecycleListener { get; set; }
         private BottomNavigationView _bottomNav { get; set; }
         private AndroidX.Fragment.App.Fragment _currentFragment => SupportFragmentManager.FindFragmentById(Resource.Id.viewPager);
         private Dictionary<IMenuItem, EventHandler> _menuItems = new Dictionary<IMenuItem, EventHandler>();
         private static AndroidX.AppCompat.Widget.Toolbar _toolbar { get; set; }
-        private static LocalCacheService cacheService { get; set; }
 
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -54,9 +51,6 @@ namespace RublikNativeAndroid
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             SetContentView(Resource.Layout.activity_main);
 
-            messengerService = messengerService == null ? new MessengerService() : messengerService;
-            lobbyService = lobbyService == null ? new LobbyService() : lobbyService;
-
             _toolbar = FindViewById<AndroidX.AppCompat.Widget.Toolbar>(Resource.Id.main_toolbar);
             _bottomNav = FindViewById<BottomNavigationView>(Resource.Id.bottom_navigation);
 
@@ -66,10 +60,9 @@ namespace RublikNativeAndroid
 
             if (savedInstanceState == null) // TODO: проверка на сохраненные данные о входе
                 ShowLoginPage();
-                //SupportFragmentManager.ShowFragment(ShellGameFragment.NewInstance("62.109.26.46",9000), false);
+            //SupportFragmentManager.ShowFragment(ShellGameFragment.NewInstance("62.109.26.46",9000), false);
         }
 
-        //navigation.SetOnNavigationItemSelectedListener(this);        
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
@@ -147,19 +140,28 @@ namespace RublikNativeAndroid
             {
                 string title = hasToolbarTitle.GetTitle();
                 SupportActionBar.Title = title;
-
             }
 
             if (fragment is IMessengerListener messengerListener)
             {
+                messengerService = new MessengerService();
                 messengerService.Connect(UsersService.myUser.extraData.accessKey);
                 messengerService.SetListener(messengerListener);
             }
 
-            if(fragment is IRoomEventListener roomEventListener)
+            if (fragment is IRoomEventListener roomEventListener)
             {
+                LobbyService lobbyService = new LobbyService();
                 lobbyService.Connect(UsersService.myUser.extraData.accessKey);
                 lobbyService.SetListener(roomEventListener);
+            }
+
+            if (fragment is IGameEventListener gameEventListener)
+            {
+                ServerEndpoint endpoint = gameEventListener.GetServerEndpoint();
+                GameServer gameServer = new GameServer();
+                gameServer.Connect(new BasePlayer(UsersService.myUser.extraData), endpoint);
+                gameServer.SetListener(gameEventListener);
             }
         }
 
@@ -179,7 +181,13 @@ namespace RublikNativeAndroid
         {
             SupportFragmentManager.PopBackStack(null, (int)PopBackStackFlags.Inclusive);
             SupportFragmentManager.ShowFragment(MyprofileFragment.NewInstance(), false);
+        }
 
+        public void ShowGamePage(Room room, ServerEndpoint endpoint)
+        {
+            var fragment = GameFragmentFactory.CreateNew(room.game.id, new ServerEndpoint(endpoint.ip, endpoint.port), room.award);
+            SupportFragmentManager.PopBackStack(null, (int)PopBackStackFlags.Inclusive);
+            SupportFragmentManager.ShowFragment(fragment, false);
         }
 
         public void ShowMessenger(int userId) => SupportFragmentManager.ShowFragment(MessengerFragment.NewInstance(userId));
@@ -214,6 +222,12 @@ namespace RublikNativeAndroid
             throw new NotImplementedException();
         }
 
+        public void ShowGameResultPage(int sum, GameResult status)
+        {
+            SupportFragmentManager.PopBackStack(null, (int)PopBackStackFlags.Inclusive);
+            SupportFragmentManager.ShowFragment(GameResultFragment.NewInstance(sum, status), false);
+        }
+
         public void ShowLoginPage()
         {
             SupportFragmentManager.PopBackStack();
@@ -222,11 +236,12 @@ namespace RublikNativeAndroid
 
         public void ShowRoomsPage() => SupportFragmentManager.ShowFragment(new RoomsFragment());
 
-        public void ShowRegisterPage()=> SupportFragmentManager.ShowFragment(new RegisterFragment());
+        public void ShowRegisterPage() => SupportFragmentManager.ShowFragment(new RegisterFragment());
 
-        public void SendPrivateMessage(int destinationUserId, string message)=> messengerService.SendPrivateMessage(destinationUserId, message);
+        public void SendPrivateMessage(int destinationUserId, string message) => messengerService.SendPrivateMessage(destinationUserId, message);
 
-        public LocalCacheService GetCacheService()=> cacheService;
+        public LocalCacheService GetCacheService() => cacheService;
+
 
     }
 }

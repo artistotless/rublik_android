@@ -8,12 +8,12 @@ using RublikNativeAndroid.Models;
 
 namespace RublikNativeAndroid.Services
 {
-    public class MessengerService : IService
+    public class MessengerService : IService, IDisposable
     {
-        public LiveData<ChatMessage> liveData = new LiveData<ChatMessage>();
+        private LiveData<ChatMessage> _liveData = new LiveData<ChatMessage>();
 
         private NetPeer _chatServicePeer;
-        private EventBasedNetListener _localListener;
+        private EventBasedNetListener _listener;
         private NetManager _client;
         private CancellationTokenSource _cancelTokenSource = new CancellationTokenSource();
 
@@ -25,7 +25,7 @@ namespace RublikNativeAndroid.Services
 
         public void SetListener(IMessengerListener listener)
         {
-            listener.OnSubscribedOnMessenger(liveData);
+            listener.OnSubscribedOnMessenger(_liveData, this);
         }
 
         public void Connect(string accessKey)
@@ -33,20 +33,20 @@ namespace RublikNativeAndroid.Services
             if (GetConnectionState() == ConnectionState.Connected)
                 return;
 
-            _localListener = new EventBasedNetListener();
-            _client = new NetManager(_localListener);
+            _listener = new EventBasedNetListener();
+            _client = new NetManager(_listener);
             CancellationToken canselToken = _cancelTokenSource.Token;
             _client.Start();
 
             // TODO: заменить ip сервиса на домен вида m1s.rublik.ru . Использовать DNS сервера
             _chatServicePeer = _client.Connect(Constants.Services.MESSENGER_IP, Constants.Services.MESSENGER_PORT, accessKey);
-            _localListener.NetworkReceiveEvent += (peer, packetReader, deliveryMethod) =>
+            _listener.NetworkReceiveEvent += (peer, packetReader, deliveryMethod) =>
             {
                 Console.WriteLine($"NetworkReceiveEvent THREAD # {Thread.CurrentThread.ManagedThreadId}");
                 ChatMessage message = new ChatMessage(packetReader);
                 Console.WriteLine("[{0}][{1}]: {2}", message.timeStamp, message.authorId, message.text);
 
-                liveData.PostValue(message);
+                _liveData.PostValue(message);
 
             };
             Task.Run(async () =>
@@ -61,10 +61,18 @@ namespace RublikNativeAndroid.Services
 
         }
 
-        public void Stop()
+        public void Disconnect()
         {
             _cancelTokenSource.Cancel();
             _client.Stop();
+        }
+
+
+        public void Dispose()
+        {
+            Disconnect();
+            _client = null;
+            _listener = null;
         }
 
         public ConnectionState GetConnectionState() => _chatServicePeer == null ? ConnectionState.Disconnected : _chatServicePeer.ConnectionState;

@@ -35,7 +35,7 @@ namespace RublikNativeAndroid.Fragments
 
         private ProfileViewModel _myProfileViewModel;
         private IDisposable _unsubscriber;
-        private IDisposable _unsubscriberMessenger;
+        private IDisposable _eventsUnsubscriber;
         private FriendRecycleListAdapter _adapter;
 
         private static int _userId { get; set; }
@@ -59,8 +59,8 @@ namespace RublikNativeAndroid.Fragments
         public override void OnDestroyView()
         {
             base.OnDestroyView();
-            if (_unsubscriberMessenger != null)
-                _unsubscriberMessenger.Dispose();
+            try { _eventsUnsubscriber.Dispose(); }
+            catch { }
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -175,16 +175,18 @@ namespace RublikNativeAndroid.Fragments
         private void SetFriends(List<Friend> friends) => _adapter.SetElements(friends);
 
 
-        public void OnSubscribedOnMessenger(LiveData<ChatMessage> liveData)
+        public void OnSubscribedOnMessenger(LiveData<ChatMessage> liveData, IDisposable serviceDisposable)
         {
-            _unsubscriberMessenger = liveData.Subscribe(
+            var liveDataDisposable = liveData.Subscribe(
                  (ChatMessage message) =>
                  {
                      Console.WriteLine($"MyprofileFragment:OnSubscribedOnMessenger THREAD # {Thread.CurrentThread.ManagedThreadId}");
                      Toast.MakeText(Context, $"Message: {message.text}", ToastLength.Short).Show();
                  },
-                 (Exception e) => { },
-                 () => { });
+                 delegate (Exception e) { },
+                 delegate { });
+
+            _eventsUnsubscriber = new UnsubscriberService(liveDataDisposable, serviceDisposable);
         }
     }
 }

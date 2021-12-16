@@ -36,6 +36,9 @@
 	<string name="finishedGame">____</string>
 	<string name="initGame">____</string>
 	<string name="readyGame">____</string>
+	<string name="youwon">You won!</string>
+	<string name="wasted">Lucky for another time!</string>
+	<string name="gamewascanceled">Game was canceled</string>
 	<!-- GameTitles -->
 	<string name="shellgame">Shell Game (Eggs)</string>
 	<!-- Errors -->

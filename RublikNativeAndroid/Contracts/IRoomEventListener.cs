@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
-using CrossPlatformLiveData;
-using LiteNetLib;
 using RublikNativeAndroid.Models;
 
 namespace RublikNativeAndroid.Contracts
 {
-    public interface IRoomEventListener
+    public interface IRoomEventListener: IServiceListener
     {
         public void OnGotRooms(List<Room> rooms);
         public void OnDeletedRoom(int idRoom);
@@ -13,8 +11,7 @@ namespace RublikNativeAndroid.Contracts
         public void OnMessagedRoom(Room room);
         public void OnLeavedRoom(int idRoom, string userName);
         public void OnJoinedRoom(int idRoom, string userName);
-        public void OnGameStarted(string ip, int port);
+        public void OnGameStarted(ServerEndpoint endpoint);
 
-        public void OnSubscribedOnLobbyService(LiveData<NetPacketReader> liveData);
     }
 }

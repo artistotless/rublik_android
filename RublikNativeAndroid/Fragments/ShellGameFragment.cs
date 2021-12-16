@@ -13,27 +13,40 @@ using Com.Airbnb.Lottie;
 using RublikNativeAndroid.Games.ShellGame;
 using System.Collections.Generic;
 using System.Linq;
-using Android.Views.Animations;
 using Android.Animation;
 using static Android.Animation.ValueAnimator;
+using Google.Android.Material.BottomSheet;
+using Google.Android.Material.FloatingActionButton;
+using RublikNativeAndroid.Adapters;
+using static Android.Views.View;
+using AndroidX.RecyclerView.Widget;
 
 namespace RublikNativeAndroid.Fragments
 {
-    public class ShellGameFragment : Fragment, IHasToolbarTitle, IShellGameEventListener, IHideBottomNav, IAnimatorUpdateListener
+    public class ShellGameFragment : Fragment, IHasToolbarTitle, IShellGameEventListener, IHideBottomNav, IAnimatorUpdateListener, IOnClickListener
     {
         private LottieAnimationView[] _eggs;
         private TextView _status, _scoresTable, _firstPlayerText, _secondPlayerText;
         private ImageView _firstPlayerImage, _secondPlayerImage;
+        private RecyclerView _chatRecyclerView;
         private LottieAnimationView _loading;
+        private FloatingActionButton _floatingActionButton;
+        private View _bottomSheetMessages;
+        private EditText _msgField;
+        private Button _msgSubmit;
+        private Button _scrollDownBtn;
 
         private BaseGameEventParserViewModel _eventParser;
         private ShellGameControllerViewModel _controller;
+        private MessengerRecycleListAdapter _adapter;
+        private BottomSheetDialog _bottomSheetDialog;
 
-        private GameServer _game;
 
+        private ServerEndpoint _endpoint;
         private ShellGamePlayer _selectorPlayer => _players.Count < _maxPlayersCount ? null : _players[_masterId == 0 ? 1 : 0];
         private ShellGamePlayer _masterPlayer => _players.Count <= 0 ? null : _players[_masterId];
         private List<ShellGamePlayer> _players = new List<ShellGamePlayer>();
+        private int _award;
         private int _maxPlayersCount = 2;
         private int _masterId;
         private int _secondsForConnectingAllPlayers;
@@ -44,31 +57,25 @@ namespace RublikNativeAndroid.Fragments
         private IDisposable _eventsUnsubscriber;
 
         public string GetTitle() => GetString(Resource.String.shellgame);
+        public ServerEndpoint GetServerEndpoint() => _endpoint;
 
         public override void OnDestroyView()
         {
             base.OnDestroyView();
-            if (_eventsUnsubscriber != null)
-                _eventsUnsubscriber.Dispose();
-
+            try { _eventsUnsubscriber.Dispose(); }
+            catch { }
         }
 
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             _eventParser = new ShellGameEventParserViewModel(this);
-
-            string ip = Arguments.GetString(Constants.Fragments.IP);
-            int port = Arguments.GetInt(Constants.Fragments.PORT);
-            try
-            {
-                _game = new GameServer(new ShellGamePlayer(UsersService.myUser.extraData), ip, port);
-                _game.SetListener(this);
-                _game.Start();
-                _controller = new ShellGameControllerViewModel(_game);
-
-            }
-            catch { }
+            _controller = new ShellGameControllerViewModel();
+            _adapter = new MessengerRecycleListAdapter(this);
+            _award = Arguments.GetInt(Constants.GameTermins.AWARD);
+            _endpoint = new ServerEndpoint(
+                ip: Arguments.GetString(Constants.Fragments.IP),
+                port: Arguments.GetInt(Constants.Fragments.PORT));
         }
 
 
@@ -76,7 +83,19 @@ namespace RublikNativeAndroid.Fragments
         {
             base.OnCreateView(inflater, container, savedInstanceState);
             var rootView = inflater.Inflate(Resource.Layout.fragment_shellgame, container, false);
+            _bottomSheetDialog = new BottomSheetDialog(Context);
+
+            _bottomSheetMessages = LayoutInflater.From(Context).Inflate(Resource.Layout.bottom_sheet_shellgame,
+                new LinearLayout(Context));
+
+            _bottomSheetDialog.SetContentView(_bottomSheetMessages);
+
             _status = rootView.FindTextView(Resource.Id.shellgame_status);
+            _chatRecyclerView = _bottomSheetMessages.FindRecyclerView(Resource.Id.messenger_dialog_list);
+            _msgField = _bottomSheetMessages.FindEditText(Resource.Id.messenger_text_field);
+            _scrollDownBtn = _bottomSheetMessages.FindButton(Resource.Id.messenger_scrolldown_btn);
+            _msgSubmit = _bottomSheetMessages.FindButton(Resource.Id.messenger_send_btn);
+            _floatingActionButton = rootView.FindFloatingBtn(Resource.Id.chat_floating_btn);
             _firstPlayerText = rootView.FindTextView(Resource.Id.player1_name);
             _secondPlayerText = rootView.FindTextView(Resource.Id.player2_name);
             _scoresTable = rootView.FindTextView(Resource.Id.score);
@@ -89,12 +108,48 @@ namespace RublikNativeAndroid.Fragments
                     rootView.FindLottie(Resource.Id.egg3),
                     };
 
+            AttachAdapter(_adapter, container);
+            _msgField.TextChanged += (object sender, Android.Text.TextChangedEventArgs e) =>
+            {
+                if (string.IsNullOrEmpty(_msgField.Text))
+                    _msgSubmit.Visibility = ViewStates.Gone;
+                else
+                    _msgSubmit.Visibility = ViewStates.Visible;
+            };
+
+            _scrollDownBtn.Click += (object sender, EventArgs e) => { SmoothScroolDown(); };
+
+            _chatRecyclerView.ScrollChange += (object sender, ScrollChangeEventArgs e) =>
+            {
+                if (_adapter.ItemCount - GetCurrentRecyclerViewPos() > 3)
+                    _scrollDownBtn.Visibility = ViewStates.Visible;
+                else
+                    _scrollDownBtn.Visibility = ViewStates.Gone;
+            };
+
+            _msgSubmit.Click += (object sender, EventArgs e) =>
+            {
+                Vibrator v = Vibrator.FromContext(Context);
+
+                // Vibrate for 20 milliseconds
+                if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
+                    v.Vibrate(VibrationEffect.CreateOneShot(20, 10));
+
+                else
+                    //deprecated in API 26 
+                    v.Vibrate(20);
+
+                string message = _msgField.Text;
+                _controller.Chat(message);
+                _msgField.SetText(string.Empty, TextView.BufferType.Normal);
+                //OnChatGame(UsersService.myUser.extraData.id,message);
+
+            };
+
             ConfigureAnimationView(_eggs[0], 1);
             ConfigureAnimationView(_eggs[1], 2);
             ConfigureAnimationView(_eggs[2], 3);
-
-            //_hide.Click += delegate (object sender, EventArgs e) { _controller.HideBall(ushort.Parse(_place.Text)); };
-            //_select.Click += delegate (object sender, EventArgs e) { _controller.SelectBall(ushort.Parse(_place.Text)); };
+            _floatingActionButton.Click += delegate (object sender, EventArgs e) { _bottomSheetDialog.Show(); };
 
             return rootView;
         }
@@ -104,13 +159,19 @@ namespace RublikNativeAndroid.Fragments
             view.Click += delegate (object sender, EventArgs e) { SelectOrHide(id); };
             view.AddAnimatorUpdateListener(this);
         }
+        private int GetCurrentRecyclerViewPos() => (_chatRecyclerView.GetLayoutManager() as LinearLayoutManager).FindLastVisibleItemPosition();
 
-        private void SelectOrHide(int eggNumber)
+        private void AttachAdapter(MessengerRecycleListAdapter adapter, ViewGroup container)
         {
-            Toast.MakeText(Context, $"Egg number #{eggNumber}", ToastLength.Short).Show();
-            _controller.Move((ushort)eggNumber);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(container.Context, (int)Orientation.Vertical, false);
 
+            layoutManager.StackFromEnd = true;
+
+            _chatRecyclerView.SetLayoutManager(layoutManager);
+            _chatRecyclerView.SetAdapter(adapter);
         }
+
+        private void SelectOrHide(int eggNumber) => _controller.Move((ushort)eggNumber);
 
         private void AnimateEgg(int eggNumber, bool isTruePredicted)
         {
@@ -125,17 +186,27 @@ namespace RublikNativeAndroid.Fragments
 
         public void OnChatGame(int authorId, string message)
         {
-            Toast.MakeText(Context, $"{GetString(Resource.String.send_message)}: {message}", ToastLength.Long).Show();
+            _adapter.AddElement(new ChatMessage(UsersService.myUser.extraData.id, message, authorId, DateTime.Now));
+        }
+
+        private void SmoothScroolDown()
+        {
+            _scrollDownBtn.Visibility = ViewStates.Gone;
+            _chatRecyclerView.SmoothScrollToPosition(_adapter.ItemCount - 1);
         }
 
         public void OnFinishedGame()
         {
-            Toast.MakeText(Context, GetString(Resource.String.finishedGame), ToastLength.Short).Show();
+            var myPlayerIndex = _players.IndexOf(new ShellGamePlayer(UsersService.myUser.extraData));
+            var opponent = _players[myPlayerIndex == 0 ? 1 : 0];
+            GameResult gameResult = _players[myPlayerIndex].score > opponent.score ? GameResult.Win : GameResult.Lose;
+            this.Navigator().ShowGameResultPage(_award, gameResult);
+
         }
 
         public void OnCanceledGame()
         {
-            Toast.MakeText(Context, GetString(Resource.String.canceledGame), ToastLength.Short).Show();
+            this.Navigator().ShowGameResultPage(_award, GameResult.Cancel);
         }
 
         public void OnInitGame(GameInitialPacket initialPacket)
@@ -153,10 +224,10 @@ namespace RublikNativeAndroid.Fragments
             Toast.MakeText(Context, GetString(Resource.String.readyGame), ToastLength.Short).Show();
         }
 
-        public void OnSubscribedGameEvents(LiveData<NetPacketReader> liveData)
+        public void OnSubscribedOnService(LiveData<NetPacketReader> liveData, IDisposable serviceDisposable)
         {
-            _eventsUnsubscriber = liveData.Subscribe(
-                delegate (NetPacketReader reader)
+            var liveDataDisposable = liveData.Subscribe(
+                (NetPacketReader reader) =>
                 {
                     Console.WriteLine($"RoomsFragment : OnSubscribedOnLobbyService THREAD # {System.Threading.Thread.CurrentThread.ManagedThreadId}");
                     _eventParser.ParseNetPacketReader(reader);
@@ -164,6 +235,8 @@ namespace RublikNativeAndroid.Fragments
                 delegate (Exception e) { },
                 delegate { }
                 );
+
+            _eventsUnsubscriber = new UnsubscriberService(serviceDisposable, liveDataDisposable);
         }
 
         public void OnWaitingPlayerConnection()
@@ -176,11 +249,12 @@ namespace RublikNativeAndroid.Fragments
             Toast.MakeText(Context, GetString(Resource.String.awaitReconnection), ToastLength.Short).Show();
         }
 
-        public static ShellGameFragment NewInstance(string ip, int port)
+        public static ShellGameFragment NewInstance(ServerEndpoint endpoint, int award)
         {
             Bundle bundle = new Bundle();
-            bundle.PutString(Constants.Fragments.IP, ip);
-            bundle.PutInt(Constants.Fragments.PORT, port);
+            bundle.PutString(Constants.Fragments.IP, endpoint.ip);
+            bundle.PutInt(Constants.Fragments.PORT, endpoint.port);
+            bundle.PutInt(Constants.GameTermins.AWARD, award);
             ShellGameFragment fragment = new ShellGameFragment();
             fragment.Arguments = bundle;
             return fragment;
@@ -232,6 +306,11 @@ namespace RublikNativeAndroid.Fragments
         public void OnAnimationUpdate(ValueAnimator animation)
         {
             animation.AnimationEnd += (object sender, EventArgs e) => { _eggs[0].Progress = 0; _eggs[1].Progress = 0; _eggs[2].Progress = 0; };
+        }
+
+        public void OnClick(View v)
+        {
+            //throw new NotImplementedException();
         }
     }
 }

@@ -12,6 +12,8 @@ using CrossPlatformLiveData;
 using LiteNetLib;
 using System;
 using RublikNativeAndroid.ViewModels;
+using RublikNativeAndroid.Services;
+using System.Linq;
 
 namespace RublikNativeAndroid.Fragments
 {
@@ -21,16 +23,24 @@ namespace RublikNativeAndroid.Fragments
         private RoomsRecycleViewAdapter _adapter;
         private RoomEventsParserViewModel _roomEvents;
         private RoomNetRequestViewModel _roomRequest;
+        private Room _myRoom;
+        private IDisposable _eventsUnsubscriber;
 
         public string GetTitle() => GetString(Resource.String.lobby);
 
+        public override void OnDestroyView()
+        {
+            base.OnDestroyView();
+            try { _eventsUnsubscriber.Dispose(); }
+            catch { }
+        }
 
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             _adapter = new RoomsRecycleViewAdapter(this);
             _roomEvents = new RoomEventsParserViewModel(this);
-            _roomRequest = new RoomNetRequestViewModel(Services.LobbyService.currentInstance,_adapter.GetElements());
+            _roomRequest = new RoomNetRequestViewModel(_adapter.GetElements());
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -39,7 +49,7 @@ namespace RublikNativeAndroid.Fragments
             var rootView = inflater.Inflate(Resource.Layout.fragment_rooms, container, false);
 
             _rooms_scroll = rootView.FindRecyclerView(Resource.Id.rooms_recycler_view);
-            
+
             AttachAdapter(_adapter, container);
 
             return rootView;
@@ -64,22 +74,28 @@ namespace RublikNativeAndroid.Fragments
 
         public void OnLeavedRoom(int idRoom, string userName) => _adapter.RemoveUserFromRoom(idRoom, userName);
 
-        public void OnJoinedRoom(int idRoom, string userName) => _adapter.AddUserToRoom(idRoom, userName);
+        public void OnJoinedRoom(int idRoom, string userName)
+        {
+            if (UsersService.myUser.extraData.username == userName)
+                _myRoom = _adapter.GetElements().FirstOrDefault(x => x.id == idRoom);
+
+            _adapter.AddUserToRoom(idRoom, userName);
+        }
 
         public void OnMessagedRoom(Room room)
         {
             throw new NotImplementedException();
         }
 
-        public void OnGameStarted(string ip, int port)
+        public void OnGameStarted(ServerEndpoint endpoint)
         {
-            ParentFragmentManager.BeginTransaction().Replace(Resource.Id.viewPager, ShellGameFragment.NewInstance(ip,port)).AddToBackStack(null).Commit();
+            this.Navigator().ShowGamePage(_myRoom, endpoint);
         }
 
-        public void OnSubscribedOnLobbyService(LiveData<NetPacketReader> liveData)
+        public void OnSubscribedOnService(LiveData<NetPacketReader> liveData, IDisposable serviceDisposable)
         {
-            liveData.Subscribe(
-                delegate (NetPacketReader reader)
+            var liveDataDisposable = liveData.Subscribe(
+                (NetPacketReader reader) =>
                 {
                     Console.WriteLine($"RoomsFragment : OnSubscribedOnLobbyService THREAD # {System.Threading.Thread.CurrentThread.ManagedThreadId}");
                     _roomEvents.ParseNetPacketReader(reader);
@@ -87,6 +103,8 @@ namespace RublikNativeAndroid.Fragments
                 delegate (Exception e) { },
                 delegate { }
                 );
+
+            _eventsUnsubscriber = new UnsubscriberService(serviceDisposable, liveDataDisposable);
         }
 
 
