@@ -1,8 +1,12 @@
 ﻿
+using System.Threading.Tasks;
+using RublikNativeAndroid.Models;
+
 namespace RublikNativeAndroid.Contracts
 {
-    internal interface IService
+    internal interface IServer
     {
-        void Connect(string accessKey);
+        Task ConnectAsync(ServerEndpoint endpoint);
+        void SetListener(IServerListener listener);
     }
 }

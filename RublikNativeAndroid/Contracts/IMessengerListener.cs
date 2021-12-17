@@ -1,11 +1,9 @@
-﻿using System;
-using CrossPlatformLiveData;
-using RublikNativeAndroid.Models;
+﻿using RublikNativeAndroid.Models;
 
 namespace RublikNativeAndroid.Contracts
 {
-    public interface IMessengerListener
+    public interface IMessengerEventListener: IServerListener
     {
-        void OnSubscribedOnMessenger(LiveData<ChatMessage> liveData, IDisposable serviceDisposable);
+        void OnComingMessage(ChatMessage message);
     }
 }

@@ -5,13 +5,20 @@ namespace RublikNativeAndroid.Services
 {
     public class LocalCacheService
     {
+        private static LocalCacheService _instance;
         public static Dictionary<int, User.Data> usersData { get; set; }
         public static Dictionary<int, List<Friend>> userFriends { get; set; }
 
-        public LocalCacheService()
+        private LocalCacheService()
         {
             usersData = new Dictionary<int, User.Data>();
             userFriends = new Dictionary<int, List<Friend>>();
+        }
+
+        public static LocalCacheService NewInstance()
+        {
+            _instance = _instance ?? new LocalCacheService();
+            return _instance;
         }
 
         public User.Data GetUsersData(int userId)

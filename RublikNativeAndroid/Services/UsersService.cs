@@ -13,59 +13,62 @@ namespace RublikNativeAndroid.Services
     {
 
         public static User myUser { get; set; }
+        private static LocalCacheService _localCacheService = LocalCacheService.NewInstance();
 
-
-        public static async Task<User> GetUserAsync(int id, bool sync = false)
+        public static async Task<User> GetUserAsync(int userId, bool sync = false, bool ignoreCache = false)
         {
-           /* // Offline mode
+            /* // Offline mode
 
-            switch (id)
-            {
-                case 1:
-                    return new User(new User.Data()
-                    {
-                        accessKey = "user1",
-                        avatar = "/Files/126kb.jpg",
-                        balance = 1350,
-                        id = 1,
-                        isOnline = true,
-                        nickname = "Artistotless",
-                        quote = "just quote",
-                        username = "admin"
-                    });
+             switch (id)
+             {
+                 case 1:
+                     return new User(new User.Data()
+                     {
+                         accessKey = "user1",
+                         avatar = "/Files/126kb.jpg",
+                         balance = 1350,
+                         id = 1,
+                         isOnline = true,
+                         nickname = "Artistotless",
+                         quote = "just quote",
+                         username = "admin"
+                     });
 
-                case 4:
-                    return new User(new User.Data()
-                    {
-                        accessKey = "user4",
-                        avatar = "/Files/33kb.jpg",
-                        balance = 15,
-                        id = 4,
-                        isOnline = true,
-                        nickname = "KennyS",
-                        quote = "bebra",
-                        username = "kenya"
-                    });
+                 case 4:
+                     return new User(new User.Data()
+                     {
+                         accessKey = "user4",
+                         avatar = "/Files/33kb.jpg",
+                         balance = 15,
+                         id = 4,
+                         isOnline = true,
+                         nickname = "KennyS",
+                         quote = "bebra",
+                         username = "kenya"
+                     });
 
 
-                case 6:
-                    return new User(new User.Data()
-                    {
-                        accessKey = "user6",
-                        avatar = "/Files/admin.jpg",
-                        balance = 800,
-                        id = 6,
-                        isOnline = true,
-                        nickname = "BoomBoombI4",
-                        quote = "cmon lulz",
-                        username = "suser"
-                    });
-            }
-           */
+                 case 6:
+                     return new User(new User.Data()
+                     {
+                         accessKey = "user6",
+                         avatar = "/Files/admin.jpg",
+                         balance = 800,
+                         id = 6,
+                         isOnline = true,
+                         nickname = "BoomBoombI4",
+                         quote = "cmon lulz",
+                         username = "suser"
+                     });
+             }
+            */
+            if (!ignoreCache)
+                if (_localCacheService.GetUsersData(userId) is User.Data dataCache)
+                    return new User(dataCache);
 
             HttpClient client = new HttpClient();
             HttpRequestMessage request = new HttpRequestMessage();
-            request.RequestUri = new Uri(string.Format(Constants.WebApiUrls.API_GET_USER, id));
+            request.RequestUri = new Uri(string.Format(Constants.WebApiUrls.API_GET_USER, userId));
             request.Method = HttpMethod.Get;
             HttpResponseMessage response;
             if (sync)
@@ -86,15 +89,16 @@ namespace RublikNativeAndroid.Services
                 Console.WriteLine("Deserialize is done!");
                 if (extraData == null)
                     throw new UserDataDeserializeException();
+                _localCacheService.AddUsersData(userId, extraData);
                 return new User(extraData);
             }
 
-            throw new UserNotFoundException($"User with the id - {id} was not found");
+            throw new UserNotFoundException($"User with the id - {userId} was not found");
         }
 
 
 
-        public static async Task<List<Friend>> GetFriendsAsync(int userId, string accessKey)
+        public static async Task<List<Friend>> GetFriendsAsync(int userId, string accessKey="", bool ignoreCache = false)
         {
             /*// Offline mode
 
@@ -117,7 +121,9 @@ namespace RublikNativeAndroid.Services
             }*/
 
 
-
+            if (!ignoreCache)
+                if (_localCacheService.GetUserFriends(userId) is List<Friend> friendsCache)
+                    return friendsCache;
 
             HttpClient client = new HttpClient();
             HttpRequestMessage request = new HttpRequestMessage();
@@ -133,6 +139,7 @@ namespace RublikNativeAndroid.Services
                 Console.WriteLine("Deserialize is done!");
                 if (friends == null)
                     throw new UserDataDeserializeException();
+                _localCacheService.AddUserFriends(userId, friends);
                 return friends;
             }
 

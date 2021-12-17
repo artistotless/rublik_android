@@ -31,7 +31,7 @@ namespace RublikNativeAndroid
     {
         public static IMessengerInteractor Messenger(this Fragment fragment)
         {
-            if (fragment is IMessengerListener)
+            if (fragment is IMessengerEventListener)
                 return fragment.RequireActivity() as IMessengerInteractor;
             throw new InvalidCastException($"Fragment #{fragment.Id} does not have IMessengerListener interface");
         }

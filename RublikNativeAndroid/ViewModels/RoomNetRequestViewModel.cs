@@ -8,6 +8,16 @@ using RublikNativeAndroid.Services;
 
 namespace RublikNativeAndroid.ViewModels
 {
+    enum ActionRequest : ushort
+    {
+        HostRoom,
+        GetRooms,
+        LeaveRoom,
+        JoinRoom,
+        MessageToRoom,
+        StartGame
+    }
+
     public class RoomNetRequestViewModel : ViewModel
     {
         private List<Room> _rooms;
@@ -21,7 +31,7 @@ namespace RublikNativeAndroid.ViewModels
         {
             NetDataWriter writer = new NetDataWriter();
             writer.Put((ushort)ActionRequest.GetRooms);
-            LobbyService.currentInstance.Send(writer, DeliveryMethod.Unreliable);
+            Server.currentInstance.Send(writer, DeliveryMethod.Unreliable);
         }
 
         internal void HostRoom(ushort gameId, uint award = 10, string password = "")
@@ -32,14 +42,14 @@ namespace RublikNativeAndroid.ViewModels
             writer.Put(award);
             if (password != string.Empty)
                 writer.Put(password);
-            LobbyService.currentInstance.Send(writer, DeliveryMethod.ReliableUnordered);
+            Server.currentInstance.Send(writer, DeliveryMethod.ReliableUnordered);
         }
 
         internal void RequestStartGame()
         {
             NetDataWriter writer = new NetDataWriter();
             writer.Put((ushort)ActionRequest.StartGame);
-            LobbyService.currentInstance.Send(writer, DeliveryMethod.ReliableUnordered);
+            Server.currentInstance.Send(writer, DeliveryMethod.ReliableUnordered);
         }
 
         internal void JoinRoom(int idRoom, string password = "")
@@ -52,7 +62,7 @@ namespace RublikNativeAndroid.ViewModels
                 writer.Put(room.id);
                 if (room.hasPassword)
                     writer.Put(password);
-                LobbyService.currentInstance.Send(writer, DeliveryMethod.ReliableUnordered);
+                Server.currentInstance.Send(writer, DeliveryMethod.ReliableUnordered);
 
             }
         }
@@ -61,7 +71,7 @@ namespace RublikNativeAndroid.ViewModels
         {
             NetDataWriter writer = new NetDataWriter();
             writer.Put((ushort)ActionRequest.LeaveRoom);
-            LobbyService.currentInstance.Send(writer, DeliveryMethod.ReliableUnordered);
+            Server.currentInstance.Send(writer, DeliveryMethod.ReliableUnordered);
         }
 
         internal void MessageToRoom(string text)
@@ -69,7 +79,7 @@ namespace RublikNativeAndroid.ViewModels
             NetDataWriter writer = new NetDataWriter();
             writer.Put((ushort)ActionRequest.MessageToRoom);
             writer.Put(text);
-            LobbyService.currentInstance.Send(writer, DeliveryMethod.ReliableUnordered);
+            Server.currentInstance.Send(writer, DeliveryMethod.ReliableUnordered);
         }
     }
 }

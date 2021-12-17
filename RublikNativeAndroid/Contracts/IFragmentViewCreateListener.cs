@@ -1,7 +1,9 @@
-﻿namespace RublikNativeAndroid.Contracts
+﻿using System.Threading.Tasks;
+
+namespace RublikNativeAndroid.Contracts
 {
     public interface IFragmentViewCreateListener
     {
-        void UpdateUI(AndroidX.Fragment.App.Fragment fragment);
+        Task UpdateUI(AndroidX.Fragment.App.Fragment fragment);
     }
 }

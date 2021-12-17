@@ -44,10 +44,6 @@ namespace RublikNativeAndroid.Games.ShellGame
                     masterId: dataReader.GetInt(),
                     scores: dataReader.GetIntArray()
                 );
-                //game.masterPlayer.score = scores[0];
-                //game.selectorPlayer.score = scores[1];
-                //Console.WriteLine(" {0}:{1}  |  {2}:{3}", game.masterPlayer.username, game.masterPlayer.score, game.selectorPlayer.username, game.selectorPlayer.score);
-                //Console.WriteLine(game.masterPlayer.username == GameInstance.currentGame.user.extraData.username ? "\n Вы ходите! Спрячьте шарик " : "\n Ваш соперник прячет шарик, ожидайте...");
             }
             catch { }
 

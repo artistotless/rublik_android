@@ -98,7 +98,6 @@
     <Compile Include="Fragments\RegisterFragment.cs" />
     <Compile Include="Utils\RefreshLayoutCollisionFixer.cs" />
     <Compile Include="Models\ChatMessage.cs" />
-    <Compile Include="Services\MessengerService.cs" />
     <Compile Include="Contracts\IService.cs" />
     <Compile Include="Contracts\IMessengerInteractor.cs" />
     <Compile Include="Contracts\IMessengerListener.cs" />
@@ -109,28 +108,29 @@
     <Compile Include="Services\LocalCacheService.cs" />
     <Compile Include="Contracts\ICacheServiceAccessor.cs" />
     <Compile Include="Database\Database.cs" />
-    <Compile Include="Services\LobbyService.cs" />
     <Compile Include="ViewModels\RoomNetRequestViewModel.cs" />
     <Compile Include="Fragments\RoomsFragment.cs" />
     <Compile Include="Adapters\RoomsRecycleViewAdapter.cs" />
     <Compile Include="Contracts\IRoomEventListener.cs" />
     <Compile Include="ViewModels\RoomEventsParserViewModel.cs" />
     <Compile Include="Contracts\IGameEventListener.cs" />
-    <Compile Include="Games\BaseGameEventParserViewModel.cs" />
     <Compile Include="Models\BasePlayer.cs" />
     <Compile Include="Games\ShellGame\ShellGameControllerViewModel.cs" />
     <Compile Include="Models\PlayerListSerializable.cs" />
     <Compile Include="Fragments\ShellGameFragment.cs" />
     <Compile Include="Games\ShellGame\ShellGameEventParserViewModel.cs" />
-    <Compile Include="Games\GameServer.cs" />
     <Compile Include="Models\ShellGamePlayer.cs" />
     <Compile Include="Contracts\IShellGameEventListener.cs" />
     <Compile Include="Models\GameInitialPacket.cs" />
     <Compile Include="GameFragmentFactory.cs" />
     <Compile Include="Models\ServerEndpoint.cs" />
     <Compile Include="Services\UnsubscriberService.cs" />
-    <Compile Include="Contracts\IServiceListener.cs" />
     <Compile Include="Fragments\GameResultFragment.cs" />
+    <Compile Include="Services\Server.cs" />
+    <Compile Include="Contracts\IServerListener.cs" />
+    <Compile Include="ViewModels\MessengerEventsParserViewModel.cs" />
+    <Compile Include="ViewModels\BaseGameEventParserViewModel.cs" />
+    <Compile Include="ViewModels\MessengerRequestsViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

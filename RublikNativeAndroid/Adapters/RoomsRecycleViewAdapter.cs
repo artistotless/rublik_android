@@ -72,14 +72,16 @@ namespace RublikNativeAndroid.Adapters
 
         public void RemoveUserFromRoom(int idRoom, string username)
         {
-            var roomIndex = elements.IndexOf(elements.FirstOrDefault(x => x.id == idRoom));
-            elements[roomIndex].members.RemoveAll(x => x.extraData.username == username);  
+            var position = elements.IndexOf(elements.FirstOrDefault(x => x.id == idRoom));
+            elements[position].members.RemoveAll(x => x.extraData.username == username);
+            NotifyItemChanged(position);
         }
 
         public void AddUserToRoom(int idRoom, string username)
         {
-            var roomIndex = elements.IndexOf(elements.FirstOrDefault(x => x.id == idRoom));
-            elements[roomIndex].members.Add(new User(username));
+            var position = elements.IndexOf(elements.FirstOrDefault(x => x.id == idRoom));
+            elements[position].members.Add(new User(username));
+            NotifyItemChanged(position);
         }
 
         public void DeleteElement(int id)

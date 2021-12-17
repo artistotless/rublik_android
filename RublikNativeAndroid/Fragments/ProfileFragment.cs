@@ -40,7 +40,7 @@ namespace RublikNativeAndroid.Fragments
         {
             base.OnCreate(savedInstanceState);
             _userId = Arguments.GetInt(Constants.Fragments.USER_ID);
-            _profileViewModel = _profileViewModel == null ? new ProfileViewModel() : _profileViewModel;
+            _profileViewModel = _profileViewModel ?? new ProfileViewModel();
 
             _adapter = new FriendRecycleListAdapter(this);
             ListenObservableObjects();
@@ -52,8 +52,6 @@ namespace RublikNativeAndroid.Fragments
             base.OnDestroy();
             _unsubscriber.Dispose();
         }
-
-
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
@@ -69,28 +67,18 @@ namespace RublikNativeAndroid.Fragments
             _friends_scroll = view.FindRecyclerView(Resource.Id.profile_friends_scroll_view);
             _friends_scroll.AddOnScrollListener(new RefreshLayoutCollisionFixer(_swipeRefreshLayout));
 
-            var userData = this.Cache().GetCacheService().GetUsersData(_userId);
-            var userFriends = this.Cache().GetCacheService().GetUserFriends(_userId);
 
             _friends_scroll.ViewAttachedToWindow += async (object sender, ViewAttachedToWindowEventArgs e) =>
             {
-                if (userFriends == null)
-                    await RequestUpdateFriendsLiveData();
-                else
-                    SetFriends(userFriends);
+                await RequestUpdateLiveData();
             };
 
             AttachAdapter(_adapter, container);
 
-            if (userData != null)
-                UpdateUI(userData);
-            else
-                Task.Run(async () => { await RequestUpdateProfileLiveData(); });
 
             _swipeRefreshLayout.Refresh += async (object sender, EventArgs e) =>
             {
-                await RequestUpdateProfileLiveData();
-                await RequestUpdateFriendsLiveData();
+                await RequestUpdateLiveData(ignoreCache: true);
                 _swipeRefreshLayout.Refreshing = false;
             };
 
@@ -102,20 +90,14 @@ namespace RublikNativeAndroid.Fragments
         private void ListenObservableObjects()
         {
             _unsubscriber = _profileViewModel.liveDataProfile.Subscribe(
-               (User.Data data) =>
-               {
-                   this.Cache().GetCacheService().AddUsersData(_userId, data);
-                   UpdateUI(data);
-               },
-               (Exception e) => { }, () => { });
+               (User.Data data) => UpdateUI(data),
+                delegate (Exception e) { },
+                delegate { });
 
             _profileViewModel.liveDataFriends.Subscribe(
-                (List<Friend> friends) =>
-                {
-                    SetFriends(friends);
-                    this.Cache().GetCacheService().AddUserFriends(_userId, friends);
-                },
-                (Exception e) => { }, () => { });
+                (List<Friend> friends) => SetFriends(friends),
+                delegate (Exception e) { },
+                delegate { });
         }
 
         private void AttachAdapter(FriendRecycleListAdapter adapter, ViewGroup container)
@@ -124,9 +106,11 @@ namespace RublikNativeAndroid.Fragments
             _friends_scroll.SetAdapter(adapter);
         }
 
-        private async Task RequestUpdateProfileLiveData() => await _profileViewModel.GetProfileAsync(_userId);
-        private async Task RequestUpdateFriendsLiveData() => await _profileViewModel.GetFriendsAsync(_userId);
-
+        private async Task RequestUpdateLiveData(bool ignoreCache = false)
+        {
+            await _profileViewModel.GetProfileAsync(_userId, ignoreCache);
+            await _profileViewModel.GetFriendsAsync(_userId, ignoreCache);
+        }
 
         public void OnClick(View v) => OnFriendClicked((int)v.Tag);
         private void OnFriendClicked(int userId) => this.Navigator().ShowProfilePage(userId);

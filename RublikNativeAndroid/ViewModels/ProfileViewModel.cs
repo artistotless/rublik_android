@@ -14,11 +14,11 @@ namespace RublikNativeAndroid.ViewModels
         public ILiveData<List<Friend>> liveDataFriends = new LiveData<List<Friend>>();
 
 
-        public async Task GetProfileAsync(int userId)
+        public async Task GetProfileAsync(int userId, bool ignoreCache)
         {
             try
             {
-                var data = await UsersService.GetUserAsync(userId);
+                var data = await UsersService.GetUserAsync(userId, ignoreCache: ignoreCache);
                 liveDataProfile.PostValue(data.extraData);
                 Console.WriteLine(1);
             }
@@ -29,11 +29,11 @@ namespace RublikNativeAndroid.ViewModels
         }
 
 
-        public async Task GetFriendsAsync(int userId)
+        public async Task GetFriendsAsync(int userId, bool ignoreCache)
         {
             try
             {
-                var data = await UsersService.GetFriendsAsync(userId);
+                var data = await UsersService.GetFriendsAsync(userId, ignoreCache: ignoreCache);
                 liveDataFriends.PostValue(data);
             }
             catch

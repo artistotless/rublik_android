@@ -7,6 +7,17 @@ using RublikNativeAndroid.Models;
 
 namespace RublikNativeAndroid.Games
 {
+    public enum GameServerEvent : ushort
+    {
+        waitingForConnecting,
+        init,
+        waitingForReconnecting,
+        ready,
+        canceled,
+        finished,
+        chat
+    }
+
     public abstract class BaseGameEventParserViewModel : ViewModel
     {
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Android.App;
 using Android.OS;
 using Android.Runtime;
@@ -10,7 +11,6 @@ using FFImageLoading.Transformations;
 using Google.Android.Material.BottomNavigation;
 using RublikNativeAndroid.Contracts;
 using RublikNativeAndroid.Fragments;
-using RublikNativeAndroid.Games;
 using RublikNativeAndroid.Models;
 using RublikNativeAndroid.Services;
 
@@ -30,23 +30,19 @@ namespace RublikNativeAndroid
 
 
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true)]
-    public class MainActivity : AppCompatActivity, INavigator, IFragmentViewCreateListener, ICacheServiceAccessor, IMenuItemOnMenuItemClickListener, IMessengerInteractor
+    public class MainActivity : AppCompatActivity, INavigator, IFragmentViewCreateListener, IMenuItemOnMenuItemClickListener
     {
-        private MessengerService messengerService;
-        private static LocalCacheService cacheService { get; set; }
-
+        private static Server _server;
         private FragmentLifecycleListener _fragmentLifecycleListener { get; set; }
         private BottomNavigationView _bottomNav { get; set; }
         private AndroidX.Fragment.App.Fragment _currentFragment => SupportFragmentManager.FindFragmentById(Resource.Id.viewPager);
         private Dictionary<IMenuItem, EventHandler> _menuItems = new Dictionary<IMenuItem, EventHandler>();
         private static AndroidX.AppCompat.Widget.Toolbar _toolbar { get; set; }
 
-
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            if (cacheService == null)
-                cacheService = new LocalCacheService();
+
             _fragmentLifecycleListener = new FragmentLifecycleListener(this);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             SetContentView(Resource.Layout.activity_main);
@@ -54,8 +50,7 @@ namespace RublikNativeAndroid
             _toolbar = FindViewById<AndroidX.AppCompat.Widget.Toolbar>(Resource.Id.main_toolbar);
             _bottomNav = FindViewById<BottomNavigationView>(Resource.Id.bottom_navigation);
 
-            if (SupportActionBar == null)
-                SetSupportActionBar(_toolbar);
+            SetSupportActionBar(_toolbar);
             SupportFragmentManager.RegisterFragmentLifecycleCallbacks(_fragmentLifecycleListener, false);
 
             if (savedInstanceState == null) // TODO: проверка на сохраненные данные о входе
@@ -121,7 +116,7 @@ namespace RublikNativeAndroid
             }
         }
 
-        public void UpdateUI(AndroidX.Fragment.App.Fragment fragment)
+        public async Task UpdateUI(AndroidX.Fragment.App.Fragment fragment)
         {
             bool needForBackButton = SupportFragmentManager.BackStackEntryCount > 0;
 
@@ -142,27 +137,13 @@ namespace RublikNativeAndroid
                 SupportActionBar.Title = title;
             }
 
-            if (fragment is IMessengerListener messengerListener)
+            if (fragment is IServerListener serverListener)
             {
-                messengerService = new MessengerService();
-                messengerService.Connect(UsersService.myUser.extraData.accessKey);
-                messengerService.SetListener(messengerListener);
+                _server = _server ?? new Server(UsersService.myUser.extraData.accessKey);
+                await _server.ConnectAsync(serverListener.GetServerEndpoint());
+                _server.SetListener(serverListener);
             }
 
-            if (fragment is IRoomEventListener roomEventListener)
-            {
-                LobbyService lobbyService = new LobbyService();
-                lobbyService.Connect(UsersService.myUser.extraData.accessKey);
-                lobbyService.SetListener(roomEventListener);
-            }
-
-            if (fragment is IGameEventListener gameEventListener)
-            {
-                ServerEndpoint endpoint = gameEventListener.GetServerEndpoint();
-                GameServer gameServer = new GameServer();
-                gameServer.Connect(new BasePlayer(UsersService.myUser.extraData), endpoint);
-                gameServer.SetListener(gameEventListener);
-            }
         }
 
         public void GoBack()
@@ -185,7 +166,7 @@ namespace RublikNativeAndroid
 
         public void ShowGamePage(Room room, ServerEndpoint endpoint)
         {
-            var fragment = GameFragmentFactory.CreateNew(room.game.id, new ServerEndpoint(endpoint.ip, endpoint.port), room.award);
+            var fragment = GameFragmentFactory.CreateNew(room.game.id, new ServerEndpoint(endpoint.ip, endpoint.port, ServerType.Game), room.award);
             SupportFragmentManager.PopBackStack(null, (int)PopBackStackFlags.Inclusive);
             SupportFragmentManager.ShowFragment(fragment, false);
         }
@@ -237,11 +218,6 @@ namespace RublikNativeAndroid
         public void ShowRoomsPage() => SupportFragmentManager.ShowFragment(new RoomsFragment());
 
         public void ShowRegisterPage() => SupportFragmentManager.ShowFragment(new RegisterFragment());
-
-        public void SendPrivateMessage(int destinationUserId, string message) => messengerService.SendPrivateMessage(destinationUserId, message);
-
-        public LocalCacheService GetCacheService() => cacheService;
-
 
     }
 }

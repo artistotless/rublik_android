@@ -3,7 +3,7 @@ using RublikNativeAndroid.Models;
 
 namespace RublikNativeAndroid.Contracts
 {
-    public interface IRoomEventListener: IServiceListener
+    public interface IRoomEventListener: IServerListener
     {
         public void OnGotRooms(List<Room> rooms);
         public void OnDeletedRoom(int idRoom);

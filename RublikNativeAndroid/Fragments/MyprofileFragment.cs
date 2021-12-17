@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using Android.OS;
 using Android.Views;
@@ -11,6 +10,7 @@ using AndroidX.SwipeRefreshLayout.Widget;
 using CrossPlatformLiveData;
 using FFImageLoading;
 using FFImageLoading.Transformations;
+using LiteNetLib;
 using RublikNativeAndroid.Adapters;
 using RublikNativeAndroid.Contracts;
 using RublikNativeAndroid.Models;
@@ -22,7 +22,7 @@ using static Android.Views.View;
 namespace RublikNativeAndroid.Fragments
 {
 
-    public class MyprofileFragment : Fragment, IHasToolbarTitle, IOnClickListener, IMessengerListener
+    public class MyprofileFragment : Fragment, IHasToolbarTitle, IOnClickListener, IMessengerEventListener
     {
         public string GetTitle() => GetString(Resource.String.myprofile);
 
@@ -37,6 +37,7 @@ namespace RublikNativeAndroid.Fragments
         private IDisposable _unsubscriber;
         private IDisposable _eventsUnsubscriber;
         private FriendRecycleListAdapter _adapter;
+        private MessengerEventsParserViewModel _eventParser;
 
         private static int _userId { get; set; }
         private static User.Data _userData { get; set; }
@@ -44,8 +45,9 @@ namespace RublikNativeAndroid.Fragments
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            _myProfileViewModel = _myProfileViewModel == null ? new ProfileViewModel() : _myProfileViewModel;
-            _adapter = _adapter == null ? new FriendRecycleListAdapter(this) : _adapter;
+            _myProfileViewModel = _myProfileViewModel ?? new ProfileViewModel();
+            _adapter = _adapter ?? new FriendRecycleListAdapter(this);
+            _eventParser = _eventParser ?? new MessengerEventsParserViewModel(this);
             _userId = Arguments.GetInt(Constants.Fragments.USER_ID);
             ListenObservableObjects();
         }
@@ -59,7 +61,7 @@ namespace RublikNativeAndroid.Fragments
         public override void OnDestroyView()
         {
             base.OnDestroyView();
-            _eventsUnsubscriber.Dispose();     
+            _eventsUnsubscriber.Dispose();
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -77,12 +79,7 @@ namespace RublikNativeAndroid.Fragments
             _friends_scroll.AddOnScrollListener(new RefreshLayoutCollisionFixer(_swipeRefreshLayout));
             _friends_scroll.ViewAttachedToWindow += async (object sender, ViewAttachedToWindowEventArgs e) =>
             {
-                if (_userData == null)
-                {
-                    await RequestUpdateProfileLiveData();
-                }
-                await RequestUpdateFriendsLiveData();
-
+                await RequestUpdateLiveData();
             };
 
             AttachAdapter(_adapter, container);
@@ -90,8 +87,7 @@ namespace RublikNativeAndroid.Fragments
 
             _swipeRefreshLayout.Refresh += async (object sender, EventArgs e) =>
             {
-                await RequestUpdateProfileLiveData();
-                await RequestUpdateFriendsLiveData();
+                await RequestUpdateLiveData(ignoreCache: true);
                 _swipeRefreshLayout.Refreshing = false;
             };
 
@@ -129,9 +125,11 @@ namespace RublikNativeAndroid.Fragments
             _friends_scroll.SetLayoutManager(layoutManager);
             _friends_scroll.SetAdapter(adapter);
         }
-
-        private async Task RequestUpdateProfileLiveData() => await _myProfileViewModel.GetProfileAsync(_userId);
-        private async Task RequestUpdateFriendsLiveData() => await _myProfileViewModel.GetFriendsAsync(_userId);
+        private async Task RequestUpdateLiveData(bool ignoreCache = false)
+        {
+            await _myProfileViewModel.GetProfileAsync(_userId, ignoreCache);
+            await _myProfileViewModel.GetFriendsAsync(_userId, ignoreCache);
+        }
 
         public void OnClick(View v) => OnFriendClicked((int)v.Tag);
         private void OnFriendClicked(int userId) => this.Navigator().ShowProfilePage(userId);
@@ -174,19 +172,28 @@ namespace RublikNativeAndroid.Fragments
         private void SetFriends(List<Friend> friends) => _adapter.SetElements(friends);
 
 
-        public void OnSubscribedOnMessenger(LiveData<ChatMessage> liveData, IDisposable serviceDisposable)
+        public void OnComingMessage(ChatMessage message)
+        {
+            Toast.MakeText(Context, $"Message: {message.text}", ToastLength.Short).Show();
+            // TODO: добавить сообщение в базу данных 
+        }
+
+        public void OnSubscribedOnServer(LiveData<NetPacketReader> liveData, IDisposable serviceDisposable)
         {
             var liveDataDisposable = liveData.Subscribe(
-                 (ChatMessage message) =>
-                 {
-                     Console.WriteLine($"MyprofileFragment:OnSubscribedOnMessenger THREAD # {Thread.CurrentThread.ManagedThreadId}");
-                     Toast.MakeText(Context, $"Message: {message.text}", ToastLength.Short).Show();
-                 },
-                 delegate (Exception e) { },
-                 delegate { });
+              (NetPacketReader reader) => _eventParser.ParseNetPacketReader(reader),
+              delegate (Exception e) { },
+              delegate { }
+              );
 
-            _eventsUnsubscriber = new UnsubscriberService(liveDataDisposable, serviceDisposable);
+            _eventsUnsubscriber = new UnsubscriberService(serviceDisposable, liveDataDisposable);
         }
+
+        public ServerEndpoint GetServerEndpoint() => new ServerEndpoint(
+            ip: Constants.Services.MESSENGER_IP,
+            port: Constants.Services.MESSENGER_PORT,
+            serverType: ServerType.Messenger);
+
     }
 }
 

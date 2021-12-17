@@ -12,10 +12,12 @@ using RublikNativeAndroid.Contracts;
 using AndroidX.RecyclerView.Widget;
 using RublikNativeAndroid.Adapters;
 using RublikNativeAndroid.Services;
+using LiteNetLib;
+using RublikNativeAndroid.ViewModels;
 
 namespace RublikNativeAndroid.Fragments
 {
-    public class MessengerFragment : Fragment, IHasToolbarTitle, IMessengerListener, IHasCustomToolbarMenu, IHideBottomNav, IOnClickListener
+    public class MessengerFragment : Fragment, IHasToolbarTitle, IMessengerEventListener, IHasCustomToolbarMenu, IHideBottomNav, IOnClickListener
     {
         private EditText _msgField { get; set; }
         private Button _msgSubmit { get; set; }
@@ -23,10 +25,11 @@ namespace RublikNativeAndroid.Fragments
         private RecyclerView _dialogList { get; set; }
 
         private User.Data _conversator { get; set; }
-        private User.Data _conversatorCache { get; set; }
 
         private MessengerRecycleListAdapter _adapter;
         private IDisposable _eventsUnsubscriber;
+        private MessengerRequestsViewModel _controller;
+        private MessengerEventsParserViewModel _eventParser;
 
         public CustomToolbarItemsBag GetBag()
         {
@@ -55,19 +58,10 @@ namespace RublikNativeAndroid.Fragments
             base.OnCreate(savedInstanceState);
             RetainInstance = true;
             var _conversatorId = Arguments.GetInt(Constants.Fragments.USER_ID);
-
-            _conversatorCache = this.Cache().GetCacheService().GetUsersData(_conversatorId);
-            if (_conversatorCache != null)
-            {
-                _conversator = _conversatorCache;
-            }
-            else
-            {
-                _conversator = UsersService.GetUserAsync(_conversatorId, true).Result.extraData;
-                this.Cache().GetCacheService().AddUsersData(_conversatorId, _conversator);
-            }
-
+            _conversator = UsersService.GetUserAsync(_conversatorId, true).Result.extraData;
             _adapter = new MessengerRecycleListAdapter(this);
+            _eventParser = new MessengerEventsParserViewModel(this);
+            _controller = new MessengerRequestsViewModel();
         }
 
 
@@ -114,7 +108,7 @@ namespace RublikNativeAndroid.Fragments
                     v.Vibrate(20);
 
                 string message = _msgField.Text;
-                this.Messenger().SendPrivateMessage(_conversator.id, message);
+                _controller.SendPrivateMessage(_conversator.id, message);
                 _msgField.SetText(string.Empty, TextView.BufferType.Normal);
                 HandleIncommingMessage(new ChatMessage(_conversator.id, message, UsersService.myUser.extraData.id, DateTime.Now));
 
@@ -135,23 +129,6 @@ namespace RublikNativeAndroid.Fragments
             _dialogList.SetAdapter(adapter);
         }
 
-        public void OnSubscribedOnMessenger(LiveData<ChatMessage> liveData, IDisposable serviceDisposable)
-        {
-            var liveDataDisposable = liveData.Subscribe(
-                (ChatMessage message) =>
-                {
-                    if (message.authorId == _conversator.id)
-                        HandleIncommingMessage(message);
-                    else
-                        Console.WriteLine($"MessengerFragment:OnSubscribedOnMessenger THREAD # {Thread.CurrentThread.ManagedThreadId}");
-                },
-                delegate (Exception e) { },
-                delegate { }
-                );
-
-            _eventsUnsubscriber = new UnsubscriberService(serviceDisposable, liveDataDisposable);
-        }
-
         private void HandleIncommingMessage(ChatMessage message)
         {
             var currentRecyclerViewPos = GetCurrentRecyclerViewPos();
@@ -159,7 +136,6 @@ namespace RublikNativeAndroid.Fragments
 
             if (_adapter.ItemCount - currentRecyclerViewPos < 3)
                 SmoothScroolDown();
-
         }
 
         private void SmoothScroolDown()
@@ -181,5 +157,31 @@ namespace RublikNativeAndroid.Fragments
             fragment.Arguments = bundle;
             return fragment;
         }
+
+        public void OnComingMessage(ChatMessage message)
+        {
+            if (message.authorId == _conversator.id)
+                HandleIncommingMessage(message);
+            else
+                Console.WriteLine($"MessengerFragment:OnSubscribedOnMessenger THREAD # {Thread.CurrentThread.ManagedThreadId}");
+            // TODO: добавить сообщение в базу данных 
+        }
+
+        public void OnSubscribedOnServer(LiveData<NetPacketReader> liveData, IDisposable serviceDisposable)
+        {
+            var liveDataDisposable = liveData.Subscribe(
+              (NetPacketReader reader) => _eventParser.ParseNetPacketReader(reader),
+              delegate (Exception e) { },
+              delegate { }
+              );
+
+            _eventsUnsubscriber = new UnsubscriberService(serviceDisposable, liveDataDisposable);
+        }
+
+
+        public ServerEndpoint GetServerEndpoint() => new ServerEndpoint(
+            ip: Constants.Services.MESSENGER_IP,
+            port: Constants.Services.MESSENGER_PORT,
+            serverType: ServerType.Messenger);
     }
 }

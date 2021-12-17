@@ -21,12 +21,22 @@ namespace RublikNativeAndroid.Fragments
     {
         private RecyclerView _rooms_scroll;
         private RoomsRecycleViewAdapter _adapter;
-        private RoomEventsParserViewModel _roomEvents;
+        private RoomEventsParserViewModel _eventParser;
         private RoomNetRequestViewModel _roomRequest;
         private Room _myRoom;
         private IDisposable _eventsUnsubscriber;
 
         public string GetTitle() => GetString(Resource.String.lobby);
+
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+        }
+
+        public override void OnDetach()
+        {
+            base.OnDetach();
+        }
 
         public override void OnDestroyView()
         {
@@ -39,7 +49,7 @@ namespace RublikNativeAndroid.Fragments
         {
             base.OnCreate(savedInstanceState);
             _adapter = new RoomsRecycleViewAdapter(this);
-            _roomEvents = new RoomEventsParserViewModel(this);
+            _eventParser = new RoomEventsParserViewModel(this);
             _roomRequest = new RoomNetRequestViewModel(_adapter.GetElements());
         }
 
@@ -92,13 +102,13 @@ namespace RublikNativeAndroid.Fragments
             this.Navigator().ShowGamePage(_myRoom, endpoint);
         }
 
-        public void OnSubscribedOnService(LiveData<NetPacketReader> liveData, IDisposable serviceDisposable)
+        public void OnSubscribedOnServer(LiveData<NetPacketReader> liveData, IDisposable serviceDisposable)
         {
             var liveDataDisposable = liveData.Subscribe(
                 (NetPacketReader reader) =>
                 {
                     Console.WriteLine($"RoomsFragment : OnSubscribedOnLobbyService THREAD # {System.Threading.Thread.CurrentThread.ManagedThreadId}");
-                    _roomEvents.ParseNetPacketReader(reader);
+                    _eventParser.ParseNetPacketReader(reader);
                 },
                 delegate (Exception e) { },
                 delegate { }
@@ -108,5 +118,9 @@ namespace RublikNativeAndroid.Fragments
         }
 
 
+        public ServerEndpoint GetServerEndpoint() => new ServerEndpoint(
+            ip: Constants.Services.LOBBY_IP,
+            port: Constants.Services.LOBBY_PORT,
+            serverType:ServerType.Lobby);
     }
 }

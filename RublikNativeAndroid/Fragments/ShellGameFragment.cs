@@ -75,7 +75,8 @@ namespace RublikNativeAndroid.Fragments
             _award = Arguments.GetInt(Constants.GameTermins.AWARD);
             _endpoint = new ServerEndpoint(
                 ip: Arguments.GetString(Constants.Fragments.IP),
-                port: Arguments.GetInt(Constants.Fragments.PORT));
+                port: Arguments.GetInt(Constants.Fragments.PORT),
+                serverType: ServerType.Game);
         }
 
 
@@ -222,21 +223,6 @@ namespace RublikNativeAndroid.Fragments
             Toast.MakeText(Context, GetString(Resource.String.readyGame), ToastLength.Short).Show();
         }
 
-        public void OnSubscribedOnService(LiveData<NetPacketReader> liveData, IDisposable serviceDisposable)
-        {
-            var liveDataDisposable = liveData.Subscribe(
-                (NetPacketReader reader) =>
-                {
-                    Console.WriteLine($"RoomsFragment : OnSubscribedOnLobbyService THREAD # {System.Threading.Thread.CurrentThread.ManagedThreadId}");
-                    _eventParser.ParseNetPacketReader(reader);
-                },
-                delegate (Exception e) { },
-                delegate { }
-                );
-
-            _eventsUnsubscriber = new UnsubscriberService(serviceDisposable, liveDataDisposable);
-        }
-
         public void OnWaitingPlayerConnection()
         {
             Toast.MakeText(Context, GetString(Resource.String.awaitConnectionOtherPlayers), ToastLength.Short).Show();
@@ -309,6 +295,21 @@ namespace RublikNativeAndroid.Fragments
         public void OnClick(View v)
         {
             //throw new NotImplementedException();
+        }
+
+        public void OnSubscribedOnServer(LiveData<NetPacketReader> liveData, IDisposable serviceDisposable)
+        {
+            var liveDataDisposable = liveData.Subscribe(
+                (NetPacketReader reader) =>
+                {
+                    Console.WriteLine($"ShellGame Fragment : OnSubscribedOnServer THREAD # {System.Threading.Thread.CurrentThread.ManagedThreadId}");
+                    _eventParser.ParseNetPacketReader(reader);
+                },
+                delegate (Exception e) { },
+                delegate { }
+                );
+
+            _eventsUnsubscriber = new UnsubscriberService(serviceDisposable, liveDataDisposable);
         }
     }
 }

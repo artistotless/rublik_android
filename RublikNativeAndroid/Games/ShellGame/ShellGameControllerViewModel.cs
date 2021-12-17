@@ -1,6 +1,7 @@
 ﻿using AndroidX.Lifecycle;
 using LiteNetLib;
 using LiteNetLib.Utils;
+using RublikNativeAndroid.Services;
 
 namespace RublikNativeAndroid.Games
 {
@@ -19,7 +20,7 @@ namespace RublikNativeAndroid.Games
             NetDataWriter writer = new NetDataWriter();
             writer.Put((ushort)ControllerAction.Move);
             writer.Put(idPlace);
-            GameServer.currentInstance.Send(writer, DeliveryMethod.ReliableOrdered);
+            Server.currentInstance.Send(writer, DeliveryMethod.ReliableOrdered);
             currentEggIndex = idPlace - 1;
         }
 
@@ -29,7 +30,7 @@ namespace RublikNativeAndroid.Games
             NetDataWriter writer = new NetDataWriter();
             writer.Put((ushort)ControllerAction.Chat);
             writer.Put(msg);
-            GameServer.currentInstance.Send(writer, DeliveryMethod.ReliableOrdered);
+            Server.currentInstance.Send(writer, DeliveryMethod.ReliableOrdered);
         }
     }
 }

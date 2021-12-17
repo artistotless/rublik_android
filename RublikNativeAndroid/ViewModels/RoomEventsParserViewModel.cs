@@ -3,13 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using AndroidX.Lifecycle;
 using LiteNetLib;
-using LiteNetLib.Utils;
 using RublikNativeAndroid.Contracts;
 using RublikNativeAndroid.Models;
 using RublikNativeAndroid.Services;
 
 namespace RublikNativeAndroid.ViewModels
 {
+    enum EventOption : ushort
+    {
+        HostedRoom,
+        JoinedRoom,
+        LeavedRoom,
+        MessageRoom,
+        GotRoomList,
+        DeletedRoom,
+        HostOfRoomChanged,
+        GameStarted
+    }
+
     public class RoomEventsParserViewModel : ViewModel
     {
         private Dictionary<EventOption, Action<User, NetPacketReader>> _eventReferenses;
@@ -106,7 +117,6 @@ namespace RublikNativeAndroid.ViewModels
             //TODO: запрос данных из БД или кэшХранилища по gameId  и формирование инстанса типа Game
         }
 
-
         private void ParseGameStartedEvent(User user, NetPacketReader dataReader)
         {
             Console.WriteLine("GameStartedEvent <- LobbyService");
@@ -114,18 +124,9 @@ namespace RublikNativeAndroid.ViewModels
             _listener.OnGameStarted(
                 new ServerEndpoint(
                 ip: dataReader.GetString(),
-                port: dataReader.GetUShort()
+                port: dataReader.GetUShort(),
+                serverType: ServerType.Game
                 ));
-
-            /*
-            string ip = dataReader.GetString();
-            ushort port = dataReader.GetUShort();
-            System.Console.WriteLine("Endpoint of gameServer - {0}:{1}", ip, port);
-            if (ip == "undefined") { System.Console.WriteLine("Ошибка, LSPM: undefined"); return; }
-            Room.Clear();
-            var game = new ShellGame(user, ip, port);
-            GameInstance.currentGame = game;
-            game.Start();*/
 
         }
     }
