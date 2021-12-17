@@ -6,12 +6,18 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
     >
-
+		<com.airbnb.lottie.LottieAnimationView
+		android:id="@+id/game_result_confetti"
+		app:layout_constraintBottom_toBottomOf="@id/game_result_header"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="40dp"
+        />
 	<TextView
 		android:id="@+id/game_result_header"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:textSize="20dp"
+		android:textSize="25dp"
 		android:textStyle=""
 		android:text="Вы победили!"
 		android:gravity="center"
@@ -33,15 +39,7 @@
 		android:textSize="18dp"
 		android:layout_margin="10dp"
 		/>
-	<com.airbnb.lottie.LottieAnimationView
-		android:id="@+id/game_result_confetti"
-		app:layout_constraintBottom_toBottomOf="parent"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		app:lottie_loop="false"
-		app:lottie_autoPlay="false"
-		app:lottie_fileName="confitti.json.json"
-        />
+
 	<LinearLayout
 		android:gravity="center"
 		android:layout_marginTop="20dp"
@@ -52,7 +50,7 @@
 			android:id="@+id/game_result_goHome"
 			android:layout_width="120dp"
 			android:layout_height="wrap_content"
-			android:backgroundTint="#ff000000"
+			android:backgroundTint="@color/colorAccent"
 			android:textAllCaps="false"
 			android:textColor="#fff"
 			android:text="@string/myprofile"/>

@@ -10,7 +10,7 @@ namespace RublikNativeAndroid
         ShellGame = 1,
     }
 
-    public delegate Fragment NewInstance(ServerEndpoint endpoint, int award);
+    public delegate Fragment NewInstance(ServerEndpoint endpoint, uint award);
 
     public class GameFragmentFactory
     {
@@ -21,7 +21,7 @@ namespace RublikNativeAndroid
             { GamesId.ShellGame, ShellGameFragment.NewInstance},
         };
 
-        public static Fragment CreateNew(int gameId, ServerEndpoint endpoint, int award)
+        public static Fragment CreateNew(int gameId, ServerEndpoint endpoint, uint award)
         {
             return _references[(GamesId)gameId].Invoke(endpoint, award);
         }

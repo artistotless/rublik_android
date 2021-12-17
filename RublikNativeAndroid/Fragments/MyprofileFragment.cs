@@ -59,8 +59,7 @@ namespace RublikNativeAndroid.Fragments
         public override void OnDestroyView()
         {
             base.OnDestroyView();
-            try { _eventsUnsubscriber.Dispose(); }
-            catch { }
+            _eventsUnsubscriber.Dispose();     
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)

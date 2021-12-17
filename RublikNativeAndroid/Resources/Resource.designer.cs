@@ -6204,145 +6204,148 @@ namespace RublikNativeAndroid
 			public const int email = 2131623972;
 			
 			// aapt resource value: 0x7F0E0025
-			public const int fab_transformation_scrim_behavior = 2131623973;
+			public const int empty = 2131623973;
 			
 			// aapt resource value: 0x7F0E0026
-			public const int fab_transformation_sheet_behavior = 2131623974;
+			public const int fab_transformation_scrim_behavior = 2131623974;
 			
 			// aapt resource value: 0x7F0E0027
-			public const int fallback_menu_item_copy_link = 2131623975;
+			public const int fab_transformation_sheet_behavior = 2131623975;
 			
 			// aapt resource value: 0x7F0E0028
-			public const int fallback_menu_item_open_in_browser = 2131623976;
+			public const int fallback_menu_item_copy_link = 2131623976;
 			
 			// aapt resource value: 0x7F0E0029
-			public const int fallback_menu_item_share_link = 2131623977;
+			public const int fallback_menu_item_open_in_browser = 2131623977;
 			
 			// aapt resource value: 0x7F0E002A
-			public const int finishedGame = 2131623978;
+			public const int fallback_menu_item_share_link = 2131623978;
 			
 			// aapt resource value: 0x7F0E002B
-			public const int friends = 2131623979;
+			public const int finishedGame = 2131623979;
 			
 			// aapt resource value: 0x7F0E002C
-			public const int friends_online = 2131623980;
+			public const int friends = 2131623980;
 			
 			// aapt resource value: 0x7F0E002D
-			public const int games = 2131623981;
+			public const int friends_online = 2131623981;
 			
 			// aapt resource value: 0x7F0E002E
-			public const int gamewascanceled = 2131623982;
+			public const int games = 2131623982;
 			
 			// aapt resource value: 0x7F0E002F
-			public const int hide_bottom_view_on_scroll_behavior = 2131623983;
+			public const int gamewascanceled = 2131623983;
 			
 			// aapt resource value: 0x7F0E0030
-			public const int identity = 2131623984;
+			public const int hide_bottom_view_on_scroll_behavior = 2131623984;
 			
 			// aapt resource value: 0x7F0E0031
-			public const int identity_or_email = 2131623985;
+			public const int identity = 2131623985;
 			
 			// aapt resource value: 0x7F0E0032
-			public const int initGame = 2131623986;
+			public const int identity_or_email = 2131623986;
 			
 			// aapt resource value: 0x7F0E0033
-			public const int lobby = 2131623987;
+			public const int initGame = 2131623987;
 			
 			// aapt resource value: 0x7F0E0034
-			public const int login = 2131623988;
+			public const int lobby = 2131623988;
 			
 			// aapt resource value: 0x7F0E0035
-			public const int login_btn = 2131623989;
+			public const int login = 2131623989;
 			
 			// aapt resource value: 0x7F0E0036
-			public const int messages = 2131623990;
+			public const int login_btn = 2131623990;
 			
 			// aapt resource value: 0x7F0E0037
-			public const int messenger = 2131623991;
+			public const int messages = 2131623991;
 			
 			// aapt resource value: 0x7F0E0038
-			public const int mtrl_chip_close_icon_content_description = 2131623992;
+			public const int messenger = 2131623992;
 			
 			// aapt resource value: 0x7F0E0039
-			public const int myprofile = 2131623993;
+			public const int mtrl_chip_close_icon_content_description = 2131623993;
 			
 			// aapt resource value: 0x7F0E003A
-			public const int news = 2131623994;
+			public const int myprofile = 2131623994;
 			
 			// aapt resource value: 0x7F0E003B
-			public const int notifications = 2131623995;
+			public const int news = 2131623995;
 			
 			// aapt resource value: 0x7F0E003C
-			public const int novalid_login = 2131623996;
+			public const int notifications = 2131623996;
 			
 			// aapt resource value: 0x7F0E003D
-			public const int novalid_register = 2131623997;
+			public const int novalid_login = 2131623997;
 			
 			// aapt resource value: 0x7F0E003E
-			public const int password = 2131623998;
+			public const int novalid_register = 2131623998;
 			
 			// aapt resource value: 0x7F0E003F
-			public const int password_toggle_content_description = 2131623999;
+			public const int password = 2131623999;
 			
 			// aapt resource value: 0x7F0E0040
-			public const int path_password_eye = 2131624000;
+			public const int password_toggle_content_description = 2131624000;
 			
 			// aapt resource value: 0x7F0E0041
-			public const int path_password_eye_mask_strike_through = 2131624001;
+			public const int path_password_eye = 2131624001;
 			
 			// aapt resource value: 0x7F0E0042
-			public const int path_password_eye_mask_visible = 2131624002;
+			public const int path_password_eye_mask_strike_through = 2131624002;
 			
 			// aapt resource value: 0x7F0E0043
-			public const int path_password_strike_through = 2131624003;
+			public const int path_password_eye_mask_visible = 2131624003;
 			
 			// aapt resource value: 0x7F0E0044
-			public const int profile = 2131624004;
+			public const int path_password_strike_through = 2131624004;
 			
 			// aapt resource value: 0x7F0E0045
-			public const int quote = 2131624005;
+			public const int profile = 2131624005;
 			
 			// aapt resource value: 0x7F0E0046
-			public const int readyGame = 2131624006;
+			public const int quote = 2131624006;
 			
 			// aapt resource value: 0x7F0E0047
-			public const int register = 2131624007;
+			public const int readyGame = 2131624007;
 			
 			// aapt resource value: 0x7F0E0048
-			public const int register_btn = 2131624008;
+			public const int register = 2131624008;
 			
 			// aapt resource value: 0x7F0E0049
-			public const int search_menu_title = 2131624009;
+			public const int register_btn = 2131624009;
 			
 			// aapt resource value: 0x7F0E004A
-			public const int send_message = 2131624010;
+			public const int search_menu_title = 2131624010;
 			
 			// aapt resource value: 0x7F0E004B
-			public const int services = 2131624011;
+			public const int send_message = 2131624011;
 			
 			// aapt resource value: 0x7F0E004C
-			public const int settings = 2131624012;
+			public const int services = 2131624012;
 			
 			// aapt resource value: 0x7F0E004D
-			public const int shellgame = 2131624013;
+			public const int settings = 2131624013;
 			
 			// aapt resource value: 0x7F0E004E
-			public const int stats = 2131624014;
+			public const int shellgame = 2131624014;
 			
 			// aapt resource value: 0x7F0E004F
-			public const int status_bar_notification_info_overflow = 2131624015;
+			public const int stats = 2131624015;
 			
 			// aapt resource value: 0x7F0E0050
-			public const int tournaments = 2131624016;
+			public const int status_bar_notification_info_overflow = 2131624016;
 			
 			// aapt resource value: 0x7F0E0051
-			public const int user_not_found = 2131624017;
+			public const int tournaments = 2131624017;
 			
 			// aapt resource value: 0x7F0E0052
-			public const int wasted = 2131624018;
+			public const int user_not_found = 2131624018;
 			
 			// aapt resource value: 0x7F0E0053
-			public const int youwon = 2131624019;
+			public const int wasted = 2131624019;
+			
+			// aapt resource value: 0x7F0E0054
+			public const int youwon = 2131624020;
 			
 			static String()
 			{

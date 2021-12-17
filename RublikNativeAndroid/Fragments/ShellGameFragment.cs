@@ -142,8 +142,6 @@ namespace RublikNativeAndroid.Fragments
                 string message = _msgField.Text;
                 _controller.Chat(message);
                 _msgField.SetText(string.Empty, TextView.BufferType.Normal);
-                //OnChatGame(UsersService.myUser.extraData.id,message);
-
             };
 
             ConfigureAnimationView(_eggs[0], 1);
@@ -249,12 +247,12 @@ namespace RublikNativeAndroid.Fragments
             Toast.MakeText(Context, GetString(Resource.String.awaitReconnection), ToastLength.Short).Show();
         }
 
-        public static ShellGameFragment NewInstance(ServerEndpoint endpoint, int award)
+        public static ShellGameFragment NewInstance(ServerEndpoint endpoint, uint award)
         {
             Bundle bundle = new Bundle();
             bundle.PutString(Constants.Fragments.IP, endpoint.ip);
             bundle.PutInt(Constants.Fragments.PORT, endpoint.port);
-            bundle.PutInt(Constants.GameTermins.AWARD, award);
+            bundle.PutInt(Constants.GameTermins.AWARD, (int)award);
             ShellGameFragment fragment = new ShellGameFragment();
             fragment.Arguments = bundle;
             return fragment;

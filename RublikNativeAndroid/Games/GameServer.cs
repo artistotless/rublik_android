@@ -70,21 +70,22 @@ namespace RublikNativeAndroid.Games
                         _liveData.PostValue(disconnectInfo.AdditionalData);
                     };
 
-            Task.Factory.StartNew(async delegate
+            Task.Run(async delegate
                     {
                         while (!canselToken.IsCancellationRequested)
                         {
                             _client.PollEvents();
                             await Task.Delay(500);
                         }
-                    }, canselToken);
+                        _gameServerPeer.Disconnect();
+                        _client.Stop();
+                    });
         }
         public void Send(NetDataWriter writer, DeliveryMethod deliveryMethod) => _gameServerPeer.Send(writer, deliveryMethod);
 
         public void Disconnect()
         {
             _cancelTokenSource.Cancel();
-            _client.Stop();
             currentInstance = null;
         }
 

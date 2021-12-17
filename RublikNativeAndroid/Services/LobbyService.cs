@@ -53,6 +53,7 @@ namespace RublikNativeAndroid.Services
             _client = new NetManager(_listener);
             CancellationToken cancelToken = _cancelTokenSource.Token;
             _client.Start();
+
             NetDataWriter initPacket = new NetDataWriter();
             initPacket.Put(accessKey);
             // TODO: заменить ip сервиса на домен вида l1s.rublik.ru . Использовать DNS сервера
@@ -71,14 +72,18 @@ namespace RublikNativeAndroid.Services
             };
 
 
-            Task.Factory.StartNew(async () =>
+            Task.Run(async delegate
             {
                 while (!cancelToken.IsCancellationRequested)
                 {
                     _client.PollEvents();
-                    await Task.Delay(100);
+                    await Task.Delay(400);
                 }
-            }, cancelToken);
+                _lobbyServicePeer.Disconnect();
+                _client.Stop();
+                Console.WriteLine($"Lobby Service : Disconnect THREAD # {Thread.CurrentThread.ManagedThreadId}");
+                Console.WriteLine($"Lobby Service : ConnectionState - {_lobbyServicePeer.ConnectionState}");
+            });
 
         }
 
@@ -86,8 +91,7 @@ namespace RublikNativeAndroid.Services
 
         public void Disconnect()
         {
-            _cancelTokenSource.Cancel();
-            _client.Stop();
+            _cancelTokenSource.Cancel();             
             currentInstance = null;
         }
 

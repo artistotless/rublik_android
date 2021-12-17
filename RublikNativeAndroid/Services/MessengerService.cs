@@ -49,24 +49,25 @@ namespace RublikNativeAndroid.Services
                 _liveData.PostValue(message);
 
             };
-            Task.Run(async () =>
+            Task.Run(async delegate
             {
                 while (!canselToken.IsCancellationRequested)
                 {
-                    //Console.WriteLine($"PollEvents THREAD # {Thread.CurrentThread.ManagedThreadId}");
+                    Console.WriteLine($"PollEvents THREAD # {Thread.CurrentThread.ManagedThreadId}");
                     _client.PollEvents();
-                    await Task.Delay(500);
+                    await Task.Delay(800);
                 }
-            }, canselToken);
+                _chatServicePeer.Disconnect();
+                _client.Stop();
+                Console.WriteLine($"Messenger Service was STOPED from THREAD # {Thread.CurrentThread.ManagedThreadId}");
+            });
 
         }
 
         public void Disconnect()
         {
             _cancelTokenSource.Cancel();
-            _client.Stop();
         }
-
 
         public void Dispose()
         {

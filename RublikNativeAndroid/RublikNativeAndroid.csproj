@@ -403,7 +403,7 @@
     <AndroidAsset Include="Assets\awaiting_lottie.json" />
     <AndroidAsset Include="Assets\egg_lottie.json" />
     <AndroidAsset Include="Assets\loading-dots-blue_lottie.json" />
-    <AndroidAsset Include="Assets\confitti.json" />
+    <AndroidAsset Include="Assets\confetti.json" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

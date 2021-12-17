@@ -20,6 +20,7 @@
 	<string name="friends">Friends</string>
 	<string name="lobby">Lobbies</string>
 	<!-- Other -->
+	<string name="empty"> </string>
 	<string name="messages">Messages</string>
 	<string name="notifications">Notifications</string>
 	<string name="news">News</string>

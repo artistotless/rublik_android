@@ -16,7 +16,7 @@ namespace RublikNativeAndroid.Fragments
         Cancel
     }
 
-    public class GameResultFragment : Fragment, IHasToolbarTitle
+    public class GameResultFragment : Fragment, IHasToolbarTitle, IHideBottomNav
     {
         private Button _goHome;
         private TextView _sumView;
@@ -26,7 +26,7 @@ namespace RublikNativeAndroid.Fragments
         private int _sum;
         private GameResult _resultStatus;
 
-        public string GetTitle() => GetString(Resource.String.friends);
+        public string GetTitle() => GetString(Resource.String.empty);
 
         public override void OnCreate(Bundle savedInstanceState)
         {
@@ -43,19 +43,23 @@ namespace RublikNativeAndroid.Fragments
             _sumView = rootView.FindTextView(Resource.Id.game_result_win_sum);
             _header = rootView.FindTextView(Resource.Id.game_result_header);
             _confetti = rootView.FindLottie(Resource.Id.game_result_confetti);
+            _confetti.SetAnimation("confetti.json");
+            _confetti.SetMaxProgress(0.66f);
+            _confetti.Loop(false);
             _goHome.Click += delegate (object sender, EventArgs e) { this.Navigator().ShowMyProfilePage(); };
 
             switch (_resultStatus)
             {
                 case GameResult.Win:
-                    _sumView.Text = $"+ {_sumView} {Constants.Currency.MAIN}";
+                    _sumView.Text = $"+ {_sum} {Constants.Currency.MAIN}";
                     _sumView.SetTextColor(Android.Graphics.Color.ParseColor("#ff7cb342"));
                     _header.Text = GetString(Resource.String.youwon);
+                    
                     _confetti.PlayAnimation();
                     break;
 
                 case GameResult.Lose:
-                    _sumView.Text = $"- {_sumView} {Constants.Currency.MAIN}";
+                    _sumView.Text = $"- {_sum} {Constants.Currency.MAIN}";
                     _sumView.SetTextColor(Android.Graphics.Color.ParseColor("#ffe53935"));
                     _header.Text = GetString(Resource.String.wasted);
                     break;
