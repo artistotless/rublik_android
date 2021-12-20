@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using Android.Content;
 using AndroidX.Lifecycle;
 using LiteNetLib;
 using RublikNativeAndroid.Contracts;
 using RublikNativeAndroid.Models;
+using RublikNativeAndroid.Utils;
 
 namespace RublikNativeAndroid.Games
 {
@@ -22,11 +24,10 @@ namespace RublikNativeAndroid.Games
     {
 
         private Dictionary<GameServerEvent, Action<NetPacketReader>> _eventReferenses;
-        private IGameEventListener _listener;
+        public IGameEventListener listener;
 
-        public BaseGameEventParserViewModel(IGameEventListener listener)
+        public BaseGameEventParserViewModel()
         {
-            _listener = listener;
             _eventReferenses = new Dictionary<GameServerEvent, Action<NetPacketReader>>{
             {GameServerEvent.waitingForConnecting , ParseWaitingPlayerConnectionEvent},
             {GameServerEvent.waitingForReconnecting ,ParseWaitingPlayerReconnectionEvent},
@@ -37,6 +38,8 @@ namespace RublikNativeAndroid.Games
             {GameServerEvent.chat , ParseChatGameEvent}
             };
         }
+
+        public void SetListener(IGameEventListener listener) => this.listener = listener;
 
         public void ParseNetPacketReader(NetPacketReader reader)
         {
@@ -53,14 +56,15 @@ namespace RublikNativeAndroid.Games
         {
             Console.WriteLine("WaitingPlayerConnectioneEvent <- GameServer");
             Console.WriteLine("Ожидаем подключения других участников");
-            _listener.OnWaitingPlayerConnection();
+
+            listener.OnWaitingPlayerConnection();
         }
 
         private void ParseWaitingPlayerReconnectionEvent(NetPacketReader dataReader)
         {
             Console.WriteLine("WaitingPlayerReconnectionEvent <- GameServer");
             Console.WriteLine("Ваш оппонент отключился, ждем его переподключения некоторое время");
-            _listener.OnWaitingPlayerReconnection();
+            listener.OnWaitingPlayerReconnection();
         }
 
         private void ParseInitGameEvent(NetPacketReader dataReader)
@@ -68,7 +72,7 @@ namespace RublikNativeAndroid.Games
             Console.WriteLine("InitGameEvent <- GameServer");
             Console.WriteLine("Все игроки подключены. Инициализация");
             GameInitialPacket initialPacket = new GameInitialPacket(dataReader);
-            _listener.OnInitGame(initialPacket);
+            listener.OnInitGame(initialPacket);
 
         }
 
@@ -76,29 +80,28 @@ namespace RublikNativeAndroid.Games
         {
             Console.WriteLine("FinishedGameEvent <- GameServer");
             Console.WriteLine("Игра завершена. Победителю начислен выигрыш");
-            _listener.OnFinishedGame();
+            listener.OnFinishedGame();
         }
 
         private void ParseChatGameEvent(NetPacketReader dataReader)
         {
             Console.WriteLine("ChatGameEvent <- GameServer");
-            _listener.OnChatGame(
-                authorId: dataReader.GetInt(),
-                message: dataReader.GetString());
+            listener.OnChatGame(
+                dataReader.GetInt(),
+                dataReader.GetString());
         }
 
         private void ParseCanceledGameEvent(NetPacketReader dataReader)
         {
             Console.WriteLine("CanceledGameEvent <- GameServer");
             Console.WriteLine("Игра отменена. Деньги возвращены на ваш счет");
-            _listener.OnCanceledGame();
+            listener.OnCanceledGame();
         }
 
         private void ParseReadyGameEvent(NetPacketReader dataReader)
         {
             Console.WriteLine("ReadyGameEvent <- GameServer");
-            _listener.OnReadyGame();
-
+            listener.OnReadyGame();
         }
     }
 }

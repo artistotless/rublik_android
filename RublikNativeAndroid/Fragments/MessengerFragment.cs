@@ -14,6 +14,7 @@ using RublikNativeAndroid.Adapters;
 using RublikNativeAndroid.Services;
 using LiteNetLib;
 using RublikNativeAndroid.ViewModels;
+using RublikNativeAndroid.Utils;
 
 namespace RublikNativeAndroid.Fragments
 {
@@ -97,16 +98,7 @@ namespace RublikNativeAndroid.Fragments
 
             _msgSubmit.Click += (object sender, EventArgs e) =>
             {
-                Vibrator v = Vibrator.FromContext(Context);
-
-                // Vibrate for 20 milliseconds
-                if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
-                    v.Vibrate(VibrationEffect.CreateOneShot(20, 10));
-
-                else
-                    //deprecated in API 26 
-                    v.Vibrate(20);
-
+                Vibro.Instance.Peep(Context, 10, 10);
                 string message = _msgField.Text;
                 _controller.SendPrivateMessage(_conversator.id, message);
                 _msgField.SetText(string.Empty, TextView.BufferType.Normal);
@@ -167,7 +159,7 @@ namespace RublikNativeAndroid.Fragments
             // TODO: добавить сообщение в базу данных 
         }
 
-        public void OnSubscribedOnServer(LiveData<NetPacketReader> liveData, IDisposable serviceDisposable)
+        public void OnSubscribedOnServer(LiveData<NetPacketReader> liveData)
         {
             var liveDataDisposable = liveData.Subscribe(
               (NetPacketReader reader) => _eventParser.ParseNetPacketReader(reader),
@@ -175,7 +167,7 @@ namespace RublikNativeAndroid.Fragments
               delegate { }
               );
 
-            _eventsUnsubscriber = new UnsubscriberService(serviceDisposable, liveDataDisposable);
+            _eventsUnsubscriber = new UnsubscriberService(liveDataDisposable);
         }
 
 

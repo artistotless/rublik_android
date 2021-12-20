@@ -33,7 +33,7 @@
 		app:lottie_fileName="loading-dots-blue_lottie.json"
 		app:lottie_loop="true"
 		app:lottie_autoPlay="true"
-		android:visibility="gone"
+		android:visibility="visible"
 		app:layout_constraintRight_toRightOf="parent"
 		app:layout_constraintLeft_toLeftOf="parent"
 		app:layout_constraintTop_toBottomOf="@id/shellgame_status"

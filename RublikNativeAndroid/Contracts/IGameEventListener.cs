@@ -3,7 +3,7 @@
 namespace RublikNativeAndroid.Contracts
 {
 
-    public interface IGameEventListener: IServerListener
+    public interface IGameEventListener : IServerListener
     {
         public void OnWaitingPlayerConnection();
         public void OnWaitingPlayerReconnection();

@@ -17,6 +17,6 @@ namespace RublikNativeAndroid.Contracts
         void ShowRoomsPage();
         void ShowLobbyPage(int gameId);
         void ShowGamePage(Room room, ServerEndpoint endpoint);
-        void ShowGameResultPage(int sum, GameResult status);
+        void ShowGameResultPage(uint sum, GameResult status);
     }
 }

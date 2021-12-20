@@ -73,10 +73,10 @@ namespace RublikNativeAndroid.Fragments
             return rootView;
         }
 
-        public static GameResultFragment NewInstance(int sum, GameResult status)
+        public static GameResultFragment NewInstance(uint sum, GameResult status)
         {
             Bundle bundle = new Bundle();
-            bundle.PutInt(Constants.Fragments.SUM, sum);
+            bundle.PutInt(Constants.Fragments.SUM, (int)sum);
             bundle.PutInt(Constants.Fragments.GAME_RESULT_STATUS, (int)status);
             GameResultFragment fragment = new GameResultFragment();
             fragment.Arguments = bundle;

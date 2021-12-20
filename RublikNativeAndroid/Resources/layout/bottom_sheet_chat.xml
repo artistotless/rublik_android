@@ -15,7 +15,7 @@
 		android:layout_marginBottom="15dp"
 		android:layout_width="match_parent"
 		android:gravity="center"
-		android:text="@string/messenger"
+		android:text="@string/chat"
 		android:textColor="@android:color/white"
 		/>
 

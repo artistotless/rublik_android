@@ -67,6 +67,8 @@ namespace RublikNativeAndroid.Fragments
             _friends_scroll = view.FindRecyclerView(Resource.Id.profile_friends_scroll_view);
             _friends_scroll.AddOnScrollListener(new RefreshLayoutCollisionFixer(_swipeRefreshLayout));
 
+            if (_profileViewModel != null)
+                UpdateUI(_profileViewModel.liveDataProfile.Value);
 
             _friends_scroll.ViewAttachedToWindow += async (object sender, ViewAttachedToWindowEventArgs e) =>
             {
@@ -90,7 +92,10 @@ namespace RublikNativeAndroid.Fragments
         private void ListenObservableObjects()
         {
             _unsubscriber = _profileViewModel.liveDataProfile.Subscribe(
-               (User.Data data) => UpdateUI(data),
+               delegate (User.Data data)
+               {
+                   UpdateUI(data);
+               },
                 delegate (Exception e) { },
                 delegate { });
 

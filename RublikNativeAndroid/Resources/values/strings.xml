@@ -29,6 +29,7 @@
 	<string name="stats">Stats</string>
 	<string name="tournaments">Tournaments</string>
 	<string name="services">Services</string>
+	<string name="chat">Chat</string>
 	<!-- BaseGameEvents -->
 	<!-- // TODO: Перевести на английский -->
 	<string name="awaitReconnection">____</string>

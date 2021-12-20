@@ -28,26 +28,16 @@ namespace RublikNativeAndroid.Fragments
 
         public string GetTitle() => GetString(Resource.String.lobby);
 
-        public override void OnDestroy()
-        {
-            base.OnDestroy();
-        }
-
-        public override void OnDetach()
-        {
-            base.OnDetach();
-        }
-
         public override void OnDestroyView()
         {
             base.OnDestroyView();
-            try { _eventsUnsubscriber.Dispose(); }
-            catch { }
+            _eventsUnsubscriber.Dispose();
         }
 
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+            RetainInstance = true;
             _adapter = new RoomsRecycleViewAdapter(this);
             _eventParser = new RoomEventsParserViewModel(this);
             _roomRequest = new RoomNetRequestViewModel(_adapter.GetElements());
@@ -102,7 +92,7 @@ namespace RublikNativeAndroid.Fragments
             this.Navigator().ShowGamePage(_myRoom, endpoint);
         }
 
-        public void OnSubscribedOnServer(LiveData<NetPacketReader> liveData, IDisposable serviceDisposable)
+        public void OnSubscribedOnServer(LiveData<NetPacketReader> liveData)
         {
             var liveDataDisposable = liveData.Subscribe(
                 (NetPacketReader reader) =>
@@ -114,13 +104,12 @@ namespace RublikNativeAndroid.Fragments
                 delegate { }
                 );
 
-            _eventsUnsubscriber = new UnsubscriberService(serviceDisposable, liveDataDisposable);
+            _eventsUnsubscriber = new UnsubscriberService(liveDataDisposable);
         }
-
 
         public ServerEndpoint GetServerEndpoint() => new ServerEndpoint(
             ip: Constants.Services.LOBBY_IP,
             port: Constants.Services.LOBBY_PORT,
-            serverType:ServerType.Lobby);
+            serverType: ServerType.Lobby);
     }
 }

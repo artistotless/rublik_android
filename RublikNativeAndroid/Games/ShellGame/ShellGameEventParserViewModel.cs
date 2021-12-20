@@ -18,9 +18,8 @@ namespace RublikNativeAndroid.Games.ShellGame
         private IShellGameEventListener _listener;
 
 
-        public ShellGameEventParserViewModel(IShellGameEventListener listener) : base(listener)
+        public ShellGameEventParserViewModel() : base()
         {
-            _listener = listener;
             _eventReferenses = new Dictionary<ShellGameEvent, Action<NetPacketReader>>{
             {ShellGameEvent.updateState , ParseUpdateStateEvent},
             };
@@ -39,7 +38,7 @@ namespace RublikNativeAndroid.Games.ShellGame
             Console.WriteLine("Обновление состояния игры");
             try
             {
-                _listener.OnUpdateState(
+                (listener as IShellGameEventListener).OnUpdateState(
                     steps: dataReader.GetUInt(),
                     masterId: dataReader.GetInt(),
                     scores: dataReader.GetIntArray()

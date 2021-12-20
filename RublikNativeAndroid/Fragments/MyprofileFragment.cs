@@ -178,7 +178,7 @@ namespace RublikNativeAndroid.Fragments
             // TODO: добавить сообщение в базу данных 
         }
 
-        public void OnSubscribedOnServer(LiveData<NetPacketReader> liveData, IDisposable serviceDisposable)
+        public void OnSubscribedOnServer(LiveData<NetPacketReader> liveData)
         {
             var liveDataDisposable = liveData.Subscribe(
               (NetPacketReader reader) => _eventParser.ParseNetPacketReader(reader),
@@ -186,7 +186,7 @@ namespace RublikNativeAndroid.Fragments
               delegate { }
               );
 
-            _eventsUnsubscriber = new UnsubscriberService(serviceDisposable, liveDataDisposable);
+            _eventsUnsubscriber = new UnsubscriberService(liveDataDisposable);
         }
 
         public ServerEndpoint GetServerEndpoint() => new ServerEndpoint(

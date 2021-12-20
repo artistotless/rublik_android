@@ -54,7 +54,7 @@ namespace RublikNativeAndroid
             SupportFragmentManager.RegisterFragmentLifecycleCallbacks(_fragmentLifecycleListener, false);
 
             if (savedInstanceState == null) // TODO: проверка на сохраненные данные о входе
-                ShowLoginPage();
+                ShowInitPage();
             //SupportFragmentManager.ShowFragment(ShellGameFragment.NewInstance("62.109.26.46",9000), false);
         }
 
@@ -158,6 +158,12 @@ namespace RublikNativeAndroid
             return true;
         }
 
+        private void ShowInitPage()
+        {
+            SupportFragmentManager.PopBackStack(null, (int)PopBackStackFlags.Inclusive);
+            SupportFragmentManager.ShowFragment(new InitFragment(), false);
+        }
+
         public void ShowMyProfilePage()
         {
             SupportFragmentManager.PopBackStack(null, (int)PopBackStackFlags.Inclusive);
@@ -203,7 +209,7 @@ namespace RublikNativeAndroid
             throw new NotImplementedException();
         }
 
-        public void ShowGameResultPage(int sum, GameResult status)
+        public void ShowGameResultPage(uint sum, GameResult status)
         {
             SupportFragmentManager.PopBackStack(null, (int)PopBackStackFlags.Inclusive);
             SupportFragmentManager.ShowFragment(GameResultFragment.NewInstance(sum, status), false);

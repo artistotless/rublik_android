@@ -13,6 +13,13 @@ namespace RublikNativeAndroid
             public const string AWARD = "AWARD";
         }
 
+        public static class Preferences
+        {
+            public const string LOGIN = "LOGIN_PREFERENCES";
+            public const string CRYPTOR = "CRYPTOR_PREFERENCES";
+            public const string DEFAULT = "DEFAULT_PREFERENCES";
+        }
+
         public static class Fragments
         {
             public const string ACCESS_KEY = "ACCESS_KEY";

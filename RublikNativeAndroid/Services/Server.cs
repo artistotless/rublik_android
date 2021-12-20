@@ -11,7 +11,7 @@ namespace RublikNativeAndroid.Services
 {
     public enum ServerType { Messenger, Game, Lobby }
 
-    public class Server : IServer, IDisposable
+    public class Server : IServer
     {
         public static Server currentInstance;
 
@@ -28,7 +28,7 @@ namespace RublikNativeAndroid.Services
 
         public void SetListener(IServerListener listener)
         {
-            listener.OnSubscribedOnServer(_liveData, this);
+            listener.OnSubscribedOnServer(_liveData);
         }
 
         private async Task DisconnectAsync()
@@ -108,15 +108,6 @@ namespace RublikNativeAndroid.Services
         {
             _serverPeer.Disconnect();
             _client.Stop();
-        }
-
-        public void Dispose()
-        {
-            //Disconnect();
-            //_client = null;
-            //_serverPeer = null;
-            //_listener = null;
-            //_liveData = null;
         }
     }
 }

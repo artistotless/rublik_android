@@ -28,6 +28,7 @@
 	<string name="stats">Статистика</string>
 	<string name="tournaments">Турниры</string>
 	<string name="services">Сервисы</string>
+	<string name="chat">Чат</string>
 	<!-- BaseGameEvents -->
 	<string name="awaitReconnection">Оппонент вылетел из игры, ждем переподключения</string>
 	<string name="awaitConnectionOtherPlayers">Ожиданием подключения игроков</string>
