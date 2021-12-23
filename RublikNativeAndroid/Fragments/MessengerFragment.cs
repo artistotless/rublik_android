@@ -59,7 +59,7 @@ namespace RublikNativeAndroid.Fragments
             base.OnCreate(savedInstanceState);
             RetainInstance = true;
             var _conversatorId = Arguments.GetInt(Constants.Fragments.USER_ID);
-            _conversator = UsersService.GetUserAsync(_conversatorId, true).Result.extraData;
+            _conversator = ApiService.GetUserAsync(_conversatorId, true).Result.extraData;
             _adapter = new MessengerRecycleListAdapter(this);
             _eventParser = new MessengerEventsParserViewModel(this);
             _controller = new MessengerRequestsViewModel();
@@ -102,7 +102,7 @@ namespace RublikNativeAndroid.Fragments
                 string message = _msgField.Text;
                 _controller.SendPrivateMessage(_conversator.id, message);
                 _msgField.SetText(string.Empty, TextView.BufferType.Normal);
-                HandleIncommingMessage(new ChatMessage(_conversator.id, message, UsersService.myUser.extraData.id, DateTime.Now));
+                HandleIncommingMessage(new ChatMessage(_conversator.id, message, ApiService.myUser.extraData.id, DateTime.Now));
 
             };
 

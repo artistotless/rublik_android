@@ -45,8 +45,10 @@ namespace RublikNativeAndroid.ViewModels
         public void ParseNetPacketReader(NetPacketReader reader)
         {
             Console.WriteLine($"RoomEventsViewModel : ParseNetDataReader THREAD # {System.Threading.Thread.CurrentThread.ManagedThreadId}");
+            if (reader.AvailableBytes <= 0)
+                return;
             int code = reader.GetUShort();
-            _eventReferenses[(EventOption)code](UsersService.myUser, reader);
+            _eventReferenses[(EventOption)code](ApiService.myUser, reader);
         }
 
         private void ParseJoinedRoomEvent(User user, NetPacketReader dataReader)
@@ -54,7 +56,7 @@ namespace RublikNativeAndroid.ViewModels
             Console.WriteLine("JointRoomEvent <- LobbyService");
             _listener.OnJoinedRoom(
              idRoom: dataReader.GetInt(),
-             userName: dataReader.GetString());
+             userId: dataReader.GetInt());
         }
 
         private void ParseLeavedRoomEvent(User user, NetPacketReader dataReader)
@@ -62,7 +64,7 @@ namespace RublikNativeAndroid.ViewModels
             Console.WriteLine("LeaveRoomEvent <- LobbyService");
             _listener.OnLeavedRoom(
                 idRoom: dataReader.GetInt(),
-                userName: dataReader.GetString());
+                userId: dataReader.GetInt());
         }
 
         private void ParseMessagedRoomEvent(User user, NetPacketReader dataReader)
@@ -93,7 +95,7 @@ namespace RublikNativeAndroid.ViewModels
                 new Room(
                      id: dataReader.GetInt(),
                      game: new Game(dataReader.GetUShort()),
-                     members: dataReader.GetStringArray().Select(x => new User(x)).ToList(),
+                     members: dataReader.GetIntArray().Select(x => new User(x)).ToList(),
                      award: dataReader.GetUInt(),
                      hasPassword: dataReader.GetBool()
                     ));
@@ -109,7 +111,7 @@ namespace RublikNativeAndroid.ViewModels
             _listener.OnHostedRoom(new Room(
                 id: dataReader.GetInt(),
                 game: new Game(dataReader.GetUShort()),
-                host: new User(dataReader.GetString()),
+                host: new User(dataReader.GetInt()),
                 award: dataReader.GetUInt(),
                 hasPassword: dataReader.GetBool()
                 ));

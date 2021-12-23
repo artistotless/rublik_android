@@ -11,13 +11,12 @@
 
 	<TextView
 		android:layout_height="40dp"
-		android:background="#ff304ffe"
+		
 		android:layout_marginBottom="15dp"
 		android:layout_width="match_parent"
 		android:gravity="center"
 		android:text="@string/chat"
-		android:textColor="@android:color/white"
-		/>
+				/>
 
 
 	<include

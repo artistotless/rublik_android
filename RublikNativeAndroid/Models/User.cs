@@ -1,10 +1,13 @@
 ﻿using System;
+using RublikNativeAndroid.Services;
 
 namespace RublikNativeAndroid.Models
 {
 
     public class User : IEquatable<User>
     {
+        public static User myUser => ApiService.myUser;
+
         public class Data
         {
             public int id { get; set; }
@@ -18,7 +21,7 @@ namespace RublikNativeAndroid.Models
         }
 
         public User(Data extraData) => this.extraData = extraData;
-        public User(string username) : this(new Data() { username = username }) { }
+        public User(int id) : this(new Data() { id = id }) { }
 
         internal Data extraData { get; set; }
         internal Room currentRoom { get; set; }
@@ -26,7 +29,7 @@ namespace RublikNativeAndroid.Models
 
         public bool Equals(User other)
         {
-            return other.extraData.username == this.extraData.username;
+            return other.extraData.id == this.extraData.id;
         }
 
         public override bool Equals(object obj)

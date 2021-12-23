@@ -3,6 +3,9 @@ namespace RublikNativeAndroid
 {
     public static class Constants
     {
+        public static string countryCode = Java.Util.Locale.Default.Country.ToString(); // RU
+        public static string languageCode = Java.Util.Locale.Default.Language.ToString();
+
         public static class Currency
         {
             public const string MAIN = "RUB";
@@ -12,6 +15,7 @@ namespace RublikNativeAndroid
         {
             public const string AWARD = "AWARD";
         }
+
 
         public static class Preferences
         {
@@ -61,6 +65,9 @@ namespace RublikNativeAndroid
             public const string API_GET_FRIENDS = HTTPS_SCHEME + API_DOMAIN + "/api/Friend?userId={0}&accessKey={1}";
             public const string API_GET_AVATAR = HTTPS_SCHEME + API_DOMAIN + "/api/user/GetAvatar?userId={0}";
             public const string API_REGISTER = HTTPS_SCHEME + API_DOMAIN + "/api/Register";
+            public const string API_GET_GAME_INFO = HTTPS_SCHEME + API_DOMAIN + "/api/Games/{0}/?locale={1}";
+            public const string API_GET_GAMES = HTTPS_SCHEME + API_DOMAIN + "/api/Games/0/?locale={0}";
+
             //public const string API_GET_FRIENDS = API_SCHEME + API_DOMAIN + "/api/Friend";
         }
     }

@@ -7,7 +7,6 @@
 	android:paddingStart="20dp"
 	android:paddingTop="20dp"
 	android:paddingBottom="20dp"
-	android:background="#fffafafa"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content">
 
@@ -18,6 +17,7 @@
 		app:layout_constraintTop_toTopOf="parent"
 		android:layout_width="64dp"
 		android:layout_height="64dp"
+		android:backgroundTint="#ff616161"
 		android:background="@drawable/circle_shape"
 		android:contentDescription="ProfileImage"
 		android:cropToPadding="true" />
@@ -27,7 +27,6 @@
 		app:layout_constraintTop_toTopOf="@id/profile_image"
 		app:layout_constraintStart_toEndOf="@id/profile_image"
 		android:layout_marginStart="15dp"
-		android:textColor="#ff000000"
 		android:textStyle="bold"
 		android:textSize="@dimen/title"
 		android:ellipsize="end"

@@ -1,11 +1,8 @@
-﻿using AndroidX.Fragment.App;
-using Android.OS;
+﻿using Android.OS;
 using Android.Views;
 using RublikNativeAndroid.Contracts;
 using RublikNativeAndroid.Games;
 using RublikNativeAndroid.Models;
-using CrossPlatformLiveData;
-using LiteNetLib;
 using Android.Widget;
 using System;
 using RublikNativeAndroid.Services;
@@ -88,6 +85,7 @@ namespace RublikNativeAndroid.Fragments
                     rootView.FindLottie(Resource.Id.egg2),
                     rootView.FindLottie(Resource.Id.egg3),
                     };
+
             _messengerChatView = new MessengerChatView(_msgField, _msgSubmit, _chatRecyclerView, _scrollDownBtn);
             _messengerChatView
                 .SetAdapter(_adapter, container)
@@ -124,6 +122,7 @@ namespace RublikNativeAndroid.Fragments
             egg.PlayAnimation();
             egg.AddAnimatorListener(this);
         }
+
         public void OnUpdateUI()
         {
             var playerNicknames = new TextView[] { _firstPlayerText, _secondPlayerText };
@@ -162,10 +161,9 @@ namespace RublikNativeAndroid.Fragments
 
         public void OnClick(View v) { }
 
-
         public override void OnChatGame(int authorId, string message)
         {
-            _adapter.AddElement(new ChatMessage(UsersService.myUser.extraData.id, message, authorId, DateTime.Now));
+            _adapter.AddElement(new ChatMessage(ApiService.myUser.extraData.id, message, authorId, DateTime.Now));
         }
         public void OnAnimationCancel(Animator animation) { }
 

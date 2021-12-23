@@ -51,7 +51,7 @@ namespace RublikNativeAndroid.Games
 
             for (int i = 0; i < players.Count; i++)
             {
-                var userModel = await UsersService.GetUserAsync(players[i].extraData.id);
+                var userModel = await ApiService.GetUserAsync(players[i].extraData.id);
                 players[i] = new ShellGamePlayer(userModel.extraData);
             }
 
@@ -135,8 +135,8 @@ namespace RublikNativeAndroid.Games
         }
 
         public override GameResult GetGameResult() => MyPlayer.score > Opponent.score ? GameResult.Win : GameResult.Lose;
-        private ShellGamePlayer MyPlayer => (ShellGamePlayer)players.Find(x => x.extraData.id == UsersService.myUser.extraData.id);
-        private ShellGamePlayer Opponent => (ShellGamePlayer)players.Find(x => x.extraData.id != UsersService.myUser.extraData.id);
+        private ShellGamePlayer MyPlayer => (ShellGamePlayer)players.Find(x => x.extraData.id == ApiService.myUser.extraData.id);
+        private ShellGamePlayer Opponent => (ShellGamePlayer)players.Find(x => x.extraData.id != ApiService.myUser.extraData.id);
 
 
         public void Move(ushort idPlace)

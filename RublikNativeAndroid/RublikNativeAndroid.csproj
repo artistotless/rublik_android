@@ -90,7 +90,6 @@
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\Room.cs" />
     <Compile Include="Models\Game.cs" />
-    <Compile Include="Services\UsersService.cs" />
     <Compile Include="Utils\Exceptions.cs" />
     <Compile Include="Models\LoginResult.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
@@ -136,6 +135,10 @@
     <Compile Include="MessengerChatView.cs" />
     <Compile Include="Fragments\BaseGameFragment.cs" />
     <Compile Include="ViewModels\BaseGameControllerViewModel.cs" />
+    <Compile Include="Services\ApiService.cs" />
+    <Compile Include="ViewEventListener.cs" />
+    <Compile Include="Adapters\GamesRecycleViewAdapter.cs" />
+    <Compile Include="UI\Behaviors\PushUpBehavior.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -145,9 +148,6 @@
     <None Include="Assets\AboutAssets.txt" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\layout\activity_main.xml">
-      <SubType>Designer</SubType>
-    </AndroidResource>
     <AndroidResource Include="Resources\values\colors.xml" />
     <AndroidResource Include="Resources\values\dimens.xml" />
     <AndroidResource Include="Resources\values\ic_launcher_background.xml" />
@@ -335,6 +335,63 @@
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>
+    <AndroidResource Include="Resources\layout\bottom_sheet_create_room.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\holder_players_count.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\drawable\baseline_people_24.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\drawable-xhdpi\baseline_people_black_24.png">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\drawable-hdpi\baseline_people_black_24.png">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\holder_room_game.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\drawable\baseline_lock_24.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\toolbar_btn_action.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\drawable\baseline_add_20.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\activity_main.xml" />
+    <AndroidResource Include="Resources\layout\bottom_sheet_room_info.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\fragment_games.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\drawable\rectangleWithBorderRadius3.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\games_gameIco.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\holder_game_item.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="LiteNetLib">
@@ -388,6 +445,11 @@
     <Folder Include="Database\" />
     <Folder Include="Games\" />
     <Folder Include="Games\ShellGame\" />
+    <Folder Include="Resources\drawable-hdpi\" />
+    <Folder Include="Resources\drawable-xhdpi\" />
+    <Folder Include="UI\" />
+    <Folder Include="UI\Behaviors\" />
+    <Folder Include="UI\Views\" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\btn_custom.xml" />

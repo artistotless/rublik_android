@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/bottom_sheet"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="vertical"
+	android:padding="16dp">
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Информация о лобби"
+		android:textStyle="bold"
+		android:textSize="16dp"
+		android:layout_marginBottom="20dp"
+		/>
+	<TextView
+		android:id="@+id/room_info_game"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Игра: "/>
+
+	<View
+		android:layout_width="match_parent"
+		android:background="#ff616161"
+		android:layout_height="1dp"
+		android:layout_marginVertical="10dp"/>
+	<TextView
+		android:id="@+id/room_info_host"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Хост: "/>
+	<View
+		android:layout_width="match_parent"
+		android:background="#ff616161"
+		android:layout_height="1dp"
+		android:layout_marginVertical="10dp"/>
+	<TextView
+		android:id="@+id/room_info_award"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Ставка: "/>
+	<View
+		android:layout_width="match_parent"
+		android:background="#ff616161"
+		android:layout_height="1dp"
+		android:layout_marginVertical="10dp"/>
+	<TextView
+		android:id="@+id/room_info_playersCount"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Игроков в лобби: "/>
+	<View
+		android:layout_width="match_parent"
+		android:background="#ff616161"
+		android:layout_height="1dp"
+		android:layout_marginVertical="10dp"/>
+	<LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+		<Button
+			android:id="@+id/room_info_joinOrLeave"
+			android:layout_margin="10dp"
+			android:layout_weight="1"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_marginTop="16dp"
+			android:text="@string/join"
+			android:textColor="#fff" />
+		<Button
+			android:layout_margin="10dp"
+			android:id="@+id/room_create_submit"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_marginTop="16dp"
+			android:text="@string/chat"
+			android:textColor="#ffffd600"
+			style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+/>
+	</LinearLayout>
+
+</LinearLayout>

@@ -10,6 +10,9 @@
 	<string name="identity_or_email">Эл. почта или @логин</string>
 	<string name="friends_online">Друзья Online</string>
 	<string name="send_message">Сообщение</string>
+	<string name="create">Создать</string>
+	<string name="join">Присоединиться</string>
+	<string name="leave">Покинуть лобби</string>
 	<!-- Pages -->
 	<string name="login">Авторизация</string>
 	<string name="register">Регистрация</string>
@@ -29,6 +32,7 @@
 	<string name="tournaments">Турниры</string>
 	<string name="services">Сервисы</string>
 	<string name="chat">Чат</string>
+	<string name="profile_loading">Загрузка профиля</string>
 	<!-- BaseGameEvents -->
 	<string name="awaitReconnection">Оппонент вылетел из игры, ждем переподключения</string>
 	<string name="awaitConnectionOtherPlayers">Ожиданием подключения игроков</string>

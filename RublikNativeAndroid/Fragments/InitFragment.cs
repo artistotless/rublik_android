@@ -18,6 +18,7 @@ namespace RublikNativeAndroid.Fragments
 
         public override void OnCreate(Bundle savedInstanceState)
         {
+
             base.OnCreate(savedInstanceState);
             _preferences = new SharedPreferencesWrapper(Context, Constants.Preferences.LOGIN);
             if (!_preferences.Reader.Contains("username"))

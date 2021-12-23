@@ -41,8 +41,8 @@
 		app:layout_constraintTop_toTopOf="@id/messenger_barrier"
 		app:layout_constraintEnd_toStartOf="@id/messenger_barrier"
 		android:inputType="textMultiLine"
-		android:backgroundTint="#fffafafa"
-		android:background="@drawable/messenger_field"
+		android:backgroundTint="@android:color/black"
+		android:background="@drawable/rectanglewithborderradius10"
 		/>
 
 	<View

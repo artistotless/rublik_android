@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Android.Views;
 using Android.Widget;
 using AndroidX.RecyclerView.Widget;
+using FFImageLoading;
+using FFImageLoading.Transformations;
 using RublikNativeAndroid.Models;
+using RublikNativeAndroid.Services;
 using static Android.Views.View;
 
 namespace RublikNativeAndroid.Adapters
@@ -12,20 +14,23 @@ namespace RublikNativeAndroid.Adapters
     {
         public ImageView hasPaswordIco { get; set; }
         public TextView countPlayers { get; set; }
-        public TextView gameTitle { get; set; }
+        public ImageView gameImage { get; set; }
         public TextView award { get; set; }
         public TextView host { get; set; }
-        public TextView id { get; set; }
+
+        public View view;
+
 
         public RoomViewHolder(View view) : base(view)
         {
-            this.hasPaswordIco = view.FindImageView(Resource.Id.room_isPasswordIco);
-            this.award = view.FindTextView(Resource.Id.room_award);
-            this.gameTitle = view.FindTextView(Resource.Id.room_gameTitle);
-            this.host = view.FindTextView(Resource.Id.room_host);
-            this.id = view.FindTextView(Resource.Id.room_id);
-            this.countPlayers = view.FindTextView(Resource.Id.room_playersCount);
+            this.view = view;
+            hasPaswordIco = view.FindImageView(Resource.Id.room_isPrivate);
+            award = view.FindTextView(Resource.Id.room_award);
+            gameImage = view.FindImageView(Resource.Id.room_game_image);
+            host = view.FindTextView(Resource.Id.room_host);
+            countPlayers = view.FindTextView(Resource.Id.room_players_count);
         }
+
     }
 
     public class RoomsRecycleViewAdapter : BaseRecycleViewAdapter<Room>
@@ -33,20 +38,29 @@ namespace RublikNativeAndroid.Adapters
 
         public RoomsRecycleViewAdapter(IOnClickListener listener) : base(listener) { }
 
-        public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
+        public override async void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
             var roomViewHolder = (RoomViewHolder)holder;
-            var room = GetElements()[position];
+            Room room = GetElements()[position];
             try
             {
-                roomViewHolder.hasPaswordIco.Visibility = room.hasPassword ? ViewStates.Visible : ViewStates.Gone;
-                roomViewHolder.countPlayers.Text = room.members.Count.ToString();
-                roomViewHolder.gameTitle.Text = room.game.id.ToString();
-                roomViewHolder.award.Text = room.award.ToString();
-                roomViewHolder.host.Text = room.host.extraData.username;
-                roomViewHolder.id.Text = room.id.ToString();
+                Game game = await ApiService.GetGameInfoAsync(room.game.id);
+                User host = await ApiService.GetUserAsync(room.host.extraData.id);
+     
+                roomViewHolder.hasPaswordIco.Visibility = room.hasPassword ? ViewStates.Visible : ViewStates.Invisible;
+                roomViewHolder.countPlayers.Text = $"{room.members.Count}/{game.maxPlayers}";
+                ImageService.Instance
+                   .LoadUrl(game.image)
+                   .FadeAnimation(true)
+                   .Transform(new RoundedTransformation(5))
+                   .Into(roomViewHolder.gameImage);
+
+                roomViewHolder.award.Text = $"{room.award} {Constants.Currency.MAIN}";
+                roomViewHolder.host.Text = host.extraData.nickname;
+                roomViewHolder.view.Tag = room.id;
+
             }
-            catch { }
+            catch (System.Exception e) { System.Console.WriteLine(e); }
         }
 
 
@@ -57,6 +71,7 @@ namespace RublikNativeAndroid.Adapters
             item.SetOnClickListener(_listener);
             return new RoomViewHolder(item);
         }
+
 
         public void ChangeElement(Room newRoom)
         {
@@ -70,17 +85,19 @@ namespace RublikNativeAndroid.Adapters
             NotifyItemChanged(position);
         }
 
-        public void RemoveUserFromRoom(int idRoom, string username)
+        public void RemoveUserFromRoom(int idRoom, int userId)
         {
             var position = elements.IndexOf(elements.FirstOrDefault(x => x.id == idRoom));
-            elements[position].members.RemoveAll(x => x.extraData.username == username);
+            User member = userId == User.myUser.extraData.id ? User.myUser : new User(userId);
+            elements[position].RemoveMember(member);
             NotifyItemChanged(position);
         }
 
-        public void AddUserToRoom(int idRoom, string username)
+        public void AddUserToRoom(int idRoom, int userId)
         {
             var position = elements.IndexOf(elements.FirstOrDefault(x => x.id == idRoom));
-            elements[position].members.Add(new User(username));
+            User member = userId == User.myUser.extraData.id ? User.myUser : new User(userId);
+            elements[position].AddMember(member);
             NotifyItemChanged(position);
         }
 

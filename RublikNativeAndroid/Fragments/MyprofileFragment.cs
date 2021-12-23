@@ -34,6 +34,7 @@ namespace RublikNativeAndroid.Fragments
         private RecyclerView _friends_scroll;
 
         private ProfileViewModel _myProfileViewModel;
+        private ViewEventListener _viewEventListener;
         private IDisposable _unsubscriber;
         private IDisposable _eventsUnsubscriber;
         private FriendRecycleListAdapter _adapter;
@@ -45,6 +46,7 @@ namespace RublikNativeAndroid.Fragments
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+            _viewEventListener = new ViewEventListener();
             _myProfileViewModel = _myProfileViewModel ?? new ProfileViewModel();
             _adapter = _adapter ?? new FriendRecycleListAdapter(this);
             _eventParser = _eventParser ?? new MessengerEventsParserViewModel(this);
@@ -56,12 +58,13 @@ namespace RublikNativeAndroid.Fragments
         {
             base.OnDestroy();
             _unsubscriber.Dispose();
+            _viewEventListener.Dispose();
         }
 
         public override void OnDestroyView()
         {
             base.OnDestroyView();
-            _eventsUnsubscriber.Dispose();
+            _eventsUnsubscriber.Dispose();  
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -77,10 +80,11 @@ namespace RublikNativeAndroid.Fragments
             _swipeRefreshLayout = view.FindRefreshLayout(Resource.Id.profile_refresh_swipe);
             _friends_scroll = view.FindRecyclerView(Resource.Id.profile_friends_scroll_view);
             _friends_scroll.AddOnScrollListener(new RefreshLayoutCollisionFixer(_swipeRefreshLayout));
-            _friends_scroll.ViewAttachedToWindow += async (object sender, ViewAttachedToWindowEventArgs e) =>
+            _viewEventListener.AddListener(new OnViewAttached(_friends_scroll,
+                async delegate (object sender, ViewAttachedToWindowEventArgs e)
             {
                 await RequestUpdateLiveData();
-            };
+            }));
 
             AttachAdapter(_adapter, container);
             UpdateUI(_userData);
@@ -96,14 +100,18 @@ namespace RublikNativeAndroid.Fragments
 
         private void InitServiceEvents(View root)
         {
-            root.FindButton(Resource.Id.services_games).Click +=
-                (object sender, EventArgs e) => { this.Navigator().ShowRoomsPage(); };
-            root.FindButton(Resource.Id.services_news).Click +=
-                (object sender, EventArgs e) => { throw new NotImplementedException(); };
-            root.FindButton(Resource.Id.services_stats).Click +=
-                (object sender, EventArgs e) => { throw new NotImplementedException(); };
-            root.FindButton(Resource.Id.services_tournaments).Click +=
-                (object sender, EventArgs e) => { throw new NotImplementedException(); };
+            _viewEventListener.AddListener(new OnClick(root.FindCardView(Resource.Id.services_games),
+                (object sender, EventArgs e) => { this.Navigator().ShowRoomsPage(); }
+                ));
+            _viewEventListener.AddListener(new OnClick(root.FindCardView(Resource.Id.services_news),
+                (object sender, EventArgs e) => { throw new NotImplementedException(); }
+                ));
+            _viewEventListener.AddListener(new OnClick(root.FindCardView(Resource.Id.services_stats),
+                (object sender, EventArgs e) => { throw new NotImplementedException(); }
+                ));
+            _viewEventListener.AddListener(new OnClick(root.FindCardView(Resource.Id.services_tournaments),
+                (object sender, EventArgs e) => { throw new NotImplementedException(); }
+                ));
         }
 
         private void ListenObservableObjects()
@@ -138,7 +146,7 @@ namespace RublikNativeAndroid.Fragments
         {
             var fragment = new MyprofileFragment();
             var bundle = new Bundle();
-            bundle.PutInt(Constants.Fragments.USER_ID, UsersService.myUser.extraData.id);
+            bundle.PutInt(Constants.Fragments.USER_ID, ApiService.myUser.extraData.id);
             fragment.Arguments = bundle;
             return fragment;
         }

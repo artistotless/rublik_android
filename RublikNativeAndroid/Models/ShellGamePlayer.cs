@@ -5,7 +5,7 @@ namespace RublikNativeAndroid.Models
     {
         public int score { get; set; }
 
-        public ShellGamePlayer(string nickname) : base(nickname) { }
+        public ShellGamePlayer(int playerId) : base(playerId) { }
         public ShellGamePlayer(User.Data userData) : base(userData) { }
     }
 }

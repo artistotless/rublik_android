@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:orientation="vertical"
+	android:gravity="center"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	    >
+	<ImageView
+		android:layout_width="16dp"
+		android:layout_height="16dp"
+		android:backgroundTint="#ffbdbdbd"
+		android:background="@drawable/baseline_people_black_24"/>
+	<TextView
+		android:id="@+id/room_players_count"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="1/100"
+
+/>
+
+</LinearLayout>

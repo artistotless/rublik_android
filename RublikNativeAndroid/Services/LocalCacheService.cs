@@ -1,43 +1,38 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using RublikNativeAndroid.Models;
 
 namespace RublikNativeAndroid.Services
 {
     public class LocalCacheService
     {
-        private static LocalCacheService _instance;
-        public static Dictionary<int, User.Data> usersData { get; set; }
-        public static Dictionary<int, List<Friend>> userFriends { get; set; }
+        public Dictionary<int, User.Data> UsersData { get; private set; }
+        public Dictionary<int, List<Friend>> UserFriends { get; private set; }
+        public Dictionary<int, Game> Games { get; private set; }
 
-        private LocalCacheService()
+        public LocalCacheService()
         {
-            usersData = new Dictionary<int, User.Data>();
-            userFriends = new Dictionary<int, List<Friend>>();
+            UsersData = new Dictionary<int, User.Data>();
+            UserFriends = new Dictionary<int, List<Friend>>();
+            Games = new Dictionary<int, Game>();
         }
 
-        public static LocalCacheService NewInstance()
+        public User.Data GetUsersData(int userId) => (UsersData.ContainsKey(userId)) ? UsersData[userId] : null;
+        public void AddUsersData(int userId, User.Data data) => UsersData[userId] = data;
+
+        public List<Friend> GetUserFriends(int userId) => (UserFriends.ContainsKey(userId)) ? UserFriends[userId] : null;
+        public void AddUserFriends(int userId, List<Friend> friends) => UserFriends[userId] = friends;
+
+        public Game GetGame(int id) => (Games.ContainsKey(id)) ? Games[id] : null;
+        public bool IsAllGamesLoaded { get; set; }
+        public List<Game> GetAllGames() => Games.Values.ToList();
+        public void AddGame(int id, Game data) => Games[id] = data;
+        public void SetGames(List<Game> games)
         {
-            _instance = _instance ?? new LocalCacheService();
-            return _instance;
+            foreach (var game in games)
+                Games[game.id] = game;
         }
 
-        public User.Data GetUsersData(int userId)
-        {
-            if (usersData.ContainsKey(userId))
-                return usersData[userId];
-            return null;
-        }
-
-        public void AddUsersData(int userId, User.Data data) => usersData[userId] = data;
-
-        public List<Friend> GetUserFriends(int userId)
-        {
-            if (userFriends.ContainsKey(userId))
-                return userFriends[userId];
-            return null;
-        }
-
-        public void AddUserFriends(int userId, List<Friend> friends) => userFriends[userId] = friends;
 
     }
 }

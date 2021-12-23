@@ -54,7 +54,8 @@ namespace RublikNativeAndroid
             SupportFragmentManager.RegisterFragmentLifecycleCallbacks(_fragmentLifecycleListener, false);
 
             if (savedInstanceState == null) // TODO: проверка на сохраненные данные о входе
-                ShowInitPage();
+                //ShowGamesPage();
+            ShowInitPage();
             //SupportFragmentManager.ShowFragment(ShellGameFragment.NewInstance("62.109.26.46",9000), false);
         }
 
@@ -139,7 +140,7 @@ namespace RublikNativeAndroid
 
             if (fragment is IServerListener serverListener)
             {
-                _server = _server ?? new Server(UsersService.myUser.extraData.accessKey);
+                _server = _server ?? new Server(ApiService.myUser.extraData.accessKey);
                 await _server.ConnectAsync(serverListener.GetServerEndpoint());
                 _server.SetListener(serverListener);
             }
@@ -181,12 +182,19 @@ namespace RublikNativeAndroid
 
         public void ShowProfilePage(int userId)
         {
-            if (userId == UsersService.myUser.extraData.id)
+            if (userId == ApiService.myUser.extraData.id)
             {
                 ShowMyProfilePage();
                 return;
             }
             SupportFragmentManager.ShowFragment(ProfileFragment.NewInstance(userId));
+        }
+
+        public GamesFragment ShowGamesPage()
+        {
+            var fragment = SupportFragmentManager.FindFragmentByTag(GamesFragment.TAG);
+            SupportFragmentManager.ShowFragment(fragment ?? new GamesFragment(), false, GamesFragment.TAG);
+            return (GamesFragment)fragment;
         }
 
         public void ShowSettingsPage()

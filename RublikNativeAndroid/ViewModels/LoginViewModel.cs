@@ -21,23 +21,6 @@ namespace RublikNativeAndroid
         {
             _listener.OnPrepare();
 
-           /* // Offline mode
-
-            var offlineUser = new User.Data()
-            {
-                accessKey = "user1",
-                avatar = "/Files/126kb.jpg",
-                balance = 1350,
-                id = 1,
-                isOnline = true,
-                nickname = "Artistotless",
-                quote = "just quote",
-                username = "admin"
-            };
-            UsersService.myUser = new User(offlineUser);
-            _listener.OnSuccess(offlineUser);         
-            return;*/
-
             HttpClient client = new HttpClient();
             var body = string.Format("{{ \"username\":\"{0}\" , \"password\":\"{1}\"}}", username, password);
 
@@ -53,7 +36,7 @@ namespace RublikNativeAndroid
             {
                 var userData = JsonConvert.DeserializeObject<User.Data>(content);
 
-                UsersService.myUser = new User(userData);
+                ApiService.myUser = new User(userData);
 
                 _listener.OnSuccess(userData);
             }

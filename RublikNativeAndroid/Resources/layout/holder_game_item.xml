@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:paddingTop="15dp"
+		>
+	<include
+		android:layout_marginStart="15dp"
+		android:id="@+id/games_gameIco"
+		app:layout_constraintTop_toTopOf="@id/games_gameTitle"
+		app:layout_constraintLeft_toLeftOf="parent"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		layout="@layout/games_gameico"/>
+	<TextView
+		app:layout_constraintLeft_toRightOf="@id/games_gameIco"
+		android:id="@+id/games_gameTitle"
+		android:layout_width="wrap_content"
+		android:layout_height="30dp"
+		android:layout_marginEnd="15dp"
+		android:paddingHorizontal="8dp"
+		android:gravity="top"
+		android:textColor="#ffcfd8dc"
+		android:textSize="16dp"
+		android:textStyle="bold"
+		android:text="ShellGame"
+        />
+
+	<TextView
+		app:layout_constraintHorizontal_bias="0"
+		app:layout_constraintRight_toRightOf="parent"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintLeft_toLeftOf="@id/games_gameTitle"
+		app:layout_constraintTop_toBottomOf="@id/games_gameTitle"
+		android:id="@+id/games_gameDescr"
+		android:layout_marginLeft="10dp"
+		android:layout_marginRight="15dp"
+		android:textColor="#ffb0bec5"
+		app:layout_constrainedWidth="true"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="25dp"
+		android:text="A gambling game in which two people participate: the presenter and the player. The presenter has three identical opaque thimbles, under one of which he has previously hidden a small ball. Then the player is asked to guess which of the thimbles the ball is"
+			/>
+
+	<View
+		android:id="@+id/games_divider"
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:background="#ff424242"
+		app:layout_constraintBottom_toBottomOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

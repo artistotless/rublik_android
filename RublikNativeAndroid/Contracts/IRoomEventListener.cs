@@ -9,8 +9,8 @@ namespace RublikNativeAndroid.Contracts
         public void OnDeletedRoom(int idRoom);
         public void OnHostedRoom(Room room);
         public void OnMessagedRoom(Room room);
-        public void OnLeavedRoom(int idRoom, string userName);
-        public void OnJoinedRoom(int idRoom, string userName);
+        public void OnLeavedRoom(int idRoom, int userId);
+        public void OnJoinedRoom(int idRoom, int userId);
         public void OnGameStarted(ServerEndpoint endpoint);
 
     }

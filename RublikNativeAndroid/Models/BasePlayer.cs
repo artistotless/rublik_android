@@ -4,7 +4,7 @@
     {
         public int teamId;
 
-        public BasePlayer(string username) : base(username) { }
+        public BasePlayer(int userId) : base(userId) { }
         public BasePlayer(Data userData) : base(userData) { }
         public override string ToString()
         {

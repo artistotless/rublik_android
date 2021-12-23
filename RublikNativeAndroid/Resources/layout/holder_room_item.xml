@@ -1,52 +1,66 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="horizontal"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:padding="20dp"
-	android:background="#fae0e0e0"
+	android:layout_marginEnd="20dp"
+	android:layout_marginStart="20dp"
+	android:layout_marginTop="10dp"
+	android:paddingVertical="15dp"
+	android:backgroundTint="#ff424242"
+	android:background="@drawable/rectanglewithborderradius10"
+	android:paddingHorizontal="20dp"
+	
     >
 
-	<TextView
-		android:id="@+id/room_id"
+
+	<include
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginEnd="20dp"
-		android:text="id"/>
-	<TextView
-		android:id="@+id/room_playersCount"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginEnd="20dp"
-		android:text="Count:"
-        />
-	<TextView
-		android:id="@+id/room_gameTitle"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginEnd="20dp"
-		android:text="Game:"
-        />
+		layout="@layout/holder_room_game"/>
+
 	<TextView
 		android:id="@+id/room_award"
 		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
+		android:layout_height="30dp"
 		android:layout_marginEnd="20dp"
-		android:text="Award:"
+		android:paddingHorizontal="8dp"
+		android:gravity="center"
+		android:backgroundTint="#1c27ae60"
+		android:textColor="#27AE60"
+		android:textStyle="bold"
+		android:text="*** RUB"
+		android:background="@drawable/btn_custom"
+
         />
+
 	<TextView
 		android:id="@+id/room_host"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginEnd="20dp"
-		android:text="Host:"
+		android:maxWidth="100dp"
+		android:ellipsize="end"
+		android:text="***"
+		android:singleLine="true"
+
         />
-	<ImageView
-		android:id="@+id/room_isPasswordIco"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-		android:src="@drawable/lock_ico"
-		/>
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="right">
+
+		<include
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			layout="@layout/holder_players_count"/>
+
+
+	</RelativeLayout>
+
+
 
 </LinearLayout>

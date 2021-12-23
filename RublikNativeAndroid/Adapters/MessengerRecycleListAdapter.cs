@@ -36,7 +36,7 @@ namespace RublikNativeAndroid.Adapters
             messageHolder.message.Text = messageItem.text;
             messageHolder.dateTime.Text = messageItem.timeStamp;
 
-            if (messageItem.authorId == UsersService.myUser.extraData.id)
+            if (messageItem.authorId == ApiService.myUser.extraData.id)
             {
                 messageHolder.parent.SetGravity(GravityFlags.End);
                 messageHolder.container.BackgroundTintList = ColorStateList.ValueOf(new Android.Graphics.Color(227, 242, 253));

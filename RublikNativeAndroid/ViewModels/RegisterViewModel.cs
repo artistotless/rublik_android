@@ -68,7 +68,7 @@ namespace RublikNativeAndroid
             {
                 var userData = JsonConvert.DeserializeObject<User.Data>(content);
 
-                UsersService.myUser = new User(userData);
+                ApiService.myUser = new User(userData);
 
                 _listener.OnSuccess(userData);
             }

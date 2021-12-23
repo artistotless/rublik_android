@@ -64,36 +64,120 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		>
-
-		<Button
+		<com.google.android.material.card.MaterialCardView
 			android:id="@+id/services_games"
-			android:text="@string/games"
-			android:drawableTint="#ffef5350"
-			style="@style/btn_service_style"
-			android:drawableTop="@drawable/games_ico"
-			/>
+			android:layout_width="wrap_content"
+			android:layout_height="80dp">
+			<LinearLayout
+				android:orientation="vertical"
+				android:gravity="center"
+				android:minWidth="80dp"
+				android:padding="10dp"
+				android:layout_gravity="center"
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent">
+				<ImageView
+					android:layout_marginBottom="10dp"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:backgroundTint="#ffef5350"
+					android:background="@drawable/games_ico"
+				/>
+				<TextView
+					android:textAlignment="center"
+					android:layout_gravity="center"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/games"
+				/>
+			</LinearLayout>
+		</com.google.android.material.card.MaterialCardView>
 
-		<Button
+		<com.google.android.material.card.MaterialCardView
 			android:id="@+id/services_stats"
-			android:text="@string/stats"
-			android:drawableTop="@drawable/graph_ico"
-			style="@style/btn_service_style"
-			android:drawableTint="#ff9ccc65" 
-			/>
-		<Button
+			android:layout_width="wrap_content"
+			android:layout_height="80dp">
+			<LinearLayout
+				android:orientation="vertical"
+				android:gravity="center"
+				android:minWidth="80dp"
+				android:padding="10dp"
+				android:layout_gravity="center"
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent">
+				<ImageView
+					android:layout_marginBottom="10dp"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:backgroundTint="#ff9ccc65"
+					android:background="@drawable/graph_ico"
+				/>
+				<TextView
+					android:textAlignment="center"
+					android:layout_gravity="center"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/stats"
+				/>
+			</LinearLayout>
+		</com.google.android.material.card.MaterialCardView>
+		<com.google.android.material.card.MaterialCardView
 			android:id="@+id/services_tournaments"
-			android:drawableTop="@drawable/trophy_ico"
-			android:text="@string/tournaments"
-			style="@style/btn_service_style"
-			android:drawableTint="#ffffa726" 
-		/>
-		<Button
+			android:layout_width="wrap_content"
+			android:layout_height="80dp">
+			<LinearLayout
+				android:orientation="vertical"
+				android:gravity="center"
+				android:minWidth="80dp"
+				android:padding="10dp"
+				android:layout_gravity="center"
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent">
+				<ImageView
+					android:layout_marginBottom="10dp"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:backgroundTint="#ffffa726"
+					android:background="@drawable/trophy_ico"
+				/>
+				<TextView
+					android:textAlignment="center"
+					android:layout_gravity="center"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/tournaments"
+				/>
+			</LinearLayout>
+		</com.google.android.material.card.MaterialCardView>
+
+			<com.google.android.material.card.MaterialCardView
 			android:id="@+id/services_news"
-			android:drawableTop="@drawable/news_ico"
-			android:text="@string/news"
-			style="@style/btn_service_style"
-			android:drawableTint="#ff42a5f5" 
-			/>
+			android:layout_width="wrap_content"
+			android:layout_height="80dp">
+			<LinearLayout
+				android:orientation="vertical"
+				android:gravity="center"
+				android:minWidth="80dp"
+				android:padding="10dp"
+				android:layout_gravity="center"
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent">
+				<ImageView
+					android:layout_marginBottom="10dp"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:backgroundTint="#ff42a5f5"
+					android:background="@drawable/news_ico"
+				/>
+				<TextView
+					android:textAlignment="center"
+					android:layout_gravity="center"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/news"
+				/>
+			</LinearLayout>
+		</com.google.android.material.card.MaterialCardView>
 
 	</com.google.android.material.internal.FlowLayout>
 

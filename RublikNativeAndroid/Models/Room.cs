@@ -7,6 +7,8 @@ namespace RublikNativeAndroid.Models
 {
     public class Room : IEquatable<Room>, IHasId
     {
+        public static Room myRoom => User.myUser.currentRoom;
+
         public List<User> members { get; set; }
         public Game game { get; set; }
         public readonly int id;
@@ -14,15 +16,14 @@ namespace RublikNativeAndroid.Models
         public uint award { get; set; }
         public bool hasPassword;
 
-
         public Room(int id, Game game, User host, uint award, bool hasPassword)
         {
             this.members = new List<User>();
-            this.members.Add(host);
             this.game = game;
             this.id = id;
             this.award = award;
             this.hasPassword = hasPassword;
+            this.AddMember(host.Equals(User.myUser) ? User.myUser : host);
         }
 
         public Room(int id, Game game, IEnumerable<User> members, uint award, bool hasPassword)
@@ -50,8 +51,19 @@ namespace RublikNativeAndroid.Models
             user.currentRoom = null;
         }
 
-        public bool Equals(Room other) => other.id == id;
+        public bool Equals(Room other)
+        {
+            if(other == null) return false;
+            return other.id == this.id;
+        }
 
+        public override bool Equals(object obj)
+        {
+            if (obj == null) return false;
+            User objAsPlayer = obj as User;
+            if (objAsPlayer == null) return false;
+            else return Equals(objAsPlayer);
+        }
         public long GetId() => id;
 
     }

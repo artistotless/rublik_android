@@ -3,7 +3,6 @@ using Android.Widget;
 using AndroidX.RecyclerView.Widget;
 using FFImageLoading;
 using FFImageLoading.Transformations;
-using RublikNativeAndroid.Services;
 using static Android.Views.View;
 
 namespace RublikNativeAndroid.Adapters
@@ -14,7 +13,7 @@ namespace RublikNativeAndroid.Adapters
 
         public FriendViewHolder(View view) : base(view)
         {
-            this.image = view.FindViewById<ImageView>(Resource.Id.friend_image);
+            image = view.FindImageView(Resource.Id.friend_image);
         }
     }
 
@@ -40,7 +39,6 @@ namespace RublikNativeAndroid.Adapters
             catch { }
 
         }
-
 
         public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
         {

@@ -10,12 +10,12 @@
 	>
 
 	<ImageView
-
 		android:id="@+id/friend_image"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent"
 		android:layout_width="48dp"
 		android:layout_height="48dp"
+		android:backgroundTint="#ff616161"
 		android:layout_marginHorizontal="8dp"
 		android:background="@drawable/rectanglewithborderradius10"
 		android:contentDescription="ProfileImage"

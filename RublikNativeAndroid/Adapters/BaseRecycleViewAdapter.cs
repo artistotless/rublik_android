@@ -4,6 +4,7 @@ using System;
 using AndroidX.RecyclerView.Widget;
 using static Android.Views.View;
 using RublikNativeAndroid.Contracts;
+using System.Linq;
 
 namespace RublikNativeAndroid.Adapters
 {
@@ -37,6 +38,8 @@ namespace RublikNativeAndroid.Adapters
             int position = elements.IndexOf(element);
             NotifyItemInserted(position);
         }
+
+        public T GetElementById(int id) => elements.FirstOrDefault(x => (x as IHasId).GetId() == id);
 
         public void DeleteElement(T element)
         {

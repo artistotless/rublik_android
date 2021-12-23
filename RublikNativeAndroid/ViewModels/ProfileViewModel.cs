@@ -18,7 +18,7 @@ namespace RublikNativeAndroid.ViewModels
         {
             try
             {
-                var data = await UsersService.GetUserAsync(userId, ignoreCache: ignoreCache);
+                var data = await ApiService.GetUserAsync(userId, ignoreCache: ignoreCache);
                 liveDataProfile.PostValue(data.extraData);
                 Console.WriteLine(1);
             }
@@ -33,7 +33,7 @@ namespace RublikNativeAndroid.ViewModels
         {
             try
             {
-                var data = await UsersService.GetFriendsAsync(userId, ignoreCache: ignoreCache);
+                var data = await ApiService.GetFriendsAsync(userId, ignoreCache: ignoreCache);
                 liveDataFriends.PostValue(data);
             }
             catch

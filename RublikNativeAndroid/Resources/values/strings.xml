@@ -10,6 +10,9 @@
 	<string name="identity_or_email">Email or @username</string>
 	<string name="friends_online">Friends Online</string>
 	<string name="send_message">Message</string>
+	<string name="create">Create</string>
+	<string name="join">Join</string>
+	<string name="leave">Leave</string>
 	<!-- Pages -->
 	<string name="login">Sign In</string>
 	<string name="register">Sign Up</string>
@@ -20,7 +23,8 @@
 	<string name="friends">Friends</string>
 	<string name="lobby">Lobbies</string>
 	<!-- Other -->
-	<string name="empty"> </string>
+	<string name="empty">
+	</string>
 	<string name="messages">Messages</string>
 	<string name="notifications">Notifications</string>
 	<string name="news">News</string>
@@ -30,6 +34,7 @@
 	<string name="tournaments">Tournaments</string>
 	<string name="services">Services</string>
 	<string name="chat">Chat</string>
+	<string name="profile_loading">Loading ...</string>
 	<!-- BaseGameEvents -->
 	<!-- // TODO: Перевести на английский -->
 	<string name="awaitReconnection">____</string>
