@@ -9,12 +9,13 @@ using Android.Widget;
 using RublikNativeAndroid.Services;
 using System.Threading.Tasks;
 using System;
+using RublikNativeAndroid.Models;
 
 namespace RublikNativeAndroid.Fragments
 {
     public class GamesFragment : Fragment, IHasToolbarTitle, IOnClickListener
     {
-        public event Action<int> gameSelected;
+        public Action<Game> gameSelected;
         public const string TAG = "GAMES";
 
         private RecyclerView _gamesRecycler;
@@ -23,12 +24,21 @@ namespace RublikNativeAndroid.Fragments
 
         public string GetTitle() => GetString(Resource.String.games);
 
-        public void OnClick(View v)
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+            gameSelected = null;
+        }
+
+        public async void OnClick(View v)
         {
             var gameId = (int)v.Tag;
-            gameSelected(gameId);
+            Game game = await ApiService.GetGameInfoAsync(gameId);
+            gameSelected?.Invoke(game);
             this.Navigator().GoBack();
         }
+
+        public GamesFragment(Action<Game> callback) => gameSelected = callback;
 
         public override async void OnCreate(Bundle savedInstanceState)
         {

@@ -84,7 +84,7 @@ namespace RublikNativeAndroid
         public void Dispose()
         {
             foreach (BaseViewEvent listener in _listeners) listener.Dispose();
-            _listeners = null;
+            _listeners.Clear();
         }
     }
 }

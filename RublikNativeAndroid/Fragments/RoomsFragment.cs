@@ -13,38 +13,15 @@ using LiteNetLib;
 using System;
 using RublikNativeAndroid.ViewModels;
 using RublikNativeAndroid.Services;
-using Google.Android.Material.BottomSheet;
 using static Android.Widget.CompoundButton;
 using System.Threading.Tasks;
-using RublikNativeAndroid.UI.Behaviors;
-using AndroidX.CoordinatorLayout.Widget;
 
 namespace RublikNativeAndroid.Fragments
 {
     public class RoomsFragment : Fragment, IHasToolbarTitle, IOnClickListener, IRoomEventListener, IHasCustomToolbarMenu, IDisposable
     {
-
-
-        /* Bottom sheet Views for creating room */
-        private BottomSheetDialog _bottomCreateRoomDialog;
-        private View _bottomCreateRoomView;
-        private EditText _idGameEditText;
-        private EditText _passwordEditText;
-        private TextView _isPrivateText;
-        private CheckBox _isPrivateCheckbox;
-        private EditText _awardEditText;
-        private Button _submitBtn;
-        ///
-
-        /* Bottom sheet Views for showing room's info */
-        private BottomSheetDialog _bottomRoomInfoDialog;
-        private View _bottomRoomInfoView;
-        private TextView _gameTitle;
-        private TextView _hostName;
-        private TextView _award;
-        private TextView _playersCount;
-        private Button _joinOrLeaveBtn;
-        ///
+        private BottomCreateRoomSheet _createRoomSheet;
+        private BottomRoomInfoSheet _roomInfoSheet;
 
         private ViewEventListener _viewEventListener;
         private RecyclerView _roomsRecycler;
@@ -53,6 +30,7 @@ namespace RublikNativeAndroid.Fragments
         private RoomNetRequestViewModel _roomRequest;
 
         private Room _selectedRoom;
+        private Game _selectedGame;
         private IDisposable _eventsUnsubscriber;
 
         public string GetTitle() => GetString(Resource.String.lobby);
@@ -65,11 +43,20 @@ namespace RublikNativeAndroid.Fragments
             _viewEventListener.Dispose();
         }
 
+        public override void OnDestroyView()
+        {
+            _viewEventListener.Dispose();
+            base.OnDestroyView();
+        }
+
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             RetainInstance = true;
+
             _viewEventListener = new ViewEventListener();
+            _createRoomSheet = new BottomCreateRoomSheet(Context);
+            _roomInfoSheet = new BottomRoomInfoSheet(Context);
             _adapter = new RoomsRecycleViewAdapter(this);
             _eventParser = new RoomEventsParserViewModel(this);
             _roomRequest = new RoomNetRequestViewModel(_adapter.GetElements());
@@ -79,19 +66,10 @@ namespace RublikNativeAndroid.Fragments
         {
             base.OnCreateView(inflater, container, savedInstanceState);
             var rootView = inflater.Inflate(Resource.Layout.fragment_rooms, container, false);
-
             _roomsRecycler = rootView.FindRecyclerView(Resource.Id.rooms_recycler_view);
 
-            /*
-             PushUpBehavior pushUpBehavior = new PushUpBehavior();
-            CoordinatorLayout.LayoutParams @params =
-                (CoordinatorLayout.LayoutParams)_roomsRecycler.LayoutParameters;
-            @params.Behavior = pushUpBehavior;
-            */
             AttachAdapter(_adapter, container);
-            AttachBottomSheetViews();
             ConfigureButtonSheetCallbacks();
-
             return rootView;
         }
 
@@ -99,57 +77,41 @@ namespace RublikNativeAndroid.Fragments
         {
             _roomsRecycler.SetLayoutManager(new LinearLayoutManager(container.Context, (int)Orientation.Vertical, false));
             _roomsRecycler.SetAdapter(adapter);
-            _roomsRecycler.Enabled = false;
-            _roomsRecycler.TouchscreenBlocksFocus = true;
-            _roomsRecycler.Focusable = false;
-            
-        }
-
-        private void AttachBottomSheetViews()
-        {
-            _bottomCreateRoomDialog = new BottomSheetDialog(Context);
-            _bottomRoomInfoDialog = new BottomSheetDialog(Context);
-
-            _bottomCreateRoomView = LayoutInflater.From(Context).Inflate(Resource.Layout.bottom_sheet_create_room,
-                new LinearLayout(Context));
-
-            _bottomRoomInfoView = LayoutInflater.From(Context).Inflate(Resource.Layout.bottom_sheet_room_info,
-                new LinearLayout(Context));
-
-            _bottomCreateRoomDialog.SetContentView(_bottomCreateRoomView);
-            _bottomRoomInfoDialog.SetContentView(_bottomRoomInfoView);
-
-            _idGameEditText = _bottomCreateRoomView.FindEditText(Resource.Id.room_create_idGame);
-            _passwordEditText = _bottomCreateRoomView.FindEditText(Resource.Id.room_create_password);
-            _isPrivateText = _bottomCreateRoomView.FindTextView(Resource.Id.room_create_isPrivateText);
-            _isPrivateCheckbox = _bottomCreateRoomView.FindCheckBox(Resource.Id.room_create_isPrivate);
-            _awardEditText = _bottomCreateRoomView.FindEditText(Resource.Id.room_create_award);
-            _submitBtn = _bottomCreateRoomView.FindButton(Resource.Id.room_create_submit);
-
-            _gameTitle = _bottomRoomInfoView.FindTextView(Resource.Id.room_info_game);
-            _hostName = _bottomRoomInfoView.FindTextView(Resource.Id.room_info_host);
-            _award = _bottomRoomInfoView.FindTextView(Resource.Id.room_info_award);
-            _playersCount = _bottomRoomInfoView.FindTextView(Resource.Id.room_info_playersCount);
-            _joinOrLeaveBtn = _bottomRoomInfoView.FindButton(Resource.Id.room_info_joinOrLeave);
         }
 
         private void ConfigureButtonSheetCallbacks()
         {
-            _viewEventListener.AddListener(new OnCheckedChange(_isPrivateCheckbox, TogglePasswordEditText));
-            _viewEventListener.AddListener(new OnClick(_joinOrLeaveBtn, JoinToSelectedRoom));
-            _viewEventListener.AddListener(new OnClick(_submitBtn, HostRoom));
+            _viewEventListener.AddListener(new OnCheckedChange(_createRoomSheet.isPrivateCheckbox, TogglePasswordEditText));
+            _viewEventListener.AddListener(new OnClick(_roomInfoSheet.joinOrLeaveBtn, JoinToSelectedRoom));
+            _viewEventListener.AddListener(new OnClick(_createRoomSheet.submitBtn, HostRoom));
+            _viewEventListener.AddListener(new OnClick(_createRoomSheet.gameSelectBtn, SubscribeGamesPageResult));
         }
 
         private void TogglePasswordEditText(object sender, CheckedChangeEventArgs e)
         {
-            _passwordEditText.Visibility = e.IsChecked ? ViewStates.Visible : ViewStates.Gone;
-            _isPrivateText.Visibility = e.IsChecked ? ViewStates.Gone : ViewStates.Visible;
+            _createRoomSheet.passwordEditText.Visibility = e.IsChecked ? ViewStates.Visible : ViewStates.Gone;
+            _createRoomSheet.isPrivateText.Visibility = e.IsChecked ? ViewStates.Gone : ViewStates.Visible;
+        }
+
+        private void SubscribeGamesPageResult(object sender, EventArgs e)
+        {
+            _createRoomSheet.Hide();
+            this.Navigator().ShowGameSelectPage(OnGetGameFromGameSelectPage);
+        }
+
+        private void OnGetGameFromGameSelectPage(Game game)
+        {
+            _selectedGame = game;
+            _createRoomSheet.Show();
+            _createRoomSheet.gameSelectBtn.Text = game.title;
         }
 
         private void HostRoom(object sender, EventArgs e)
         {
-            _roomRequest.HostRoom(ushort.Parse(_idGameEditText.Text), uint.Parse(_awardEditText.Text), _passwordEditText.Text);
-            _bottomCreateRoomDialog.Hide();
+            if (_selectedGame == null)
+                return;
+            _roomRequest.HostRoom(_selectedGame.id, uint.Parse(_createRoomSheet.awardEditText.Text), _createRoomSheet.passwordEditText.Text);
+            _createRoomSheet.Hide();
         }
 
         private void JoinToSelectedRoom(object sender, EventArgs e)
@@ -157,23 +119,25 @@ namespace RublikNativeAndroid.Fragments
             if (User.myUser.inRoom)
                 _roomRequest.LeaveRoom();
             else
-                _roomRequest.JoinRoom(_selectedRoom.id, _passwordEditText.Text);
+                _roomRequest.JoinRoom(_selectedRoom.id, _createRoomSheet.passwordEditText.Text);
 
-            _bottomRoomInfoDialog.Hide();
+            _roomInfoSheet.Hide();
         }
 
         private async Task DisplayRoomInfoSheet(int roomId)
         {
-            _bottomRoomInfoDialog.Show();
+            _roomInfoSheet.joinOrLeaveBtn.Text = Room.EqualById(roomId, Room.myRoom) ? GetString(Resource.String.leave) : GetString(Resource.String.join);
+            _roomInfoSheet.joinOrLeaveBtn.Enabled = false;
+            _roomInfoSheet.Show();
             Room room = _adapter.GetElementById(roomId);
             Game game = await ApiService.GetGameInfoAsync(room.game.id);
             User host = await ApiService.GetUserAsync(room.host.extraData.id);
             _selectedRoom = room;
-            _gameTitle.Text = $"Игра: {game.title}";
-            _hostName.Text = $"Хост: {host.extraData.nickname}";
-            _award.Text = $"Ставка: {room.award} {Constants.Currency.MAIN}";
-            _playersCount.Text = $"Игроков в лобби: {room.members.Count}/{game.minPlayers}";
-            _joinOrLeaveBtn.Text = _selectedRoom.Equals(Room.myRoom) ? GetString(Resource.String.leave) : GetString(Resource.String.join);
+            _roomInfoSheet.gameTitle.Text = $"Игра: {game.title}";
+            _roomInfoSheet.hostName.Text = $"Хост: {host.extraData.nickname}";
+            _roomInfoSheet.award.Text = $"Ставка: {room.award} {Constants.Currency.MAIN}";
+            _roomInfoSheet.playersCount.Text = $"Игроков в лобби: {room.members.Count}/{game.minPlayers}";
+            _roomInfoSheet.joinOrLeaveBtn.Enabled = true;
         }
 
         public async void OnClick(View v) => await DisplayRoomInfoSheet((int)v.Tag);
@@ -218,14 +182,13 @@ namespace RublikNativeAndroid.Fragments
             port: Constants.Services.LOBBY_PORT,
             serverType: ServerType.Lobby);
 
+        public void ShowCreateRoomSheet(object sender, EventArgs e) => _createRoomSheet.Show();
+
         public CustomToolbarItemsBag GetBag()
         {
             CustomToolbarItemsBag bag = new CustomToolbarItemsBag();
             bag.AddItem(new CustomToolbarItem(Resource.Drawable.baseline_add_20, Resource.String.create, ShowAsAction.Always,
-                delegate (object sender, EventArgs e)
-                {
-                    _bottomCreateRoomDialog.Show();
-                }));
+                ShowCreateRoomSheet));
             return bag;
         }
     }

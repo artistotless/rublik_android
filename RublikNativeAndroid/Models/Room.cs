@@ -57,6 +57,12 @@ namespace RublikNativeAndroid.Models
             return other.id == this.id;
         }
 
+        public static bool EqualById(int roomId, Room room)
+        {
+            if (room == null) return false;
+            return room.id == roomId;
+        }
+
         public override bool Equals(object obj)
         {
             if (obj == null) return false;

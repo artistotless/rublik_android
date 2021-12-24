@@ -139,6 +139,9 @@
     <Compile Include="ViewEventListener.cs" />
     <Compile Include="Adapters\GamesRecycleViewAdapter.cs" />
     <Compile Include="UI\Behaviors\PushUpBehavior.cs" />
+    <Compile Include="BottomCreateRoomSheet.cs" />
+    <Compile Include="UI\Views\BaseBottomSheetDialog.cs" />
+    <Compile Include="UI\Views\BottomRoomInfoSheet.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -389,6 +392,10 @@
       <Generator></Generator>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\holder_game_item.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\drawable\baseline_send_20.xml">
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>

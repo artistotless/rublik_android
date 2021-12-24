@@ -31,6 +31,7 @@ namespace RublikNativeAndroid.Services
         {
             foreach (var game in games)
                 Games[game.id] = game;
+            IsAllGamesLoaded = true;
         }
 
 

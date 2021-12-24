@@ -190,11 +190,10 @@ namespace RublikNativeAndroid
             SupportFragmentManager.ShowFragment(ProfileFragment.NewInstance(userId));
         }
 
-        public GamesFragment ShowGamesPage()
+        public void ShowGameSelectPage(Action<Game> callback)
         {
-            var fragment = SupportFragmentManager.FindFragmentByTag(GamesFragment.TAG);
-            SupportFragmentManager.ShowFragment(fragment ?? new GamesFragment(), false, GamesFragment.TAG);
-            return (GamesFragment)fragment;
+            GamesFragment fragment = (GamesFragment)SupportFragmentManager.FindFragmentByTag(GamesFragment.TAG);
+            SupportFragmentManager.ShowFragment(fragment ?? new GamesFragment(callback), true, GamesFragment.TAG);
         }
 
         public void ShowSettingsPage()

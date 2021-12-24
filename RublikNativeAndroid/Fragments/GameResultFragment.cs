@@ -43,6 +43,7 @@ namespace RublikNativeAndroid.Fragments
             _sumView = rootView.FindTextView(Resource.Id.game_result_win_sum);
             _header = rootView.FindTextView(Resource.Id.game_result_header);
             _confetti = rootView.FindLottie(Resource.Id.game_result_confetti);
+            _confetti.Visibility = ViewStates.Invisible;
             _confetti.SetAnimation("confetti.json");
             _confetti.SetMaxProgress(0.66f);
             _confetti.Loop(false);
@@ -54,7 +55,7 @@ namespace RublikNativeAndroid.Fragments
                     _sumView.Text = $"+ {_sum} {Constants.Currency.MAIN}";
                     _sumView.SetTextColor(Android.Graphics.Color.ParseColor("#ff7cb342"));
                     _header.Text = GetString(Resource.String.youwon);
-                    
+                    _confetti.Visibility = ViewStates.Visible;
                     _confetti.PlayAnimation();
                     break;
 

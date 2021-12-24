@@ -8,6 +8,7 @@
     >
 	<com.airbnb.lottie.LottieAnimationView
 		android:id="@+id/game_result_confetti"
+		android:visibility="invisible"
 		app:layout_constraintBottom_toBottomOf="@id/game_result_header"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
